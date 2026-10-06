@@ -1,3 +1,4 @@
+const BUILD='build-id-ui-1';
 const SOURCES=[
   {name:'ADSB.FI',url:(lat,lon,dist)=>`https://opendata.adsb.fi/api/v3/lat/${lat}/lon/${lon}/dist/${dist}`},
   {name:'ADSB.ONE',url:(lat,lon,dist)=>`https://api.adsb.one/v2/point/${lat}/${lon}/${dist}`},
@@ -5,47 +6,7 @@ const SOURCES=[
 ];
 const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
 const CACHE_SECONDS=15, PROVIDER_TIMEOUT_MS=1800;
-async function trySource(source,lat,lon,dist){
-  const controller=new AbortController();
-  const timer=setTimeout(()=>controller.abort(),PROVIDER_TIMEOUT_MS);
-  try{
-    const r=await fetch(source.url(lat,lon,dist),{headers:{Accept:'application/json'},signal:controller.signal});
-    if(!r.ok)throw new Error(`${r.status}`);
-    const j=await r.json();
-    return {ok:true,provider:source.name,now:Date.now(),aircraft:j.ac||j.aircraft||[]};
-  }finally{clearTimeout(timer)}
-}
-async function getTraffic(lat,lon,dist){
-  const errors=[];
-  // Race the two currently useful public feeds so one slow source cannot hold up Sky.
-  const primary=await Promise.any(SOURCES.slice(0,2).map(async source=>{
-    try{return await trySource(source,lat,lon,dist)}catch(e){errors.push(`${source.name}: ${e.name==='AbortError'?'TIMEOUT':e.message}`);throw e}
-  })).catch(()=>null);
-  if(primary)return primary;
-  // LOL remains an emergency fallback, with the same hard timeout.
-  try{return await trySource(SOURCES[2],lat,lon,dist)}catch(e){errors.push(`${SOURCES[2].name}: ${e.name==='AbortError'?'TIMEOUT':e.message}`)}
-  return {ok:false,now:Date.now(),aircraft:[],errors};
-}
+async function trySource(source,lat,lon,dist){const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),PROVIDER_TIMEOUT_MS);try{const r=await fetch(source.url(lat,lon,dist),{headers:{Accept:'application/json'},signal:controller.signal});if(!r.ok)throw new Error(`${r.status}`);const j=await r.json();return {ok:true,build:BUILD,provider:source.name,now:Date.now(),aircraft:j.ac||j.aircraft||[]}}finally{clearTimeout(timer)}}
+async function getTraffic(lat,lon,dist){const errors=[];const primary=await Promise.any(SOURCES.slice(0,2).map(async source=>{try{return await trySource(source,lat,lon,dist)}catch(e){errors.push(`${source.name}: ${e.name==='AbortError'?'TIMEOUT':e.message}`);throw e}})).catch(()=>null);if(primary)return primary;try{return await trySource(SOURCES[2],lat,lon,dist)}catch(e){errors.push(`${SOURCES[2].name}: ${e.name==='AbortError'?'TIMEOUT':e.message}`)}return {ok:false,build:BUILD,now:Date.now(),aircraft:[],errors}}
 const json=(data,status=200,cache='no-store')=>new Response(JSON.stringify(data),{status,headers:{'content-type':'application/json; charset=utf-8','cache-control':cache,'access-control-allow-origin':'*'}});
-export default {
-  async fetch(request,env,ctx){
-    const u=new URL(request.url);
-    if(u.pathname==='/api/health')return json({ok:true,service:'DOAA',time:new Date().toISOString()});
-    if(u.pathname==='/api/traffic'){
-      // Public acquisition is centred on CYOW. Home geometry belongs on the client, not in this public Worker.
-      const lat=45.3225,lon=-75.6692,dist=clamp(Number(u.searchParams.get('dist')||45),1,80);
-      const cache=await caches.open('doaa-traffic-v2');
-      const key=new Request(`${u.origin}/__cache/traffic?dist=${Math.round(dist)}`);
-      const hit=await cache.match(key);
-      if(hit)return hit;
-      const data=await getTraffic(lat,lon,dist);
-      const response=json(data,data.ok?200:502,data.ok?`public, max-age=${CACHE_SECONDS}`:'no-store');
-      if(data.ok)ctx.waitUntil(cache.put(key,response.clone()));
-      return response;
-    }
-    return env.ASSETS.fetch(request);
-  },
-  async scheduled(controller,env,ctx){
-    ctx.waitUntil(getTraffic(45.3225,-75.6692,45));
-  }
-};
+export default {async fetch(request,env,ctx){const u=new URL(request.url);if(u.pathname==='/api/health')return json({ok:true,service:'DOAA',build:BUILD,time:new Date().toISOString()});if(u.pathname==='/api/traffic'){const lat=45.3225,lon=-75.6692,dist=clamp(Number(u.searchParams.get('dist')||45),1,80);const cache=await caches.open('doaa-traffic-v3');const key=new Request(`${u.origin}/__cache/traffic?dist=${Math.round(dist)}`);const hit=await cache.match(key);if(hit)return hit;const data=await getTraffic(lat,lon,dist);const response=json(data,data.ok?200:502,data.ok?`public, max-age=${CACHE_SECONDS}`:'no-store');if(data.ok)ctx.waitUntil(cache.put(key,response.clone()));return response}return env.ASSETS.fetch(request)},async scheduled(controller,env,ctx){ctx.waitUntil(getTraffic(45.3225,-75.6692,45))}};
