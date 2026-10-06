@@ -532,9 +532,9 @@ Acquisition catchment and viewport are distinct concepts.
 
 ## 14. Persistence / D1
 
-**D1 has always been part of the intended architecture but is not yet implemented.**
+**D1 is implemented as DOAA's durable knowledge and encounter layer.**
 
-Current encounter/track persistence is not canonical durable storage. Render process memory can be lost on restart/redeploy/cold replacement. Worker-side memory/cache is also not a substitute for durable historical storage.
+D1 currently persists entities, identifiers, claims/evidence, leads, encounters and timestamped observations. Render/Worker process memory remains ephemeral and must not be mistaken for canonical history.
 
 D1 should become DOAA's canonical memory for the domain spine:
 
@@ -554,6 +554,25 @@ Two tempos:
 - **MEMORY:** scheduled snapshots when nobody is watching.
 
 ---
+
+
+### Reconciled dossier rule
+
+The target information path is:
+
+`observe → acquire → investigate → reconcile → dossier → Rack + Investigator`
+
+D1 is consulted before external acquisition. External sources should be queried for missing, stale or lead-driven knowledge, and supported results must be written back to D1. The browser should progressively become a renderer of reconciled dossiers rather than the long-term orchestration layer.
+
+Physical airframe identity is ICAO24-first when available. Registration is a time-varying identifier and must not be allowed to silently redefine a physical airframe.
+
+### OBV
+
+**OBV** is DOAA's interpreted observation layer: a relationship or state DOAA has noticed from observations, encounters, flights or supported external knowledge. Raw timestamped ADS-B rows remain observations/track evidence and are not themselves OBVs.
+
+OBV may express deterministic relationships (same airframe/new flight, turnaround, first/repeat encounter) or explicitly uncertain interpretations (possible positioning, medical, government or other mission context). Inference can create an investigation lead but may not silently become fact.
+
+Rack epistemic shorthand: amber means a surfaced possibility; green means the claim has crossed DOAA's acceptance threshold. This shorthand belongs to Rack, not Sky. Sky remains spatially disciplined.
 
 ## 15. Tracks / Encounter Invariants
 
@@ -644,19 +663,19 @@ Visible recent encounter tracks should eventually remain tappable even after the
 
 ---
 
-## 18. Rack — Pending Content Design
+## 18. Rack — Canonical Content and Interaction
 
-Rack row content is not finalized.
+Rack is the high-density operational index to Sky and a read-only navigation surface. A strip is one touch target: tapping it opens the represented object in Investigator. There is no cell tapping or touch-and-hold interaction in Rack.
 
-Rack should not merely duplicate raw telemetry already available in drilldown. Its role is to help David understand **what each contact is doing and why it might matter**, using flight-progress-strip grammar.
+Rack strips should progressively project the reconciled dossier: operator logo (or a neutral aircraft icon occupying the same fixed slot), flight/callsign, operator, route, model/type and registration, altitude/vertical state/groundspeed, operational timing/state and compact DOAA signals. The target grammar is approximately two dense lines rather than raw telemetry-only rows.
 
-Pending discussion should decide the row hierarchy and which fields belong at Rack level versus Contact/Airframe drilldown.
+A quiet lower-right metadata rail may indicate: exact-airframe photo, prior DOAA encounter history, favourite match and unusual current state. OBV is distinct from unusual state: OBV means DOAA noticed an interesting relationship/fact; unusual state means current operation is anomalous/noteworthy.
 
-Rack must remain collapsible. LIVE VIEW/control geometry must respond to its actual state.
+Favourites are explicit watched subjects, not behavioral personalization. A favourite may target a physical airframe, model, manufacturer, carrier/operator, route or other stable subject. Creation/removal occurs by touch-and-hold on a semantic value in Investigator, not in Rack. Rack only reflects a favourite match.
 
-In Replay, Rack additionally becomes the multi-encounter selection instrument.
+Rack header includes a right-aligned universal search control. Search replaces nearby rows with results from everything DOAA knows, including ICAO24, registration, callsign/flight, model/type, manufacturer, operator/carrier and other stored claims. Clearing search restores Nearby Aircraft. Search is D1-backed, not limited to currently visible traffic.
 
----
+In Replay, Rack remains the multi-encounter selection instrument.
 
 ## 19. Flight Board — Accepted, Not Yet Implemented
 
@@ -721,7 +740,7 @@ Before another broad implementation pass, discussion is still expected around:
 3. **Drilldown:** determine progressive layout and exact fields at Contact, Encounter, Airframe, biography, DOAA History and provenance levels.
 4. **LOOK:** define attention scoring/signals and presentation sufficiently to implement without opaque magic.
 5. **Airport cards:** define the operationally useful hierarchy.
-6. **D1 schema/persistence:** implement the accepted canonical memory spine before pretending Replay/history are durable.
+6. **D1 evolution:** preserve the implemented memory spine while adding reconciled dossiers, interpreted OBVs, temporal identity/relationship handling and search/favourite subjects.
 
 The outstanding repair batch in Section 17 remains active while these product discussions continue.
 
