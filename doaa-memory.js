@@ -59,6 +59,25 @@ export async function handleMemory(request,env){
     const recent=await env.DB.prepare(`SELECT id,first_seen_at,last_seen_at,callsign,type_code,min_altitude_ft,max_altitude_ft,observation_count FROM encounters WHERE entity_id=? ORDER BY last_seen_at DESC LIMIT 12`).bind(hit.id).all();
     return json({ok:true,entity_id:hit.id,...s,recent:recent.results||[]});
   }
+  if(u.pathname==='/memory/search'&&request.method==='GET'){
+    const q=norm(u.searchParams.get('q')||'');if(!q)return json({ok:true,results:[]});
+    const like='%'+q+'%';
+    const rows=await env.DB.prepare(`SELECT e.id,e.kind,e.canonical_key,
+      MAX(CASE WHEN i.scheme='icao24' THEN i.value END) icao24,
+      MAX(CASE WHEN i.scheme='registration' THEN i.value END) registration,
+      MAX(CASE WHEN i.scheme='icao_type' THEN i.value END) icao_type,
+      MAX(CASE WHEN c.predicate='callsign' THEN c.value_text END) callsign,
+      MAX(CASE WHEN c.predicate='manufacturer' THEN c.value_text END) manufacturer,
+      MAX(CASE WHEN c.predicate='model' THEN c.value_text END) model,
+      MAX(CASE WHEN c.predicate='operator' THEN c.value_text END) operator,
+      MAX(CASE WHEN c.predicate='photo_specificity' THEN c.value_text END) photo_specificity,
+      (SELECT COUNT(*) FROM encounters x WHERE x.entity_id=e.id) encounter_count
+      FROM entities e LEFT JOIN identifiers i ON i.entity_id=e.id LEFT JOIN claims c ON c.entity_id=e.id
+      WHERE UPPER(e.canonical_key) LIKE ? OR EXISTS(SELECT 1 FROM identifiers si WHERE si.entity_id=e.id AND UPPER(si.value) LIKE ?)
+         OR EXISTS(SELECT 1 FROM claims sc WHERE sc.entity_id=e.id AND UPPER(sc.value_text) LIKE ?)
+      GROUP BY e.id ORDER BY e.updated_at DESC LIMIT 30`).bind(like,like,like).all();
+    return json({ok:true,results:rows.results||[]});
+  }
   if(u.pathname==='/memory/ingest'&&request.method==='POST'){
     const p=await request.json(),kind=p.entity?.kind||'airframe',key=p.entity?.key||p.identifiers?.icao24||p.identifiers?.registration;
     if(!key)return json({ok:false,error:'entity key required'},400);
