@@ -1,0 +1,725 @@
+# DOAA — Canonical Product Specification & Development State
+
+**Status:** Canonical working specification  
+**Product:** David's Ottawa Aviation App (DOAA)  
+**Design target:** David, an aviation nerd  
+**Build constraint:** Conceived, written, and deployed in one day. At the end of the build it should be considered complete; later additions should arise from actual use, not a speculative roadmap.
+
+This document is the ground truth for DOAA product intent, architecture, interaction rules, accepted decisions, current implementation state, and outstanding work. Update it when decisions change. Do not let implementation convenience silently redefine the product.
+
+---
+
+## 1. North Star
+
+> **Open it and understand Ottawa's sky. Notice what's interesting. Understand what's affecting it.**
+
+DOAA is not a flight tracker, weather app, NOTAM reader, aircraft database, and analytics package placed beside one another. Its unit of design is **the Ottawa aviation picture**.
+
+"David's" describes the design target, not a recommendation algorithm. **The app learns the sky, not David.** Ignoring something repeatedly must not train DOAA to stop showing objectively noteworthy aviation.
+
+Surface presentation should remain quiet. Drilldown can become extremely deep.
+
+> **Quiet at the surface, gloriously nerdy underneath.**
+
+---
+
+## 2. Product Grammar
+
+DOAA borrows established interaction grammar and aviation semantics rather than inventing replacements.
+
+- **Semantics:** aviation.
+- **Interaction grammar:** established HCI and aviation-display conventions.
+- **Expression:** DOAA.
+
+> **Grammar is inherited. Voice is ours.**
+
+Do not dumb down standard aviation terminology when it can be taught in place. Tap an object to learn about that specific object. Use **ⓘ** to explain what that kind of thing or notation means.
+
+No separate tutorial or "Learn Aviation" section is required. Education is contextual.
+
+Every visible behavior should be traceable to aviation state, elapsed time, or human interaction. Avoid decorative randomness.
+
+---
+
+## 3. Primary Information Modes
+
+### SKY
+
+**Question:** Where is everything?
+
+Sky is spatial truth and the primary/default DOAA surface. It shows live aircraft, trajectories, airports, operationally meaningful geographic context, and attention/visibility signals.
+
+Sky also has temporal modes:
+
+- **LIVE:** the current aviation picture.
+- **REPLAY:** Sky with its clock detached from NOW.
+
+### BOARD — Flight Board
+
+**Question:** What's coming and going?
+
+Board is the airport-centric inverse of Sky. It presents arrivals and departures for the selected/displayed airport using familiar airport/FIDS grammar, enriched with aviation-nerd information when resolved.
+
+Candidate fields include:
+
+- scheduled / estimated / actual time
+- arrival or departure state
+- origin / destination
+- carrier
+- flight number
+- callsign
+- registration/tail
+- equipment/type
+- runway when known or defensibly inferred
+- gate where available
+- live-acquired state
+
+Board and Sky are bidirectionally linked. Tapping a live/resolved flight on Board should take David to that aircraft in Sky. An airport in Sky can open its Board.
+
+### OPS
+
+**Question:** What is the airport doing?
+
+OPS synthesizes airport operation rather than merely listing raw data. Potential contents include runway/configuration, arrival/departure streams, holds, weather effects, traffic density, relevant NOTAM constraints, ground stops, and other operational conditions.
+
+Inferences must be labeled honestly. Co-present evidence rather than inventing causality.
+
+### PATTERNS
+
+**Question:** What normally happens here?
+
+Patterns is historical/local intelligence derived from accumulated observations and encounters. It may show traffic corridors, runway utilization, recurrent flights, aircraft/type/operator frequency, time-of-day behavior, local rarity, typical altitude bands, and historical traffic-density geometry.
+
+Patterns becomes useful because DOAA remembers Ottawa, not because it profiles David.
+
+### RACK
+
+Rack is **not currently considered a separate primary view**. It is a persistent/collapsible Sky instrument: a textual/flight-strip representation of the contacts represented spatially on Sky.
+
+In LIVE it summarizes current contacts. In REPLAY it also becomes the primary multi-selection surface for encounters.
+
+### WINDOW / visibility
+
+Window should not be a separate primary view. Balcony visibility, `VISIBLE`, `LOOK · BALCONY`, bearing/elevation and sightline geometry belong naturally to Sky.
+
+---
+
+## 4. Canonical Domain Model
+
+The interface views are ways of looking at the aviation picture. The underlying objects are what DOAA actually knows.
+
+### Physical Airframe
+
+Persistent physical aircraft identity. It may contain:
+
+- ICAO hex
+- current registration/tail
+- registration country
+- manufacturer
+- exact model/variant
+- ICAO type
+- serial/MSN / line number where available
+- manufacture date
+- first-flight date
+- delivery date
+- engine variant
+- configuration where available
+- fleet number
+- current active/stored/retired state where reliable
+
+Airframe biography must be able to go substantially deeper than ordinary flight-tracker identification.
+
+### Identity and commercial relationships
+
+Do **not** flatten these into a single "airline" field. They are distinct relationships and may disagree:
+
+- registered owner
+- beneficial owner where known
+- lessor
+- operator
+- AOC/operator relationship
+- marketing carrier
+- operating carrier
+- flight
+- wet lease / ACMI relationship
+- fleet assignment
+
+Where obtainable, retain acquisition/delivery dates, previous owners/operators/lessors, previous registrations, and transfer history.
+
+### Contact
+
+The current observed state of an aircraft:
+
+- position
+- altitude
+- track/heading as supplied
+- groundspeed
+- vertical rate
+- callsign
+- squawk
+- timestamp
+- current derived state such as climbing/descending/level, approaching/receding, likely flight phase
+
+### Encounter
+
+A particular appearance of an airframe in DOAA's observed aviation picture. An encounter belongs to the aircraft, not to the browser session or app process.
+
+An encounter may contain:
+
+- first/last observation time
+- timestamped observations
+- trajectory
+- first observed position/range
+- closest approach
+- dwell time
+- arrival/departure/overflight classification
+- likely airports
+- callsign/flight identity during encounter
+- runway inference where defensible
+- holding/orbit behavior
+- notable events
+
+Browser reload, device restart, frontend restart, and backend redeploy must not conceptually create a new encounter.
+
+### Observation
+
+Timestamped factual sample underpinning an encounter. Preserve enough source data to reconstruct trajectories and Replay without inventing positions.
+
+### Flight
+
+Scheduled/operated flight identity used by Board and reconciled against observed contacts/encounters. Scheduled flight and physical airframe are separate objects because tail assignment can change and operating/marketing relationships can differ.
+
+### Airport
+
+Persistent airport object with identity, geometry, runway data, current conditions and operational state/inferences.
+
+### Provenance
+
+Identity, biography, flight reconciliation and inference fields should retain provenance and confidence where applicable. DOAA must distinguish:
+
+- **observed**
+- **externally resolved**
+- **remembered by DOAA**
+- **inferred by DOAA**
+
+Deep drilldown should make source/provenance inspectable. `Unknown` is preferable to unsupported certainty.
+
+---
+
+## 5. Drilldown Hierarchy
+
+DOAA needs progressive disclosure rather than one overloaded popup.
+
+### Contact level — "What am I looking at right now?"
+
+First tap should prioritize:
+
+- callsign / flight
+- operator/carrier where resolved
+- type and tail
+- altitude / vertical state / groundspeed
+- likely current phase / arrival / departure
+- route/destination where resolved
+- current encounter
+- concise remembered signal such as `SEEN HERE 17×`
+
+### Airframe level — "What is this aircraft?"
+
+Deeper drilldown exposes physical identity, manufacture, registration, owner/operator/lessor relationships, fleet identity, and provenance.
+
+### Biography/history level
+
+David should be able to pursue:
+
+- ownership history
+- operator history
+- registration history
+- lessor/lease status
+- wet lease / ACMI relationships
+- acquisition/delivery dates
+- previous owner/operator and transfer history
+- manufacture/first-flight/delivery dates
+- MSN/line number
+- engines
+- configuration changes where obtainable
+- notable service history where supported
+
+### DOAA History
+
+Separate external aircraft biography from DOAA's own relationship with the airframe:
+
+- first Ottawa sighting
+- last sighting
+- encounter count
+- arrivals / departures / overflights
+- recurring routes/callsigns
+- typical local behavior
+- previous encounter trajectories
+- locally unusual appearances
+- Replay entry points
+
+### Airport drilldown
+
+Current raw METAR-only-style airport card is insufficient as the final information hierarchy. Airport drilldown should eventually answer the operational picture first, while retaining raw aviation data beneath it. Candidate hierarchy:
+
+- flight category
+- wind
+- likely runway/configuration, clearly labeled as inferred when appropriate
+- arrival/departure traffic picture
+- visibility/ceiling when operationally meaningful
+- relevant operational constraints / NOTAMs when available
+- raw METAR
+- contextual ⓘ education
+
+Exact final airport-card content remains to be decided before implementation.
+
+---
+
+## 6. LOOK — Explainable Attention
+
+LOOK is not a separate view and not a personalization/recommendation engine. It is DOAA's explainable attention layer: **this is worth noticing now.**
+
+Possible signals include:
+
+- locally rare airframe/type/operator
+- unusual military/government visitor
+- exceptionally large/unusual aircraft
+- unusual route or traffic pattern
+- holding/orbit behavior
+- exceptional squawk/state
+- operationally interesting Ornge/medical movement
+- unusually low/close contact
+- visible from the balcony now
+- familiar airframe behaving unusually
+- unusual ownership/operator/lease identity, such as an ACMI aircraft operating a familiar flight
+- first appearance under a new registration
+- broader operational event affecting the Ottawa picture
+
+Signals can combine. Interestingness is not synonymous with global rarity.
+
+DOAA should be able to answer **why** something earned attention.
+
+Example grammar:
+
+`LOOK · BALCONY`
+
+then aircraft identity and useful bearing/elevation/time-to-view information.
+
+A noteworthy contact may use restrained amber attention. Emergency/exceptional states reserve red.
+
+Ignoring/dismissing a LOOK event does not train DOAA to suppress similar future events.
+
+---
+
+## 7. Home Visibility / Balcony
+
+The primary day-one observation position is **Balcony**. Living-room visibility is opportunistic and should not be treated as a common traffic view without evidence.
+
+The balcony is modeled as an angular viewing sector minus a significant tower occlusion. Trees/distant buildings matter mainly at low elevation.
+
+Exact home coordinates are private local configuration. They must not be hard-coded into public source or unnecessarily sent to external services.
+
+DOAA can derive:
+
+- distance/bearing from observation point
+- approximate elevation
+- geometric visibility
+- balcony sector inclusion
+- tower occlusion
+- useful visible duration
+
+`VISIBLE` means geometrically viewable. `LOOK` requires stronger interestingness/usefulness.
+
+Human-place-first grammar is preferred, e.g. `LOOK · BALCONY`, followed by bearing/elevation/time.
+
+Sightline calibration work established that the earlier phone elevation formula was unreliable; do not treat those erroneous elevation traces as canonical geometry.
+
+---
+
+## 8. Replay
+
+> **Replay is SKY with its clock detached from NOW.**
+
+Replay is a mode of Sky, not a separate primary view.
+
+### Single encounter
+
+Entry points include current contact card and DOAA History. Replay uses actual timestamped observations. The trail grows from recorded data. Do not fabricate intermediate/future route geometry.
+
+Candidate playback speeds: `1× / 5× / 15× / 30× / 60×`.
+
+### Multi-contact Replay
+
+Multi-Replay belongs to Sky because Sky is where multiple encounters coexist.
+
+When Sky enters Replay mode, Rack becomes an additive encounter-selection surface. Normal tap can retain drilldown semantics; established multi-select grammar such as long-press/selection mode may be used where appropriate.
+
+Two related states:
+
+- **Selected Replay:** emphasize a chosen set of encounters.
+- **Replay Sky:** reconstruct all recorded traffic available for the selected interval.
+
+Conceptually, `Replay Sky = selection: ALL`.
+
+An encounter replay may offer `+ SURROUNDING TRAFFIC` to expand into the contemporaneous recorded aviation picture.
+
+Persistent timestamped observations are required for meaningful Replay.
+
+---
+
+## 9. Data Extraction and Derived Knowledge
+
+> **Acquire sparingly. Extract completely.**
+
+Once data crosses into DOAA, derive as much durable meaning from it as is defensible.
+
+From ADS-B observations derive, where possible:
+
+- distance/bearing from relevant reference
+- approaching/receding
+- climbing/descending/level
+- rough flight phase
+- trajectory
+- holding/orbit-like behavior
+- emergency squawk
+- first/last observed
+- dwell time
+- behavior changes
+
+Across encounters derive:
+
+- first/last DOAA sighting
+- sighting count
+- typicality by airframe/type/operator
+- recurring callsigns/flights
+- usual corridors
+- normal altitude bands
+- local rarity
+
+Relationships can derive:
+
+- likely arrival/departure from track + airport geometry + altitude trend
+- holding from repeated trajectory geometry
+- runway-in-use confidence from actual traffic geometry + wind
+- operational context from traffic + weather + NOTAM/state
+
+Do not overclaim causal relationships.
+
+---
+
+## 10. Weather, NOTAMs and Aviation Language
+
+Weather and NOTAMs are explanatory context, not standalone mini-apps.
+
+Use real aviation language and notation. Raw METAR remains available. Explain terminology behind ⓘ rather than replacing standard notation with generic prose.
+
+NOTAMs should be ruthlessly filtered to operational relevance when implemented.
+
+Weather should emphasize aviation-significant information.
+
+---
+
+## 11. Visual System
+
+The concept render is treated as a visual specification, not loose inspiration.
+
+Core visual rules:
+
+- near-black navy ground, not pure black
+- recognizable Ottawa geography at low contrast
+- cyan primarily belongs to map/instrument substrate
+- hydrography can carry restrained cyan prominence
+- ordinary live aircraft soft white / ice-grey
+- selected aircraft crisp luminous white
+- tracks white near the aircraft and receding toward blue-grey/cyan substrate with age
+- amber means operational attention/interesting, not automatically danger
+- red reserved for genuine exceptional/emergency/data-failure states
+- restrained functional glow
+- sparse intentional geographic labels
+- major transport geometry only where useful
+- small radii/hard geometry/thin rules/alignment rather than generic rounded-card UI
+- clean grotesk/sans UI face plus mono/semi-mono technical face
+
+> **The map is not the interface background. The map is the darkness from which the aviation picture emerges.**
+
+Time has visual depth: now is brightest, recent recedes, known/history is dimmer.
+
+> **Colour tells you what kind of information something is; luminance tells you how much attention it deserves.**
+
+Selection should be expressed as attention: selected aircraft/track comes forward while unrelated traffic recedes.
+
+The current OSM raster is a functional fallback, not the final cartographic target.
+
+---
+
+## 12. Ambient Sky
+
+DOAA is intended to run on old tablets/phones as an ambient always-on instrument.
+
+When dormant, Sky should take over almost the entire display. UI/text disappears unless worth saying. Aircraft simplify, trajectories recede, and actual aviation state creates the composition.
+
+This is not a dashboard plus screensaver. LIVE and ambient are two states of the same instrument.
+
+Rules:
+
+- no ornamental animation
+- sparse sky remains sparse
+- current traffic gently influences viewport composition
+- YOW is gravitational centre, not necessarily geometric centre
+- movement is very slow and bounded
+- if the user notices "the map is moving," it is overdone
+- OLED protection should arise naturally from dark background, moving content, decaying trails and disappearing UI
+- do not add clock/date/weather merely because ambient displays often do
+
+---
+
+## 13. Acquisition / Hosting Architecture
+
+Current intended path:
+
+`ADS-B provider → Render acquisition relay → Cloudflare Worker/cache → frontend`
+
+GitHub is source control. Render exists because ADS-B providers blocked Cloudflare-origin acquisition. Cloudflare Worker hosts/serves API/UI behavior. Tablet is the ambient physical display.
+
+ADS-B provider behavior observed during development:
+
+- ADSB.lol: Cloudflare-origin requests rate-limited
+- ADSB.fi: Cloudflare-origin requests forbidden; v3 works through Render relay
+- ADSB One: Cloudflare-origin requests forbidden
+
+The Render relay is therefore current acquisition plumbing rather than product surface.
+
+### Live acquisition invariant
+
+**The acquisition envelope follows the visible Sky, not YOW.**
+
+Live View is a special YOW-centered configured catchment. Manual pan/zoom acquires the actual visible viewport, tiled into provider-compatible point/radius requests as needed. Overlapping cells are deduplicated.
+
+If Sky shows Montréal, it should be capable of showing Montréal traffic rather than silently retaining an Ottawa-only worldview.
+
+### Status truthfulness
+
+In Live View:
+
+`N AIRBORNE / YOW <configured catchment>` in cyan.
+
+After manual pan/zoom:
+
+`N AIRBORNE / VIEW <extent>` in purple.
+
+`N AIRBORNE` should represent aircraft actually visible in the current viewport.
+
+Acquisition catchment and viewport are distinct concepts.
+
+---
+
+## 14. Persistence / D1
+
+**D1 has always been part of the intended architecture but is not yet implemented.**
+
+Current encounter/track persistence is not canonical durable storage. Render process memory can be lost on restart/redeploy/cold replacement. Worker-side memory/cache is also not a substitute for durable historical storage.
+
+D1 should become DOAA's canonical memory for the domain spine:
+
+`Airframe → Encounter → Observations`
+
+with associated Flight, Airport, identity/provenance and derived-local-knowledge records as appropriate.
+
+Do not store every high-frequency raw packet forever merely because it exists. Preserve enough timestamped observation fidelity for truthful trajectories/Replay, while extracting durable encounter/local knowledge. High-resolution raw detail can age/compact where appropriate without destroying the historical facts Replay and Patterns need.
+
+A small scheduled collector is desirable for **always-on memory** even when no tablet/browser is open:
+
+`periodically acquire Ottawa picture → derive observations/encounters → persist → sleep`
+
+Two tempos:
+
+- **LIVE:** frequent updates while UI is active.
+- **MEMORY:** scheduled snapshots when nobody is watching.
+
+---
+
+## 15. Tracks / Encounter Invariants
+
+> **The track belongs to the aircraft, not the app.**
+
+The past does not disappear; it recedes.
+
+Track rendering principles:
+
+- preserve encounter history rather than resetting on browser/app state
+- no interpolation that invents positions
+- current/recent trajectory strongest
+- older tail recedes in luminance
+- selected encounter can bring its full retained trajectory forward
+- holding should remain visually legible as a racetrack/orbit
+- scale-aware rendering should prevent distant/zoomed views from becoming spaghetti
+
+Current target retention from the prototype has been approximately 90 minutes for current encounters and 30 minutes for recently absent contacts, but durable D1 history should supersede ephemeral retention as the source of truth.
+
+---
+
+## 16. Current Implemented State
+
+At the time this document was created, the observed live build was approximately:
+
+- **UI:** `sky-7.4.1`
+- **API:** `encounter-tracks-6.6`
+- ADSB.FI data through Render relay
+- native frontend rather than Worker runtime UI injection
+- OSM raster fallback map
+- live aircraft
+- current tracks
+- Rack with pull/collapse behavior
+- airport targets/cards, including CYOW METAR display
+- viewport/multi-cell acquisition logic exists
+- manual-view `VIEW` status exists
+- Live View button exists
+
+Known-good older frontend reference: `sky-7.3-known-good`.
+
+Do not assume GitHub commits automatically deploy Render. Verify deployments when backend changes matter. Minimize Render redeploys because they can erase process-memory encounters.
+
+---
+
+## 17. Outstanding Repair Batch
+
+These are accepted defects/regressions, not speculative features.
+
+### Restore catchment selection
+
+The native 7.4 rewrite dropped the prior tappable catchment selector. Restore selectable steps:
+
+`10 / 20 / 30 / 40 / 45 / 50 / 60 / 70 / 80 NM`
+
+Selecting a catchment should set the configured Live View radius and return/reset to Live View. Live View should restore the selected catchment.
+
+### Progressive, partial-failure-tolerant viewport acquisition
+
+Current multi-cell acquisition can treat one failed/slow cell as failure of the whole view. Repair so that:
+
+- existing useful picture is not immediately blanked while a new viewport acquires
+- acquisition state is explicit (`ACQUIRING VIEW…` or equivalent)
+- successful cells populate even if another cell fails
+- partial success is represented honestly
+- `DATA LINK UNAVAILABLE` appears only when the required acquisition genuinely provides no useful data
+- stale/previous data is not presented as if it were authoritative current coverage
+- late responses from an older viewport cannot overwrite a newer viewport
+- pan/zoom acquisition is debounced
+- concurrency is bounded if necessary to protect provider/relay stability
+
+`Promise.allSettled` or equivalent per-cell handling is preferable to all-or-nothing `Promise.all` behavior.
+
+### Track temporal fade
+
+Tracks currently need stronger fading toward the older tail. Preserve history; change luminance/alpha, not historical truth. Recent path near aircraft remains crisp; older trajectory should recede faster.
+
+### LIVE VIEW positioning
+
+When Rack collapses, **LIVE VIEW** currently remains stuck at the expanded-Rack vertical position. Its bottom offset (and related attribution/control positioning where applicable) should follow the Rack's actual current top edge and drop toward the bottom with the collapsed Rack.
+
+### Airport card hierarchy
+
+Current airport card proves drilldown mechanics but is not yet considered product-complete. Discuss/finalize David-useful operational hierarchy before adding more fields.
+
+### Track hit-testing for absent encounters
+
+Visible recent encounter tracks should eventually remain tappable even after the current contact disappears. Current implementation may require a live aircraft record to resolve the track selection. Preserve enough last-known encounter/airframe metadata to open meaningful drilldown from historical/recent tracks.
+
+---
+
+## 18. Rack — Pending Content Design
+
+Rack row content is not finalized.
+
+Rack should not merely duplicate raw telemetry already available in drilldown. Its role is to help David understand **what each contact is doing and why it might matter**, using flight-progress-strip grammar.
+
+Pending discussion should decide the row hierarchy and which fields belong at Rack level versus Contact/Airframe drilldown.
+
+Rack must remain collapsible. LIVE VIEW/control geometry must respond to its actual state.
+
+In Replay, Rack additionally becomes the multi-encounter selection instrument.
+
+---
+
+## 19. Flight Board — Accepted, Not Yet Implemented
+
+Board is an accepted primary view.
+
+It should support selecting/displaying an airport's arrivals and departures, with conventional board grammar plus resolved aviation detail. A Board flight that is currently acquired should connect directly to the physical contact in Sky.
+
+This requires a Flight data source and reconciliation layer that has not yet been selected/implemented. Do not fabricate schedule/assignment information from ADS-B alone.
+
+---
+
+## 20. OPS / PATTERNS — Accepted Concepts, Not Yet Implemented
+
+OPS and Patterns currently earn conceptual existence but exact screen design/content remains open.
+
+Do not implement them merely to fill navigation. Each should exist only insofar as it answers its distinct question better than Sky/Board/drilldown can.
+
+---
+
+## 21. Comms
+
+Ordinary civil aviation around Ottawa primarily uses VHF AM aviation band. A phone/laptop cannot become a general aviation-band SDR without suitable RF hardware.
+
+Live ATC transcription is not a day-one dependency. No reliable clean Ottawa text transcript source has been established. Published frequencies can be useful contextual data. Live audio/transcription should only be added if a legitimate, technically clean source is available and Canadian legal/rebroadcast constraints are respected.
+
+DOAA should not become a scanner app.
+
+---
+
+## 22. Privacy / Repository History
+
+Current frontend should not expose a HOME marker or hard-code exact home coordinates. Acquisition can be centered on public aviation geometry such as YOW or the visible viewport.
+
+**Known unresolved issue:** older Git history contains exact/near-exact home coordinates from earlier prototypes. Cleaning the current file does not clean Git history. This remains a repository/privacy task. Options include making source private, rewriting history, or moving to a fresh clean repository. Do not claim historical exposure has been removed until it actually has.
+
+Never repeat exact home coordinates in documentation or UI.
+
+---
+
+## 23. One-Day Discipline
+
+DOAA is not a roadmap product. Build the coherent instrument David can use today.
+
+Accepted principles:
+
+- technical debt is acceptable when bounded and understood
+- architectural mistakes that destroy product truth are not
+- avoid speculative feature accumulation
+- later additions should arise from actual David usage (`I wish it did X`)
+- do not sacrifice coherent data capture now if doing so would make accepted core functions such as history, local knowledge, or Replay impossible
+
+When choosing between polish and preserving the correct domain model, preserve the model.
+
+---
+
+## 24. Current Decision Queue
+
+Before another broad implementation pass, discussion is still expected around:
+
+1. **Other views / navigation:** Board accepted; OPS and Patterns need exact shape.
+2. **Rack rows:** determine information hierarchy and flight-strip content.
+3. **Drilldown:** determine progressive layout and exact fields at Contact, Encounter, Airframe, biography, DOAA History and provenance levels.
+4. **LOOK:** define attention scoring/signals and presentation sufficiently to implement without opaque magic.
+5. **Airport cards:** define the operationally useful hierarchy.
+6. **D1 schema/persistence:** implement the accepted canonical memory spine before pretending Replay/history are durable.
+
+The outstanding repair batch in Section 17 remains active while these product discussions continue.
+
+---
+
+## 25. Build Test
+
+For every addition, ask:
+
+1. Does it help David understand the aviation picture?
+2. Is this aviation truth, DOAA inference, or decoration?
+3. Are we solving expression, or unnecessarily reinventing interaction grammar?
+4. Does the information belong on the surface, in Rack, or deeper in drilldown?
+5. Are we preserving provenance and uncertainty?
+6. Are we learning the sky rather than profiling David?
+7. Does this preserve the one-day product's coherence?
+
+If the answer is unclear, do not add another widget merely because the data exists.
