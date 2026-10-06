@@ -206,11 +206,21 @@ Deep drilldown should make source/provenance inspectable. `Unknown` is preferabl
 
 ---
 
-## 5. Drilldown Hierarchy
+## 5. Investigator — Canonical Drilldown
+
+The Investigator is one stable physical instrument with invariant primary navigation:
+
+`CONTACT · FLIGHT · AIRCRAFT · MEDIA · ENCOUNTERS`
+
+The current surface is highlighted in purple; the other surfaces remain cyan and in the same positions. Biography and provenance are not permanent primary tabs. Their information is retained and surfaced contextually under Aircraft/Encounters and where individual facts require provenance.
+
+Semantic values inside Investigator are interactive. **Tap a value to follow/drill/search that object. Touch-and-hold a durable subject to favourite/unfavourite it.** This cell-level interaction belongs to Investigator only, never Rack.
+
+### Contact level
 
 DOAA needs progressive disclosure rather than one overloaded popup.
 
-### Contact level — "What am I looking at right now?"
+**Question:** What am I looking at right now?
 
 First tap should prioritize:
 
@@ -223,11 +233,19 @@ First tap should prioritize:
 - current encounter
 - concise remembered signal such as `SEEN HERE 17×`
 
-### Airframe level — "What is this aircraft?"
+### Flight
+
+**Question:** What journey/service is this contact operating?
+
+Prioritize route, operating/marketing flight identity, operator/carrier, schedule, actual/estimated times, delay/status, codeshare and operational context. Do not use ambiguous “flight time” wording where scheduled/actual/elapsed is meant.
+
+### Aircraft
+
+**Question:** What is this machine?
 
 Deeper drilldown exposes physical identity, manufacture, registration, owner/operator/lessor relationships, fleet identity, and provenance.
 
-### Biography/history level
+### Contextual biography / provenance
 
 David should be able to pursue:
 
@@ -244,7 +262,7 @@ David should be able to pursue:
 - configuration changes where obtainable
 - notable service history where supported
 
-### DOAA History
+### Encounters
 
 Separate external aircraft biography from DOAA's own relationship with the airframe:
 
@@ -594,26 +612,61 @@ Current target retention from the prototype has been approximately 90 minutes fo
 
 ---
 
-## 16. Current Implemented State
+## 16. Current Implemented / Committed State
 
-At the time this document was created, the observed live build was approximately:
+### Durable memory and encounters
 
-- **UI:** `sky-7.4.1`
-- **API:** `encounter-tracks-6.6`
-- ADSB.FI data through Render relay
-- native frontend rather than Worker runtime UI injection
-- OSM raster fallback map
-- live aircraft
-- current tracks
-- Rack with pull/collapse behavior
-- airport targets/cards, including CYOW METAR display
-- viewport/multi-cell acquisition logic exists
-- manual-view `VIEW` status exists
-- Live View button exists
+D1 is live in the codebase with entities, identifiers, sources, atomic claims, evidence, leads, encounters and timestamped observations. Live traffic is written to D1, and selecting a live contact explicitly persists the current observation before Encounters is rendered. `/memory/history` returns first/last seen, encounter/observation counts and recent encounters.
 
-Known-good older frontend reference: `sky-7.3-known-good`.
+### Investigation and dossier refactor
 
-Do not assume GitHub commits automatically deploy Render. Verify deployments when backend changes matter. Minimize Render redeploys because they can erase process-memory encounters.
+The October refactor introduced the backend dossier boundary:
+
+`observation → D1 → acquisition/investigation → reconciliation → dossier → Rack + Investigator`
+
+Worker **encounter-tracks-9.0** adds `/api/dossier`. It starts from ICAO24, consults D1, resolves current flight/airframe data, persists supported results, invokes investigation, rereads memory, and returns identity, live state, flight, airframe, memory, history, media and initial OBVs as one reconciled package.
+
+Investigation now resolves physical identity **ICAO24 first, registration second**. This is an important correction, but registration history is not yet fully temporalized and the identifier uniqueness behavior still needs repair so historical airframe/registration associations cannot be erased.
+
+Frontend enrichment **5.1** consumes the dossier endpoint for Rack enrichment and Investigator instead of independently orchestrating the entire memory → flight → airframe → ingest → investigate → reread sequence.
+
+### Investigator
+
+The visible primary surfaces are now `CONTACT · FLIGHT · AIRCRAFT · MEDIA · ENCOUNTERS`, with stable navigation intended across every surface. The presentation is moving from boxed spreadsheet cells toward a technical-data-plate grammar: strong grouping, aligned facts, subtle rules and progressive hierarchy without deleting known information.
+
+Deterministic E295 → Embraer E195-E2 enrichment has been added. Other type mappings and presentation normalization remain incomplete.
+
+### Rack
+
+UI **sky-8.1** introduces the denser two-line Rack strip architecture, fixed operator-logo slot with neutral aircraft fallback, a quiet metadata rail, dossier-backed enrichment and a universal search control. Rack remains read-only except for strip selection: tapping a strip opens the represented object in Investigator.
+
+D1 `/memory/search` searches entities, identifiers and claims rather than only currently visible traffic. Search mode replaces Nearby Aircraft rows and clearing it returns to the live Rack.
+
+The metadata rail has structural support for exact-airframe media, prior history, favourite match, unusual state and `◇ OBV`. Do not treat every structural hook as fully implemented data logic.
+
+### Initial OBV implementation
+
+The dossier currently emits deliberately conservative OBVs derived from DOAA's own memory, including repeat visitor and same-airframe/new-callsign relationships. These are first implementation steps, not the final OBV engine. Mission labels such as ferry, positioning, medical, government or military must not be inferred as fact without adequate support.
+
+### Media
+
+Media remains **unresolved and unverified**. Wikimedia Commons discovery, persistence and dossier fields exist, but repeated live tests have failed to show aircraft media. Do not call Media fixed until an actual live aircraft image is observed through the deployed application. The dossier boundary should now be used to determine whether failure occurs at discovery, D1 persistence, reconciliation or rendering rather than adding speculative Commons heuristics.
+
+### Deployment truth
+
+These versions describe repository state, not automatically verified Cloudflare deployment state. GitHub commits must not be described as live until the deployed Worker/UI is observed.
+
+Recent refactor commits:
+
+- `2c41de2` — dense Rack/dossier surface and universal search UI
+- `ad081fd4` — Investigator 5.0 navigation/data-plate refactor
+- `dfb35b9` — universal D1 search
+- `439f653` — canonical dossier/OBV/Rack/favourite specification
+- `4e15c25` — Worker 9.0 reconciled dossier and ICAO24-first investigation
+- `f203dac` — enrichment 5.1 consumes reconciled dossier
+- `96c12cd` — initial OBV signal in Rack metadata rail
+
+Do not assume GitHub commits automatically deploy Cloudflare/Render. Verify the live build before debugging UI behavior against repository-only changes.
 
 ---
 
@@ -731,18 +784,58 @@ When choosing between polish and preserving the correct domain model, preserve t
 
 ---
 
-## 24. Current Decision Queue
+## 24. Next Work / Outstanding Product Work
 
-Before another broad implementation pass, discussion is still expected around:
+The broad refactor pass is complete enough to stop redesigning in abstraction. Next work should be driven by the deployed build and concrete defects while preserving these already accepted items.
 
-1. **Other views / navigation:** Board accepted; OPS and Patterns need exact shape.
-2. **Rack rows:** determine information hierarchy and flight-strip content.
-3. **Drilldown:** determine progressive layout and exact fields at Contact, Encounter, Airframe, biography, DOAA History and provenance levels.
-4. **LOOK:** define attention scoring/signals and presentation sufficiently to implement without opaque magic.
-5. **Airport cards:** define the operationally useful hierarchy.
-6. **D1 evolution:** preserve the implemented memory spine while adding reconciled dossiers, interpreted OBVs, temporal identity/relationship handling and search/favourite subjects.
+### Immediate validation and repair
 
-The outstanding repair batch in Section 17 remains active while these product discussions continue.
+1. **Verify deployment/builds.** Confirm Worker 9.0, enrichment 5.1 and UI sky-8.1 are actually live before interpreting screenshots or runtime failures.
+2. **Exercise the dossier boundary with real Ottawa contacts.** Confirm Rack and Investigator agree on flight, airframe, registration/type/operator and history, and that known data does not disappear during asynchronous enrichment.
+3. **Diagnose Media end-to-end.** Inspect the returned dossier and each boundary: Commons discovery → investigation result → D1 `photo_*` claims/evidence → reconciled `media` object → renderer. Do not add another search heuristic until the failing boundary is known.
+4. **Repair temporal identity semantics.** ICAO24-first lookup is implemented, but registration remains time-varying. Replace identifier reassignment behavior with a model that preserves historical registration-to-airframe associations and supported conflicts.
+5. **Normalize presentation data.** Expand deterministic ICAO type mappings beyond the current small dictionary; normalize country/state values such as `CA → CANADA`; remove raw source suffixes such as `pax`; prevent manufacturer/model duplication; calculate approximate age from year rather than trusting stale age fields.
+6. **Complete stable Investigator navigation.** Verify every surface displays the same five primary tabs with the active surface purple. Remove any remaining legacy Bio/Evidence navigation paths from visible UI without deleting their information.
+7. **Propagate semantic status colour.** Flight status already uses green/amber/red; Contact and later Board must use the same semantic state rather than rendering delay text as ordinary white.
+
+### Dossier / Investigator evolution
+
+8. Continue moving acquisition/investigation decisions behind the dossier boundary. The browser should eventually ask for a dossier and render it, not decide which source to query or which fact wins.
+9. Follow D1 leads systematically rather than treating `/api/investigate` as a Media-only routine. Query the world only for missing, stale or unresolved lead-driven knowledge, then persist the result or durable retry/dead state.
+10. Preserve claim-level provenance and conflicts in reconciliation. One identifiable independent source is sufficient to accept a factual claim; inference remains inference.
+11. Implement semantic Investigator values: tap follows/drills/searches the represented object; touch-and-hold favourites/unfavourites durable subjects.
+12. Implement generic favourites as watched subjects rather than an airframe-only table. Initial subject types: physical airframe, model, manufacturer, carrier/operator and route. Favourite state must never suppress or behaviorally personalize unrelated aviation information.
+
+### OBV / classification
+
+13. Give OBV a durable first-class representation distinct from raw ADS-B observations. Initial deterministic families should include first/repeat encounter, same airframe/new flight or callsign, and defensible turnaround relationships.
+14. Let OBVs create investigation leads. If later independent evidence supports an explanation such as positioning/ferry/charter, enrich the OBV rather than retroactively pretending the original inference was fact.
+15. Add mission/operation classification carefully: `COM`, `GA`, `CGO`, `GOV`, `MIL`, `MED`, `CHTR`, `POS`, `UNK` as useful vocabulary, allowing combinations where appropriate. Distinguish aircraft/operator classification from the current mission.
+16. Rack epistemic grammar remains simple: nothing = insufficient basis; amber/question mark = surfaced possibility; green/no question mark = accepted knowledge. Do not put these badges on Sky.
+17. Distinguish `◇ OBV` from `ϟ`: OBV is an interesting relationship/fact; lightning is an unusual current operational state.
+
+### Rack
+
+18. Refine the new two-line strip against real traffic rather than adding more boxes. Adaptive emphasis: inbound prioritizes ETA/delay; outbound departure/elapsed; overflight route; GA registration/type; unresolved special traffic only what is actually known.
+19. Exact-airframe photo icon appears only for exact-airframe media. History icon should ideally mean history predating the current encounter, not merely that the current encounter has already produced observations. Heart means at least one explicit favourite match.
+20. Universal search should expand from raw D1 value matching into relationship-aware retrieval: route, operator/carrier relationships, classification, favourites and historical encounters. Search results use the same Rack grammar and open the same Investigator.
+21. Keep Rack a single-target navigation surface. No cell taps, long-press actions or hidden micro-controls inside strips.
+
+### Existing accepted product work
+
+22. **Board:** implement the accepted airport/FIDS view with flight reconciliation and direct Sky linkage.
+23. **OPS:** settle and implement the airport operational synthesis only when it answers its distinct question better than raw airport data.
+24. **Patterns:** derive local/historical intelligence from D1 once sufficient observation history exists.
+25. **LOOK:** build explainable attention from OBV, rarity, visibility and operational state without behavioral suppression or opaque recommendation logic.
+26. **Airport cards:** replace raw-METAR-first hierarchy with the agreed operational picture while retaining raw aviation data beneath it.
+27. **Replay:** wire actual D1 timestamped observations into single- and multi-contact Sky Replay. Never interpolate invented historical positions.
+28. **Always-on memory:** add the small scheduled collector so D1 continues learning Ottawa when no browser/tablet is open.
+29. **Repair batch from Section 17 remains active:** catchment selection, partial-failure-tolerant viewport acquisition, stronger temporal track fade, Live View positioning with collapsed Rack, and hit-testing/retrieval for absent recent encounters.
+30. **Privacy/repository history:** historical source still contains exact/near-exact home coordinates. Resolve by appropriate repository/history strategy; current-file cleanup alone is not sufficient.
+
+### Stop condition
+
+After the deployed dossier/Rack/Investigator refactor is validated and concrete defects above are repaired, stop broad refactoring. Let David use DOAA. Subsequent additions should come from actual use unless required to complete an already accepted core function.
 
 ---
 
