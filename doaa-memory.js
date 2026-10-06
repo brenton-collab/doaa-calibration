@@ -25,6 +25,7 @@ async function rememberClaim(db,entityId,c,sourceId){
   if(lt) await db.prepare(`INSERT INTO leads(entity_id,lead_type,lead_value,normalized_value,status,discovered_from_claim_id,discovered_from_source_id) VALUES(?,?,?,?,?,?,?) ON CONFLICT(lead_type,normalized_value) DO NOTHING`).bind(entityId,lt,String(c.value),norm(c.value),'pending',claim.id,sourceId||null).run();
   return claim.id;
 }
+async function markLead(db,id,status,error=null,retryHours=24){const retry=status==='retry'?new Date(Date.now()+retryHours*3600000).toISOString():null;await db.prepare(`UPDATE leads SET status=?,attempts=attempts+1,last_attempt_at=CURRENT_TIMESTAMP,retry_after=?,last_error=? WHERE id=?`).bind(status,retry,error,id).run()}
 async function dossier(db,entityId){
   const claims=await db.prepare(`SELECT c.id,c.predicate,c.value_text,c.status,c.first_supported_at,c.last_supported_at,s.source_name,s.source_url,s.source_kind,e.retrieved_at FROM claims c LEFT JOIN evidence e ON e.claim_id=c.id LEFT JOIN sources s ON s.id=e.source_id WHERE c.entity_id=? ORDER BY c.predicate,c.last_supported_at DESC`).bind(entityId).all();
   const ids=await db.prepare(`SELECT scheme,value,first_seen_at,last_seen_at FROM identifiers WHERE entity_id=? ORDER BY scheme`).bind(entityId).all();
@@ -49,6 +50,10 @@ export async function handleMemory(request,env){
     let sourceId=null;if(p.source)sourceId=(await ensureSource(env.DB,p.source)).id;
     for(const c of p.claims||[]) if(c?.predicate&&c?.value!=null) await rememberClaim(env.DB,entity.id,c,sourceId);
     return json({ok:true,entity,...await dossier(env.DB,entity.id)});
+  }
+  if(u.pathname==='/memory/lead'&&request.method==='POST'){
+    const p=await request.json();if(!p.id||!['resolved','retry','dead'].includes(p.status))return json({ok:false,error:'id and valid status required'},400);
+    await markLead(env.DB,p.id,p.status,p.error||null,Math.max(1,Math.min(Number(p.retry_hours)||24,720)));return json({ok:true});
   }
   if(u.pathname==='/memory/leads'&&request.method==='GET'){
     const rows=await env.DB.prepare(`SELECT l.*,e.kind,e.canonical_key FROM leads l LEFT JOIN entities e ON e.id=l.entity_id WHERE l.status IN ('pending','retry') AND (l.retry_after IS NULL OR l.retry_after<=CURRENT_TIMESTAMP) ORDER BY CASE l.lead_type WHEN 'registration' THEN 1 WHEN 'icao24' THEN 2 WHEN 'msn' THEN 3 ELSE 4 END,l.attempts ASC LIMIT ?`).bind(Math.min(Number(u.searchParams.get('limit'))||20,100)).all();
