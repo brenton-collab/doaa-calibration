@@ -16,7 +16,7 @@ const rad=x=>x*Math.PI/180,deg=x=>x*180/Math.PI;
 function hav(a,b,c,d){const R=3440.065,p1=rad(a),p2=rad(c),dp=rad(c-a),dl=rad(d-b),q=Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;return 2*R*Math.asin(Math.sqrt(q))}
 function bearing(a,b,c,d){const p1=rad(a),p2=rad(c),dl=rad(d-b);return(deg(Math.atan2(Math.sin(dl)*Math.cos(p2),Math.cos(p1)*Math.sin(p2)-Math.sin(p1)*Math.cos(p2)*Math.cos(dl)))+360)%360}
 function nmlon(){return 60*Math.cos(rad(view.cy))}
-function area(){const m=innerWidth<=700,top=92,bottom=m?(rail.classList.contains('collapsed')?30:rail.getBoundingClientRect().height):18,right=m?0:278,w=innerWidth-right,h=innerHeight-top-bottom;return{top,bottom,w,h,cx:w*.5,cy:top+h*.5}}
+function area(){const m=innerWidth<=700,top=92,bottom=m?(rail.classList.contains('collapsed')?30:rail.getBoundingClientRect().height):18,w=innerWidth,h=innerHeight-top-bottom;return{top,bottom,w,h,cx:innerWidth/2,cy:top+h/2}}
 function positionControls(){if(innerWidth>700)return;const r=rail.getBoundingClientRect(),c=rail.classList.contains('collapsed'),edge=c?30:r.height;recenter.style.bottom=(edge+12)+'px';attrib.style.bottom=(edge+2)+'px'}
 function baseScale(){const a=area();return Math.min(a.w*.9,a.h*.94)/(configured*2)}
 function project(lat,lon){const s=baseScale()*view.zoom,a=area();return{x:a.cx+(lon-view.cx)*nmlon()*s,y:a.cy-(lat-view.cy)*60*s}}
@@ -25,7 +25,7 @@ function extent(){const a=area(),c=unproject(a.cx,a.cy),e=unproject(a.w,a.cy);re
 function centered(){return hav(YOW.lat,YOW.lon,view.cy,view.cx)<Math.max(1,configured*.025)}
 function inView(a){const p=project(a.lat,a.lon),z=area();return p.x>=0&&p.x<=z.w&&p.y>=z.top&&p.y<=innerHeight-z.bottom}
 function norm(x){if(x.lat==null||x.lon==null)return null;const ground=x.alt_baro==='ground',alt=Number(ground?0:(x.alt_baro??x.alt_geom??0));return{id:String(x.hex||x.icao||'').toLowerCase(),call:String(x.flight||x.r||x.hex||'UNKNOWN').trim(),lat:+x.lat,lon:+x.lon,alt,ground,gs:Number(x.gs||0),trk:Number(x.track||0),vr:Number(x.baro_rate??x.geom_rate??0),d:hav(YOW.lat,YOW.lon,+x.lat,+x.lon),br:bearing(YOW.lat,YOW.lon,+x.lat,+x.lon),type:x.t||''}}
-function resize(){const d=devicePixelRatio||1;for(const c of[sky,tiles]){c.width=innerWidth*d;c.height=innerHeight*d;c.style.width=innerWidth+'px';c.style.height=innerHeight+'px';c.getContext('2d').setTransform(d,0,0,d,0,0)}positionControls();draw()}
+function resize(){if(!manual){view.cx=YOW.lon;view.cy=YOW.lat}const d=devicePixelRatio||1;for(const c of[sky,tiles]){c.width=innerWidth*d;c.height=innerHeight*d;c.style.width=innerWidth+'px';c.style.height=innerHeight+'px';c.getContext('2d').setTransform(d,0,0,d,0,0)}positionControls();draw()}
 function ll2tile(lat,lon,z){const n=2**z;return{x:(lon+180)/360*n,y:(1-Math.asinh(Math.tan(rad(lat)))/Math.PI)/2*n}}
 function tile2ll(x,y,z){const n=2**z;return{lon:x/n*360-180,lat:deg(Math.atan(Math.sinh(Math.PI*(1-2*y/n))))}}
 function mapZoom(){const e=extent();return e<=12?11:e<=25?10:e<=50?9:e<=80?8:7}
