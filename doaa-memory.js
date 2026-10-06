@@ -42,6 +42,23 @@ export async function handleMemory(request,env){
     const hit=await env.DB.prepare(`SELECT e.id,e.kind,e.canonical_key FROM identifiers i JOIN entities e ON e.id=i.entity_id WHERE i.scheme=? AND i.normalized_value=?`).bind(scheme,norm(value)).first();
     return hit?json({ok:true,entity:hit,...await dossier(env.DB,hit.id)}):json({ok:true,found:false});
   }
+  if(u.pathname==='/memory/observe'&&request.method==='POST'){
+    const p=await request.json(),hex=norm(p.icao24||p.contact_key);if(!hex)return json({ok:false,error:'icao24 required'},400);
+    const entity=await ensureEntity(env.DB,'airframe',hex);await rememberIdentifier(env.DB,entity.id,'icao24',hex);
+    const at=p.observed_at||new Date().toISOString(),call=norm(p.callsign||''),type=norm(p.type_code||'');
+    let enc=await env.DB.prepare(`SELECT id,first_seen_at,last_seen_at FROM encounters WHERE entity_id=? AND last_seen_at>=datetime(?,'-15 minutes') ORDER BY last_seen_at DESC LIMIT 1`).bind(entity.id,at).first();
+    if(!enc){const q=await env.DB.prepare(`INSERT INTO encounters(entity_id,contact_key,first_seen_at,last_seen_at,callsign,type_code,min_altitude_ft,max_altitude_ft,observation_count) VALUES(?,?,?,?,?,?,?,?,0) RETURNING id,first_seen_at,last_seen_at`).bind(entity.id,hex,at,at,call||null,type||null,p.altitude_ft??null,p.altitude_ft??null).first();enc=q}
+    await env.DB.prepare(`INSERT INTO observations(encounter_id,observed_at,latitude,longitude,altitude_ft,groundspeed_kt,track_deg,vertical_rate_fpm,squawk) VALUES(?,?,?,?,?,?,?,?,?)`).bind(enc.id,at,p.latitude??null,p.longitude??null,p.altitude_ft??null,p.groundspeed_kt??null,p.track_deg??null,p.vertical_rate_fpm??null,p.squawk??null).run();
+    await env.DB.prepare(`UPDATE encounters SET last_seen_at=?,callsign=COALESCE(NULLIF(?,''),callsign),type_code=COALESCE(NULLIF(?,''),type_code),min_altitude_ft=CASE WHEN ? IS NULL THEN min_altitude_ft WHEN min_altitude_ft IS NULL OR ?<min_altitude_ft THEN ? ELSE min_altitude_ft END,max_altitude_ft=CASE WHEN ? IS NULL THEN max_altitude_ft WHEN max_altitude_ft IS NULL OR ?>max_altitude_ft THEN ? ELSE max_altitude_ft END,observation_count=observation_count+1 WHERE id=?`).bind(at,call,type,p.altitude_ft??null,p.altitude_ft??null,p.altitude_ft??null,p.altitude_ft??null,p.altitude_ft??null,p.altitude_ft??null,enc.id).run();
+    return json({ok:true,encounter_id:enc.id});
+  }
+  if(u.pathname==='/memory/history'&&request.method==='GET'){
+    const scheme=u.searchParams.get('scheme')||'icao24',value=u.searchParams.get('value');if(!value)return json({ok:false,error:'value required'},400);
+    const hit=await env.DB.prepare(`SELECT e.id FROM identifiers i JOIN entities e ON e.id=i.entity_id WHERE i.scheme=? AND i.normalized_value=?`).bind(scheme,norm(value)).first();if(!hit)return json({ok:true,found:false});
+    const s=await env.DB.prepare(`SELECT COUNT(*) encounter_count,MIN(first_seen_at) first_seen_at,MAX(last_seen_at) last_seen_at,SUM(observation_count) observation_count FROM encounters WHERE entity_id=?`).bind(hit.id).first();
+    const recent=await env.DB.prepare(`SELECT id,first_seen_at,last_seen_at,callsign,type_code,min_altitude_ft,max_altitude_ft,observation_count FROM encounters WHERE entity_id=? ORDER BY last_seen_at DESC LIMIT 12`).bind(hit.id).all();
+    return json({ok:true,entity_id:hit.id,...s,recent:recent.results||[]});
+  }
   if(u.pathname==='/memory/ingest'&&request.method==='POST'){
     const p=await request.json(),kind=p.entity?.kind||'airframe',key=p.entity?.key||p.identifiers?.icao24||p.identifiers?.registration;
     if(!key)return json({ok:false,error:'entity key required'},400);
