@@ -1,5 +1,5 @@
 import { handleMemory } from '../doaa-memory.js';
-const BUILD='encounter-tracks-9.0.1';
+const BUILD='encounter-tracks-9.1';
 const RELAY='https://doaa-adsb-relay.onrender.com',RAW='https://raw.githubusercontent.com/brenton-collab/doaa-calibration/main/';
 const clamp=(v,min,max)=>Math.max(min,Math.min(max,v)),FRESH=25,STALE=300,TIMEOUT=9000,KEEP=90*60*1000,CLOSE=15*60*1000;
 const json=(d,s=200,c='no-store')=>new Response(JSON.stringify(d),{status:s,headers:{'content-type':'application/json; charset=utf-8','cache-control':c,'access-control-allow-origin':'*'}});
@@ -21,17 +21,17 @@ async function dossierApi(u,env){
  if(!hex)return json({ok:false,error:'hex required'},400);
  let mem=await handleMemory(new Request(new URL('/memory/dossier?scheme=icao24&value='+encodeURIComponent(hex),u.origin)),env);
  let mj=await mem.json().catch(()=>({found:false}));
- const hist=await handleMemory(new Request(new URL('/memory/history?scheme=icao24&value='+encodeURIComponent(hex),u.origin)),env),hj=await hist.json().catch(()=>({found:false}));
+ let hist=await handleMemory(new Request(new URL('/memory/history?scheme=icao24&value='+encodeURIComponent(hex),u.origin)),env),hj=await hist.json().catch(()=>({found:false}));
  let fj=null,afj=null;
  try{fj=await relay('/flight?call='+encodeURIComponent(call)+'&hex='+encodeURIComponent(hex),6500)}catch{}
  const f=fj?.found?fj.flight:null,reg=f?.reg_number||mj?.identifiers?.find(x=>x.scheme==='registration')?.value||'';
  try{afj=await relay('/airframe?reg='+encodeURIComponent(reg)+'&hex='+encodeURIComponent(hex),6500)}catch{}
  const af=afj?.found?afj.airframe:null;
  const claims=[],add=(predicate,value,status='supported')=>{if(value!=null&&value!=='')claims.push({predicate,value,status})};
- add('icao24',hex,'observed');add('callsign',call,'observed');add('icao_type',af?.icao||f?.aircraft_icao||type,(af?.icao||f?.aircraft_icao)?'supported':'observed');add('registration',af?.reg_number||f?.reg_number);add('manufacturer',af?.manufacturer||f?.manufacturer);add('model',af?.model||f?.model);add('msn',af?.msn||f?.msn);add('built',af?.built||f?.built);add('operator',f?.airline_name||af?.operator_name||af?.airline_icao);add('engine',af?.engine||f?.engine);add('engine_count',af?.engine_count||f?.engine_count);
+ add('icao24',hex,'observed');add('callsign',call,'observed');add('icao_type',af?.icao||f?.aircraft_icao||type,(af?.icao||f?.aircraft_icao)?'supported':'observed');add('registration',af?.reg_number||f?.reg_number);add('manufacturer',af?.manufacturer||f?.manufacturer);add('model',af?.model||f?.model);add('msn',af?.msn||f?.msn);add('built',af?.built||f?.built);add('operator',f?.airline_name||af?.operator_name||af?.airline_icao);add('operator_code',f?.airline_icao||String(call||'').slice(0,3));add('engine',af?.engine||f?.engine);add('engine_count',af?.engine_count||f?.engine_count);
  if(claims.length){await handleMemory(new Request(new URL('/memory/ingest',u.origin),{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({entity:{kind:'airframe',key:hex},identifiers:{icao24:hex,registration:af?.reg_number||f?.reg_number||undefined,msn:af?.msn||f?.msn||undefined,icao_type:af?.icao||f?.aircraft_icao||type||undefined},source:(af||f)?{key:af?'airlabs-fleet':'airlabs-flight',name:af?'AirLabs fleet':'AirLabs flight',kind:'api'}:{key:'adsb-observation',name:'ADS-B observation',kind:'observation'},claims})}),env)}
  if(reg||af?.reg_number||f?.reg_number){const iu=new URL('/api/investigate',u.origin);iu.searchParams.set('hex',hex);iu.searchParams.set('registration',af?.reg_number||f?.reg_number||reg);iu.searchParams.set('type',af?.icao||f?.aircraft_icao||type);iu.searchParams.set('model',af?.model||f?.model||'');iu.searchParams.set('manufacturer',af?.manufacturer||f?.manufacturer||'');await investigate(iu,env).catch(()=>null)}
- mem=await handleMemory(new Request(new URL('/memory/dossier?scheme=icao24&value='+encodeURIComponent(hex),u.origin)),env);mj=await mem.json().catch(()=>({found:false}));
+ mem=await handleMemory(new Request(new URL('/memory/dossier?scheme=icao24&value='+encodeURIComponent(hex),u.origin)),env);mj=await mem.json().catch(()=>({found:false}));hist=await handleMemory(new Request(new URL('/memory/history?scheme=icao24&value='+encodeURIComponent(hex),u.origin)),env);hj=await hist.json().catch(()=>({found:false}));
  const ids=Object.fromEntries((mj.identifiers||[]).map(x=>[x.scheme,x.value])),known={};for(const c of mj.claims||[]){if(c.status==='inferred')continue;if(known[c.predicate]==null)known[c.predicate]=c.value_text}
  const recent=hj.recent||[],prior=recent.filter(x=>String(x.callsign||'').trim()&&String(x.callsign).trim().toUpperCase()!==call),obv=[];
  if((hj.encounter_count||0)>1)obv.push({code:'REPEAT',label:'REPEAT VISITOR',state:'accepted',basis:'DOAA encounter history'});
