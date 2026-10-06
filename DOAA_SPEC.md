@@ -371,6 +371,23 @@ Persistent timestamped observations are required for meaningful Replay.
 
 > **Acquire sparingly. Extract completely.**
 
+### Lead-following and claim acceptance
+
+> **Follow every lead. Preserve every supported claim. Forget neither knowledge nor uncertainty.**
+
+Every stable identifier is a potential discovery key, including registration, ICAO24, callsign, ICAO type, operator code, MSN/serial and any previous registration subsequently discovered. A newly supported identifier should be eligible to generate further leads.
+
+A factual claim may become canonical DOAA knowledge when one identifiable independent source directly supports that claim. Evidence attaches to the individual claim, not merely to the aircraft record. Search results, snippets and AI summaries are discovery mechanisms rather than sources of record: DOAA follows them to an underlying source before accepting a claim. Inference remains explicitly inferred and must not be promoted to sourced fact.
+
+Conflicting supported claims are retained with provenance rather than silently overwritten. Failed leads are also durable state, with retry timing where appropriate, so DOAA does not repeatedly hammer a dead source.
+
+Source acquisition must respect source terms. A useful page whose licence permits viewing only may be used as a human research lead but must not be automated, mirrored or treated as an application data feed. Prefer public APIs, government/open datasets, explicitly reusable sources and appropriately licensed media.
+
+D1 is durable knowledge, not merely a response cache. The intended knowledge loop is:
+
+`observation → identifiers → leads → claims → evidence → new identifiers/leads → durable dossier`
+
+
 Once data crosses into DOAA, derive as much durable meaning from it as is defensible.
 
 From ADS-B observations derive, where possible:
