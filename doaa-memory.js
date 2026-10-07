@@ -75,7 +75,7 @@ export async function handleMemory(request,env){
       MAX(CASE WHEN c.predicate='operator' THEN c.value_text END) operator,
       MAX(CASE WHEN c.predicate='photo_specificity' THEN c.value_text END) photo_specificity,
       (SELECT COUNT(*) FROM encounters x WHERE x.entity_id=e.id) encounter_count
-      FROM entities e LEFT JOIN identifiers i ON i.entity_id=e.id LEFT JOIN claims c ON c.entity_id=e.id
+      FROM entities e LEFT JOIN identifiers i ON i.entity_id=e.id LEFT JOIN claims c ON c.entity_id=e.id AND c.status!='superseded'
       WHERE UPPER(e.canonical_key) LIKE ? OR EXISTS(SELECT 1 FROM identifiers si WHERE si.entity_id=e.id AND UPPER(si.value) LIKE ?)
          OR EXISTS(SELECT 1 FROM claims sc WHERE sc.entity_id=e.id AND sc.status!='superseded' AND UPPER(sc.value_text) LIKE ?)
       GROUP BY e.id ORDER BY e.updated_at DESC LIMIT 30`).bind(like,like,like).all();
