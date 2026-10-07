@@ -852,3 +852,7 @@ For every addition, ask:
 7. Does this preserve the one-day product's coherence?
 
 If the answer is unclear, do not add another widget merely because the data exists.
+
+## Board — canonical live definition (2026-10-06)
+
+BOARD is not a filtered version of the Sky catchment. It is an airport-centric live movement view. It shows flights currently airborne where **YOW is either the departure airport or the arrival airport**, regardless of whether the aircraft is inside Sky's geographic ADS-B catchment. BOARD therefore acquires its own YOW flight set from the flight-data source and must not depend on Rack hydration or the current Sky aircraft array. Completed/landed, cancelled, and merely scheduled/not-yet-airborne flights are excluded when source status supports that distinction. SKY remains spatial truth; BOARD is airport/FIDS grammar for the currently airborne YOW movement picture.
