@@ -43,7 +43,7 @@ export async function handleMemory(request,env){
     return hit?json({ok:true,entity:hit,...await dossier(env.DB,hit.id)}):json({ok:true,found:false});
   }
   if(u.pathname==='/memory/observe'&&request.method==='POST'){
-    const p=await request.json(),hex=norm(p.icao24||p.contact_key);if(!hex)return json({ok:false,error:'icao24 required'},400);
+    const p=await request.json();if(p.observation_source!=='acquisition')return json({ok:false,error:'observation writes are acquisition-only'},403);const hex=norm(p.icao24||p.contact_key);if(!hex)return json({ok:false,error:'icao24 required'},400);
     const entity=await ensureEntity(env.DB,'airframe',hex);await rememberIdentifier(env.DB,entity.id,'icao24',hex);if(p.registration)await rememberIdentifier(env.DB,entity.id,'registration',p.registration);if(p.type_code)await rememberIdentifier(env.DB,entity.id,'icao_type',p.type_code);
     const at=p.observed_at||new Date().toISOString(),call=norm(p.callsign||''),type=norm(p.type_code||'');
     let enc=await env.DB.prepare(`SELECT id,first_seen_at,last_seen_at FROM encounters WHERE entity_id=? AND last_seen_at>=datetime(?,'-15 minutes') ORDER BY last_seen_at DESC LIMIT 1`).bind(entity.id,at).first();
