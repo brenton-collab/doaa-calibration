@@ -79,12 +79,13 @@ export async function handleMemory(request,env){
       (SELECT CASE WHEN COUNT(DISTINCT sc.value_text)=1 THEN MAX(sc.value_text) END FROM claims sc WHERE sc.entity_id=e.id AND sc.predicate='model' AND sc.status!='superseded') model,
       (SELECT CASE WHEN COUNT(DISTINCT sc.value_text)=1 THEN MAX(sc.value_text) END FROM claims sc WHERE sc.entity_id=e.id AND sc.predicate='operator' AND sc.status!='superseded') operator,
       (SELECT CASE WHEN COUNT(DISTINCT sc.value_text)=1 THEN MAX(sc.value_text) END FROM claims sc WHERE sc.entity_id=e.id AND sc.predicate='photo_specificity' AND sc.status!='superseded') photo_specificity,
-      (SELECT COUNT(*) FROM encounters x WHERE x.entity_id=e.id) encounter_count
+      (SELECT COUNT(*) FROM encounters x WHERE x.entity_id=e.id) encounter_count,
+      (SELECT GROUP_CONCAT(predicate) FROM (SELECT sc.predicate predicate FROM claims sc WHERE sc.entity_id=e.id AND sc.status!='superseded' AND sc.predicate IN ('callsign','manufacturer','model','operator','photo_specificity') GROUP BY sc.predicate HAVING COUNT(DISTINCT sc.value_text)>1 ORDER BY sc.predicate)) conflicting_predicates_csv
       FROM entities e LEFT JOIN identifiers i ON i.entity_id=e.id LEFT JOIN claims c ON c.entity_id=e.id AND c.status!='superseded'
       WHERE UPPER(e.canonical_key) LIKE ? OR EXISTS(SELECT 1 FROM identifiers si WHERE si.entity_id=e.id AND UPPER(si.value) LIKE ?)
          OR EXISTS(SELECT 1 FROM claims sc WHERE sc.entity_id=e.id AND sc.status!='superseded' AND UPPER(sc.value_text) LIKE ?)
       GROUP BY e.id ORDER BY e.updated_at DESC LIMIT 30`).bind(like,like,like).all();
-    const results=rows.results||[];for(const row of results){const conflicts=await env.DB.prepare(`SELECT predicate,COUNT(DISTINCT value_text) value_count FROM claims WHERE entity_id=? AND status!='superseded' AND predicate IN ('callsign','manufacturer','model','operator','photo_specificity') GROUP BY predicate HAVING COUNT(DISTINCT value_text)>1`).bind(row.id).all();row.conflicting_predicates=(conflicts.results||[]).map(x=>x.predicate)}return json({ok:true,results});
+    const results=(rows.results||[]).map(row=>{const {conflicting_predicates_csv,...rest}=row;return{...rest,conflicting_predicates:conflicting_predicates_csv?String(conflicting_predicates_csv).split(',').filter(Boolean):[]}});return json({ok:true,results});
   }
   if(u.pathname==='/memory/ingest'&&request.method==='POST'){
     const p=await request.json(),kind=p.entity?.kind||'airframe',key=p.entity?.key||p.identifiers?.icao24||p.identifiers?.registration;
