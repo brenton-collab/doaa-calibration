@@ -9,7 +9,10 @@ async function ensureEntity(db,kind,key){
 }
 async function rememberIdentifier(db,entityId,scheme,value){
   if(!value)return;
-  await db.prepare(`INSERT INTO identifiers(entity_id,scheme,value,normalized_value) VALUES(?,?,?,?) ON CONFLICT(scheme,normalized_value) DO UPDATE SET entity_id=excluded.entity_id,value=excluded.value,last_seen_at=CURRENT_TIMESTAMP`).bind(entityId,scheme,String(value),norm(value)).run();
+  const s=String(scheme||'').trim().toLowerCase(),v=String(value),n=norm(value);if(!s||!n)return;
+  const owner=await db.prepare(`SELECT entity_id FROM identifiers WHERE scheme=? AND normalized_value=?`).bind(s,n).first();
+  if(owner&&owner.entity_id!==entityId){if(s==='icao24')return;return;}
+  await db.prepare(`INSERT INTO identifiers(entity_id,scheme,value,normalized_value) VALUES(?,?,?,?) ON CONFLICT(scheme,normalized_value) DO UPDATE SET value=excluded.value,last_seen_at=CURRENT_TIMESTAMP`).bind(entityId,s,v,n).run();
 }
 async function ensureSource(db,s){
   const key=s.key||s.url||`${s.kind||'source'}:${s.name}`;
