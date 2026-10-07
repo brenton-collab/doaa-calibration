@@ -1,0 +1,37 @@
+name: Syntax check
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ main ]
+permissions:
+  contents: read
+jobs:
+  javascript:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      - name: Parse JavaScript
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check doaa-memory.js
+          node --check flight-enrichment.js
+          node --check relay.js
+          node --check catchment.js
+          node --check map-overlay.js
+          cp src/worker.js /tmp/doaa-worker.mjs
+          node --check /tmp/doaa-worker.mjs
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, subprocess, tempfile
+          html=Path("index.html").read_text()
+          blocks=re.findall(r"<script(?:\s[^>]*)?>([\s\S]*?)</script>",html,re.I)
+          inline=[b for b in blocks if b.strip()]
+          if not inline:
+              raise SystemExit("No inline scripts found")
+          for i,b in enumerate(inline):
+              p=Path(tempfile.gettempdir())/f"doaa-inline-{i}.js"
+              p.write_text(b)
+              subprocess.run(["node","--check",str(p)],check=True)
+          PY
