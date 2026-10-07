@@ -71,9 +71,9 @@ export async function handleMemory(request,env){
     const q=norm(u.searchParams.get('q')||'');if(!q)return json({ok:true,results:[]});
     const like='%'+q+'%';
     const rows=await env.DB.prepare(`SELECT e.id,e.kind,e.canonical_key,
-      MAX(CASE WHEN i.scheme='icao24' THEN i.value END) icao24,
-      MAX(CASE WHEN i.scheme='registration' THEN i.value END) registration,
-      MAX(CASE WHEN i.scheme='icao_type' THEN i.value END) icao_type,
+      (SELECT CASE WHEN COUNT(DISTINCT si.normalized_value)=1 THEN MAX(si.value) END FROM identifiers si WHERE si.entity_id=e.id AND si.scheme='icao24') icao24,
+      (SELECT CASE WHEN COUNT(DISTINCT si.normalized_value)=1 THEN MAX(si.value) END FROM identifiers si WHERE si.entity_id=e.id AND si.scheme='registration') registration,
+      (SELECT CASE WHEN COUNT(DISTINCT si.normalized_value)=1 THEN MAX(si.value) END FROM identifiers si WHERE si.entity_id=e.id AND si.scheme='icao_type') icao_type,
       (SELECT CASE WHEN COUNT(DISTINCT sc.value_text)=1 THEN MAX(sc.value_text) END FROM claims sc WHERE sc.entity_id=e.id AND sc.predicate='callsign' AND sc.status!='superseded') callsign,
       (SELECT CASE WHEN COUNT(DISTINCT sc.value_text)=1 THEN MAX(sc.value_text) END FROM claims sc WHERE sc.entity_id=e.id AND sc.predicate='manufacturer' AND sc.status!='superseded') manufacturer,
       (SELECT CASE WHEN COUNT(DISTINCT sc.value_text)=1 THEN MAX(sc.value_text) END FROM claims sc WHERE sc.entity_id=e.id AND sc.predicate='model' AND sc.status!='superseded') model,
