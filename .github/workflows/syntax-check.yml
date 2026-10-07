@@ -44,6 +44,41 @@ jobs:
       - run: |
           cp src/worker.js /tmp/doaa-worker.mjs
           node --check /tmp/doaa-worker.mjs
+  contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      - name: Static semantic contracts
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          worker=Path("src/worker.js").read_text()
+          memory=Path("doaa-memory.js").read_text()
+          enrichment=Path("flight-enrichment.js").read_text()
+          browser=Path("index.html").read_text()+enrichment
+          public=re.search(r"const publicMemoryPaths=new Set\((\[[^;]+\])\)",worker)
+          if not public:
+              raise SystemExit("Public memory allowlist not found")
+          allowed=set(re.findall(r"['\"]([^'\"]+)['\"]",public.group(1)))
+          expected={"/memory/health","/memory/dossier","/memory/history","/memory/search"}
+          if allowed != expected:
+              raise SystemExit(f"Public memory surface changed: {sorted(allowed)}")
+          forbidden={"/memory/observe","/memory/ingest","/memory/history-request","/memory/history-result","/memory/lead","/memory/leads"}
+          leaked=[p for p in forbidden if p in browser]
+          if leaked:
+              raise SystemExit(f"Browser mutation path leak: {leaked}")
+          if "p.observation_source!=='acquisition'" not in memory:
+              raise SystemExit("Acquisition-only observation guard missing")
+          if "INSERT OR IGNORE INTO observations" not in memory:
+              raise SystemExit("Observation idempotency insert missing")
+          if "COUNT(DISTINCT sc.value_text)=1" not in memory:
+              raise SystemExit("Conflict-safe claim projection missing")
+          if "conflicting_predicates" not in memory:
+              raise SystemExit("Conflict metadata missing from search")
+          print("semantic contracts ok")
+          PY
   inline-html:
     runs-on: ubuntu-latest
     timeout-minutes: 2
