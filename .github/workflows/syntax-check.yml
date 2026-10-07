@@ -79,6 +79,36 @@ jobs:
               raise SystemExit("Conflict metadata missing from search")
           print("semantic contracts ok")
           PY
+  migration-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate fresh D1 migration chain
+        run: |
+          python3 - <<'PY'
+          import sqlite3
+          from pathlib import Path
+          db=sqlite3.connect(":memory:")
+          db.execute("PRAGMA foreign_keys=ON")
+          for p in sorted(Path("migrations").glob("*.sql")):
+              db.executescript(p.read_text())
+          obs={r[1] for r in db.execute("PRAGMA table_info(observations)")}
+          required_obs={"entity_id","callsign","type_code","registration"}
+          if not required_obs <= obs:
+              raise SystemExit(f"observations missing {sorted(required_obs-obs)}")
+          state={r[1] for r in db.execute("PRAGMA table_info(provider_state)")}
+          required_state={"harvest_epoch","request_cursor","request_epoch"}
+          if not required_state <= state:
+              raise SystemExit(f"provider_state missing {sorted(required_state-state)}")
+          indexes={r[1] for r in db.execute("PRAGMA index_list(observations)")}
+          if "idx_observations_entity_observed_at" not in indexes:
+              raise SystemExit("entity/timestamp observation uniqueness missing")
+          req_indexes={r[1] for r in db.execute("PRAGMA index_list(provider_requests)")}
+          if "idx_provider_requests_event" not in req_indexes:
+              raise SystemExit("provider request event uniqueness missing")
+          print("fresh migration chain ok")
+          PY
   inline-html:
     runs-on: ubuntu-latest
     timeout-minutes: 2
