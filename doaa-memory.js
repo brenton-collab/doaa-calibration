@@ -90,7 +90,7 @@ export async function handleMemory(request,env){
     for(const c of p.claims||[]) if(c?.predicate&&c?.value!=null) await rememberClaim(env.DB,entity.id,c,sourceId);
     return json({ok:true,entity,...await dossier(env.DB,entity.id)});
   }
-  if(u.pathname==='/memory/lead'&&request.method==='POST'){
+  if(u.pathname==='/memory/history-request'&&request.method==='POST'){const p=await request.json(),hex=norm(p.icao24||''),day=String(p.day||'').slice(0,10);if(!hex||!/^\d{4}-\d{2}-\d{2}$/.test(day))return json({ok:false,error:'icao24 and day required'},400);const entity=await ensureEntity(env.DB,'airframe',hex);await rememberIdentifier(env.DB,entity.id,'icao24',hex);const key=hex+':'+day;await env.DB.prepare(`INSERT INTO leads(entity_id,lead_type,lead_value,normalized_value,status) VALUES(?,'airframe-day-history',?,?,'pending') ON CONFLICT(lead_type,normalized_value) DO NOTHING`).bind(entity.id,day,key).run();const lead=await env.DB.prepare(`SELECT id,status,attempts,last_attempt_at,retry_after FROM leads WHERE lead_type='airframe-day-history' AND normalized_value=?`).bind(key).first();return json({ok:true,icao24:hex,day,lead})}\n  if(u.pathname==='/memory/lead'&&request.method==='POST'){
     const p=await request.json();if(!p.id||!['resolved','retry','dead'].includes(p.status))return json({ok:false,error:'id and valid status required'},400);
     await markLead(env.DB,p.id,p.status,p.error||null,Math.max(1,Math.min(Number(p.retry_hours)||24,720)));return json({ok:true});
   }
