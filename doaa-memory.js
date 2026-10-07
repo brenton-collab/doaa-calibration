@@ -58,7 +58,7 @@ export async function handleMemory(request,env){
   if(u.pathname==='/memory/history'&&request.method==='GET'){
     const scheme=u.searchParams.get('scheme')||'icao24',value=u.searchParams.get('value');if(!value)return json({ok:false,error:'value required'},400);
     const hit=await env.DB.prepare(`SELECT e.id FROM identifiers i JOIN entities e ON e.id=i.entity_id WHERE i.scheme=? AND i.normalized_value=?`).bind(scheme,norm(value)).first();if(!hit)return json({ok:true,found:false});
-    const s=await env.DB.prepare(`SELECT COUNT(*) encounter_count,MIN(first_seen_at) first_seen_at,MAX(last_seen_at) last_seen_at,SUM(observation_count) observation_count FROM encounters WHERE entity_id=?`).bind(hit.id).first();
+    const s=await env.DB.prepare(`SELECT COUNT(*) encounter_count,MIN(first_seen_at) first_seen_at,MAX(last_seen_at) last_seen_at,COALESCE(SUM(observation_count),0) observation_count FROM encounters WHERE entity_id=?`).bind(hit.id).first();
     const recent=await env.DB.prepare(`SELECT id,first_seen_at,last_seen_at,callsign,type_code,min_altitude_ft,max_altitude_ft,observation_count FROM encounters WHERE entity_id=? ORDER BY last_seen_at DESC LIMIT 12`).bind(hit.id).all();
     return json({ok:true,entity_id:hit.id,...s,recent:recent.results||[]});
   }
