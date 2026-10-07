@@ -58,10 +58,10 @@ jobs:
           memory=Path("doaa-memory.js").read_text()
           enrichment=Path("flight-enrichment.js").read_text()
           browser=Path("index.html").read_text()+enrichment
-          public=re.search(r"const publicMemoryPaths=new Set\((\[[^;]+\])\)",worker)
+          public=re.search(r"if\(!\[(.*?)\]\.includes\(u\.pathname\)\)return json\(\{ok:false,error:'not found'\},404\)",worker,re.S)
           if not public:
-              raise SystemExit("Public memory allowlist not found")
-          allowed=set(re.findall(r"['\"]([^'\"]+)['\"]",public.group(1)))
+              raise SystemExit("Public memory allowlist guard not found")
+          allowed=set(re.findall(r"['\"](/memory/[^'\"]+)['\"]",public.group(1)))
           expected={"/memory/health","/memory/dossier","/memory/history","/memory/search"}
           if allowed != expected:
               raise SystemExit(f"Public memory surface changed: {sorted(allowed)}")
