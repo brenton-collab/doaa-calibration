@@ -90,7 +90,7 @@ export async function handleMemory(request,env){
   }
   if(u.pathname==='/memory/ingest'&&request.method==='POST'){
     const p=await request.json(),kind=p.entity?.kind||'airframe',key=p.entity?.key||p.identifiers?.icao24||p.identifiers?.registration;
-    if(!key)return json({ok:false,error:'entity key required'},400);
+    if(!key)return json({ok:false,error:'entity key required'},400);if(kind==='airframe'&&p.identifiers?.icao24&&!/^[0-9A-F]{6}$/.test(norm(p.identifiers.icao24)))return json({ok:false,error:'valid icao24 required'},400);if(!Array.isArray(p.claims)&&p.claims!=null)return json({ok:false,error:'claims must be an array'},400);
     const entity=await ensureEntity(env.DB,kind,norm(key));
     for(const [scheme,value] of Object.entries(p.identifiers||{})) await rememberIdentifier(env.DB,entity.id,scheme,value);
     let sourceId=null;if(p.source)sourceId=(await ensureSource(env.DB,p.source)).id;
