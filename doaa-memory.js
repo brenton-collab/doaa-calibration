@@ -79,7 +79,7 @@ export async function handleMemory(request,env){
       WHERE UPPER(e.canonical_key) LIKE ? OR EXISTS(SELECT 1 FROM identifiers si WHERE si.entity_id=e.id AND UPPER(si.value) LIKE ?)
          OR EXISTS(SELECT 1 FROM claims sc WHERE sc.entity_id=e.id AND sc.status!='superseded' AND UPPER(sc.value_text) LIKE ?)
       GROUP BY e.id ORDER BY e.updated_at DESC LIMIT 30`).bind(like,like,like).all();
-    return json({ok:true,results:rows.results||[]});
+    const results=rows.results||[];for(const row of results){const conflicts=await env.DB.prepare(`SELECT predicate,COUNT(DISTINCT value_text) value_count FROM claims WHERE entity_id=? AND status!='superseded' AND predicate IN ('callsign','manufacturer','model','operator','photo_specificity') GROUP BY predicate HAVING COUNT(DISTINCT value_text)>1`).bind(row.id).all();row.conflicting_predicates=(conflicts.results||[]).map(x=>x.predicate)}return json({ok:true,results});
   }
   if(u.pathname==='/memory/ingest'&&request.method==='POST'){
     const p=await request.json(),kind=p.entity?.kind||'airframe',key=p.entity?.key||p.identifiers?.icao24||p.identifiers?.registration;
