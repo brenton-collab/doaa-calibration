@@ -77,7 +77,7 @@ export async function handleMemory(request,env){
       (SELECT COUNT(*) FROM encounters x WHERE x.entity_id=e.id) encounter_count
       FROM entities e LEFT JOIN identifiers i ON i.entity_id=e.id LEFT JOIN claims c ON c.entity_id=e.id
       WHERE UPPER(e.canonical_key) LIKE ? OR EXISTS(SELECT 1 FROM identifiers si WHERE si.entity_id=e.id AND UPPER(si.value) LIKE ?)
-         OR EXISTS(SELECT 1 FROM claims sc WHERE sc.entity_id=e.id AND UPPER(sc.value_text) LIKE ?)
+         OR EXISTS(SELECT 1 FROM claims sc WHERE sc.entity_id=e.id AND sc.status!='superseded' AND UPPER(sc.value_text) LIKE ?)
       GROUP BY e.id ORDER BY e.updated_at DESC LIMIT 30`).bind(like,like,like).all();
     return json({ok:true,results:rows.results||[]});
   }
