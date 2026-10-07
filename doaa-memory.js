@@ -11,7 +11,7 @@ async function rememberIdentifier(db,entityId,scheme,value){
   if(!value)return;
   const s=String(scheme||'').trim().toLowerCase(),v=String(value),n=norm(value);if(!s||!n)return;
   const owner=await db.prepare(`SELECT entity_id FROM identifiers WHERE scheme=? AND normalized_value=?`).bind(s,n).first();
-  if(owner&&owner.entity_id!==entityId){if(s==='icao24')return;return;}
+  if(owner&&owner.entity_id!==entityId)return;
   await db.prepare(`INSERT INTO identifiers(entity_id,scheme,value,normalized_value) VALUES(?,?,?,?) ON CONFLICT(scheme,normalized_value) DO UPDATE SET value=excluded.value,last_seen_at=CURRENT_TIMESTAMP`).bind(entityId,s,v,n).run();
 }
 async function ensureSource(db,s){
@@ -20,12 +20,12 @@ async function ensureSource(db,s){
   return db.prepare(`SELECT id FROM sources WHERE source_key=?`).bind(key).first();
 }
 async function rememberClaim(db,entityId,c,sourceId){
-  const allowed=new Set(['supported','conflicting','superseded','inferred']),status=allowed.has(c.status)?c.status:'supported';
-  await db.prepare(`INSERT INTO claims(entity_id,predicate,value_text,value_normalized,status) VALUES(?,?,?,?,?) ON CONFLICT(entity_id,predicate,value_text) DO UPDATE SET last_supported_at=CURRENT_TIMESTAMP,status=excluded.status`).bind(entityId,c.predicate,String(c.value),norm(c.value),status).run();
-  const claim=await db.prepare(`SELECT id FROM claims WHERE entity_id=? AND predicate=? AND value_text=?`).bind(entityId,c.predicate,String(c.value)).first();
+  const allowed=new Set(['supported','conflicting','superseded','inferred']),status=allowed.has(c.status)?c.status:'supported',predicate=String(c.predicate||'').trim(),value=String(c.value??'').trim();if(!predicate||!value)return null;
+  await db.prepare(`INSERT INTO claims(entity_id,predicate,value_text,value_normalized,status) VALUES(?,?,?,?,?) ON CONFLICT(entity_id,predicate,value_text) DO UPDATE SET last_supported_at=CURRENT_TIMESTAMP,status=excluded.status`).bind(entityId,predicate,value,norm(value),status).run();
+  const claim=await db.prepare(`SELECT id FROM claims WHERE entity_id=? AND predicate=? AND value_text=?`).bind(entityId,predicate,value).first();
   if(sourceId&&status!=='inferred') await db.prepare(`INSERT INTO evidence(claim_id,source_id,evidence_locator,evidence_excerpt,observed_at) VALUES(?,?,?,?,?) ON CONFLICT(claim_id,source_id,evidence_locator) DO UPDATE SET retrieved_at=CURRENT_TIMESTAMP,evidence_excerpt=COALESCE(excluded.evidence_excerpt,evidence.evidence_excerpt)`).bind(claim.id,sourceId,c.locator||'',c.excerpt||null,c.observed_at||null).run();
-  const lt=LEAD_PREDICATES[c.predicate];
-  if(lt) await db.prepare(`INSERT INTO leads(entity_id,lead_type,lead_value,normalized_value,status,discovered_from_claim_id,discovered_from_source_id) VALUES(?,?,?,?,?,?,?) ON CONFLICT(lead_type,normalized_value) DO NOTHING`).bind(entityId,lt,String(c.value),norm(c.value),'pending',claim.id,sourceId||null).run();
+  const lt=LEAD_PREDICATES[predicate];
+  if(lt) await db.prepare(`INSERT INTO leads(entity_id,lead_type,lead_value,normalized_value,status,discovered_from_claim_id,discovered_from_source_id) VALUES(?,?,?,?,?,?,?) ON CONFLICT(lead_type,normalized_value) DO NOTHING`).bind(entityId,lt,value,norm(value),'pending',claim.id,sourceId||null).run();
   return claim.id;
 }
 async function markLead(db,id,status,error=null,retryHours=24){const retry=status==='retry'?new Date(Date.now()+retryHours*3600000).toISOString():null,resolved=status==='resolved'?new Date().toISOString():null;await db.prepare(`UPDATE leads SET status=?,attempts=attempts+1,last_attempt_at=CURRENT_TIMESTAMP,retry_after=?,resolved_at=COALESCE(?,resolved_at) WHERE id=?`).bind(status,retry,resolved,id).run()}
