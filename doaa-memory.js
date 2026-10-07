@@ -69,11 +69,11 @@ export async function handleMemory(request,env){
       MAX(CASE WHEN i.scheme='icao24' THEN i.value END) icao24,
       MAX(CASE WHEN i.scheme='registration' THEN i.value END) registration,
       MAX(CASE WHEN i.scheme='icao_type' THEN i.value END) icao_type,
-      MAX(CASE WHEN c.predicate='callsign' THEN c.value_text END) callsign,
-      MAX(CASE WHEN c.predicate='manufacturer' THEN c.value_text END) manufacturer,
-      MAX(CASE WHEN c.predicate='model' THEN c.value_text END) model,
-      MAX(CASE WHEN c.predicate='operator' THEN c.value_text END) operator,
-      MAX(CASE WHEN c.predicate='photo_specificity' THEN c.value_text END) photo_specificity,
+      (SELECT CASE WHEN COUNT(DISTINCT sc.value_text)=1 THEN MAX(sc.value_text) END FROM claims sc WHERE sc.entity_id=e.id AND sc.predicate='callsign' AND sc.status!='superseded') callsign,
+      (SELECT CASE WHEN COUNT(DISTINCT sc.value_text)=1 THEN MAX(sc.value_text) END FROM claims sc WHERE sc.entity_id=e.id AND sc.predicate='manufacturer' AND sc.status!='superseded') manufacturer,
+      (SELECT CASE WHEN COUNT(DISTINCT sc.value_text)=1 THEN MAX(sc.value_text) END FROM claims sc WHERE sc.entity_id=e.id AND sc.predicate='model' AND sc.status!='superseded') model,
+      (SELECT CASE WHEN COUNT(DISTINCT sc.value_text)=1 THEN MAX(sc.value_text) END FROM claims sc WHERE sc.entity_id=e.id AND sc.predicate='operator' AND sc.status!='superseded') operator,
+      (SELECT CASE WHEN COUNT(DISTINCT sc.value_text)=1 THEN MAX(sc.value_text) END FROM claims sc WHERE sc.entity_id=e.id AND sc.predicate='photo_specificity' AND sc.status!='superseded') photo_specificity,
       (SELECT COUNT(*) FROM encounters x WHERE x.entity_id=e.id) encounter_count
       FROM entities e LEFT JOIN identifiers i ON i.entity_id=e.id LEFT JOIN claims c ON c.entity_id=e.id AND c.status!='superseded'
       WHERE UPPER(e.canonical_key) LIKE ? OR EXISTS(SELECT 1 FROM identifiers si WHERE si.entity_id=e.id AND UPPER(si.value) LIKE ?)
