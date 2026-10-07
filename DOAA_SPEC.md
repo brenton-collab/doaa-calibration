@@ -847,15 +847,15 @@ For a new implementation thread, recover state in this order: read this specific
 
 **Current execution path:** Foundation (data/concurrency + Replay-safe observations; responsive composition; Investigator semantics/ⓘ) → World/Knowledge Plumbing (object graph; federated Search; Airframe Journey) → larger synthetic QA/deployment gate → Time (Replay engine; Replay presentation; Aviation Nerd pass; Why/Curiosity).
 
-**Current frontier:** close Knowledge Plumbing correctness. Federated Search, navigable objects, Journey, persisted/free route resolution, historical airframe-day leads, per-airframe/day ADSB.lol trace retrieval, movement segmentation, endpoint-airport interpretation, historical callsign extraction, route corroboration/conflict, reconciled chronology and scheduled lead processing are implemented on the branch.
+**Current frontier:** whole-codebase integrity baseline before deployment/QA. Knowledge Plumbing is substantially implemented; the active pass now audits inherited and new DOAA code together for source, data, runtime and product-semantic integrity before Replay. Recent hardening includes acquisition-only Encounter writes with no public observation mutation route; canonical claim-status enforcement; superseded-claim exclusion from dossiers and Search; deterministic historical Journey claim identity with changed-value/stale supersession and source locators; corrected readsb trace callsign/leg parsing; documented OurAirports coordinate search; observation-based Encounter continuity that tolerates out-of-order samples; monotonic Encounter temporal bounds; and validated/canonicalized observation and relay snapshot timestamps.
 
-Before the QA gate: validate source/runtime syntax; verify historical trace parsing against real payloads; audit all investigation paths against the Encounter invariant; repair lead status/schema inconsistencies; give historical Journey claims stable identity/supersession rather than positional indexes; resolve migration compatibility/state hazards; test route/trace reconciliation with real examples.
+Before the QA gate: complete the whole-codebase invariant sweep, including acquisition/cache/UI contracts; execute real syntax/runtime validation rather than source inspection alone; verify historical trace/route/airport adapters against real payloads; resolve live D1 migration compatibility/state hazards (especially the evolved 0004 migration); then make one coherent deployment and run the larger synthetic browser QA. Do not begin Replay until this baseline is trustworthy.
 
 **Encounter invariant:** an Encounter exists only because DOAA independently observed that physical aircraft in the configured observation area. Search, Investigator, historical research, route/media lookup and external knowledge must never create or increment one.
 
 **Deployment:** the feature branch may intentionally be ahead of production. Do not deploy merely to make branch changes visible. At the larger gate, make the branch deployable coherently, verify migrations/live build, then synthetic-test desktop, phone portrait, short landscape, tablet/split-screen, state/reload, Search/Home/catchment, Sky/Rack/Investigator, navigation, runtime/network failures and Encounter integrity.
 
-Update this handoff when the frontier or release stage changes. Do not use it as a commit diary.
+Update this handoff at every meaningful implementation checkpoint and whenever the frontier, invariant set, deployment state or release stage changes. This repository document is canonical project/development truth and must not lag the implementation. Keep it concise rather than turning it into a commit diary.
 
 ---
 
