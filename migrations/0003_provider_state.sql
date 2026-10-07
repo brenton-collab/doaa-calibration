@@ -2,8 +2,6 @@
 CREATE TABLE IF NOT EXISTS provider_state (
   provider TEXT PRIMARY KEY,
   harvest_cursor INTEGER NOT NULL DEFAULT 0,
-  request_cursor INTEGER NOT NULL DEFAULT 0,
-  request_epoch TEXT,
   local_calls INTEGER NOT NULL DEFAULT 0,
   metered_since TEXT,
   provider_used INTEGER,
