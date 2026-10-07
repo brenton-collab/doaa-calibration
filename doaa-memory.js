@@ -17,7 +17,7 @@ async function ensureSource(db,s){
   return db.prepare(`SELECT id FROM sources WHERE source_key=?`).bind(key).first();
 }
 async function rememberClaim(db,entityId,c,sourceId){
-  const status=c.status||'supported';
+  const allowed=new Set(['supported','conflicting','superseded','inferred']),status=allowed.has(c.status)?c.status:'supported';
   await db.prepare(`INSERT INTO claims(entity_id,predicate,value_text,value_normalized,status) VALUES(?,?,?,?,?) ON CONFLICT(entity_id,predicate,value_text) DO UPDATE SET last_supported_at=CURRENT_TIMESTAMP,status=excluded.status`).bind(entityId,c.predicate,String(c.value),norm(c.value),status).run();
   const claim=await db.prepare(`SELECT id FROM claims WHERE entity_id=? AND predicate=? AND value_text=?`).bind(entityId,c.predicate,String(c.value)).first();
   if(sourceId&&status!=='inferred') await db.prepare(`INSERT INTO evidence(claim_id,source_id,evidence_locator,evidence_excerpt,observed_at) VALUES(?,?,?,?,?) ON CONFLICT(claim_id,source_id,evidence_locator) DO UPDATE SET retrieved_at=CURRENT_TIMESTAMP,evidence_excerpt=COALESCE(excluded.evidence_excerpt,evidence.evidence_excerpt)`).bind(claim.id,sourceId,c.locator||'',c.excerpt||null,c.observed_at||null).run();
