@@ -839,6 +839,26 @@ After the deployed dossier/Rack/Investigator refactor is validated and concrete 
 
 ---
 
+## 24A. Canonical implementation handoff
+
+For a new implementation thread, recover state in this order: read this specification; inspect recent commits on the active branch; treat code/Git history as authoritative for what is actually implemented; then continue the current path in a meaningful autonomous tranche. Do not make Brent act as a next-commit button.
+
+**Active branch:** `foundation-replay-safety`.
+
+**Current execution path:** Foundation (data/concurrency + Replay-safe observations; responsive composition; Investigator semantics/ⓘ) → World/Knowledge Plumbing (object graph; federated Search; Airframe Journey) → larger synthetic QA/deployment gate → Time (Replay engine; Replay presentation; Aviation Nerd pass; Why/Curiosity).
+
+**Current frontier:** close Knowledge Plumbing correctness. Federated Search, navigable objects, Journey, persisted/free route resolution, historical airframe-day leads, per-airframe/day ADSB.lol trace retrieval, movement segmentation, endpoint-airport interpretation, historical callsign extraction, route corroboration/conflict, reconciled chronology and scheduled lead processing are implemented on the branch.
+
+Before the QA gate: validate source/runtime syntax; verify historical trace parsing against real payloads; audit all investigation paths against the Encounter invariant; repair lead status/schema inconsistencies; give historical Journey claims stable identity/supersession rather than positional indexes; resolve migration compatibility/state hazards; test route/trace reconciliation with real examples.
+
+**Encounter invariant:** an Encounter exists only because DOAA independently observed that physical aircraft in the configured observation area. Search, Investigator, historical research, route/media lookup and external knowledge must never create or increment one.
+
+**Deployment:** the feature branch may intentionally be ahead of production. Do not deploy merely to make branch changes visible. At the larger gate, make the branch deployable coherently, verify migrations/live build, then synthetic-test desktop, phone portrait, short landscape, tablet/split-screen, state/reload, Search/Home/catchment, Sky/Rack/Investigator, navigation, runtime/network failures and Encounter integrity.
+
+Update this handoff when the frontier or release stage changes. Do not use it as a commit diary.
+
+---
+
 ## 25. Build Test
 
 For every addition, ask:
