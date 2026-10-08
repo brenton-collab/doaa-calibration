@@ -5,6 +5,11 @@ Updated: 2026-10-08. Evidence-qualified checkpoint; not a live runtime acceptanc
 ## Permanent rules
 Free-only architecture and operation. The human partner owns product vision; the assistant owns execution, tooling, GitHub, testing, documentation and deliberate deployment wherever connected capabilities permit. Update this file at every meaningful checkpoint and before ending a work session; update DOAA_SPEC.md for design, architecture and invariant changes. External research must never create DOAA Encounters.
 
+## Work capacity, execution and status
+- ChatGPT Plus includes limited Work access. Conserve it; use direct connected tooling when suitable, with no paid upgrades.
+- Execute large, coherent end-to-end tranches rather than asking for repeated 'continue' prompts. Do not imply background progress outside actual tool or scheduled runs.
+- Report each state distinctly: implemented, committed, PR open, merged, Preview deployed, Production deployed, runtime/device verified. Record tests and unknowns explicitly.
+
 ## Verified repo state
 - Canonical specification: DOAA_SPEC.md sections 24B and 24C; product decisions: FIELD_NOTES_DECISIONS_2026-10-08.md.
 - Prior reconciliation: PR #11 squash-merged to main at d507d2224a2cad8f810951bca345f74e49a9ef84.
