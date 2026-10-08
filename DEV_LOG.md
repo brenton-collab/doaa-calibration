@@ -47,6 +47,11 @@ Free-only architecture and operation. The human partner owns product vision; the
 - Risk: AirLabs `flights` inventory and its `status` semantics remain provider-dependent. Passing helper tests does not establish completeness or genuinely airborne state for records lacking altitude/status evidence.
 - Next: run `node --test tests/board.test.cjs` locally or in an authorized zero-cost environment, verify real relay payload and release procedure, then deploy with explicit gates.
 
+## 2026-10-08 BOARD malformed-payload regression
+- Branch board-payload-integrity-20261008. A fulfilled provider call returning a non-array is now marked failed for coverage purposes; both malformed responses yield unavailable, not a false zero-flight success.
+- Executed the exact committed `tests/board.test.cjs` content against `board-core.cjs` in an isolated V8 test shim: 5/5 test cases passed, including malformed payload assertions. This is not an actual Node `--test` run or end-to-end provider test.
+- No deployment, D1 changes or paid Actions usage. Release status remains merged-source only pending PR and subsequent live validation.
+
 ## Current frontier: T0 truth and deployment recovery
 1. Recover the previously successful assistant-led deployment path, connected permissions, preview/production workflow, migration procedure and rollback. Verify without pushing a needless deploy.
 2. Check live/preview D1 migration and scheduled collector status without unnecessary writes.
