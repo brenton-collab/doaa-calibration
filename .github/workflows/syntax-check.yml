@@ -87,6 +87,12 @@ jobs:
               raise SystemExit("Historical search rows must not manufacture zero live telemetry")
           if "*3.28084" not in browser or "*0.539957" not in browser:
               raise SystemExit("Board handoff telemetry normalization missing")
+          if "const z=activeSurface(d)" not in enrichment:
+              raise SystemExit("Live Investigator refresh must preserve the active surface")
+          if "&&((h.encounter_count||0)>0||!!x.searchObject?.last_seen_at)" not in browser:
+              raise SystemExit("Historical presentation must require observed Encounter evidence")
+          if "'DOAA KNOWLEDGE · '" not in browser:
+              raise SystemExit("Local knowledge without Encounters needs non-historical provenance")
           print("semantic contracts ok")
           PY
   migration-contracts:
