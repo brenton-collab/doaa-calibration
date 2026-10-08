@@ -98,6 +98,9 @@ jobs:
           for contract in ["max-height:calc(100dvh", "--inspector-bottom", "function closeDetail()", "function swipeInspector(", "inspector-tabs"]:
               if contract not in (browser + enrichment):
                   raise SystemExit("Responsive Investigator contract missing: " + contract)
+          inspector_css = browser.split(".inspector-tabs{",1)[1].split("}",1)[0]
+          if "position:sticky" in inspector_css or "bottom:0" in inspector_css:
+              raise SystemExit("Investigator navigation must scroll in normal card flow")
           print("semantic contracts ok")
           PY
   migration-contracts:
