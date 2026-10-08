@@ -107,6 +107,10 @@ jobs:
                   raise SystemExit("Investigator persistent chrome state contract missing: " + contract)
           if "function clearDetailTray()" not in browser:
               raise SystemExit("Non-aircraft Investigator views must clear persistent tray")
+          if "data-fact-explain" not in enrichment or "[data-fact-explain]" not in browser:
+              raise SystemExit("Dynamic Investigator fact explainers must be actionable and delegated")
+          if "function toggleExplainer(" not in browser:
+              raise SystemExit("Contextual explainer toggle contract missing")
           print("semantic contracts ok")
           PY
   migration-contracts:
