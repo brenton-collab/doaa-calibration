@@ -102,6 +102,11 @@ jobs:
               raise SystemExit("Investigator chrome must exist synchronously in base DOM")
           if "function renderTray(" not in enrichment or "data-tray-doaa" not in enrichment:
               raise SystemExit("Investigator persistent tray wiring missing")
+          for contract in ["d.dataset.activeSurface=z", "d.closest('.detail')?.classList.contains('show')"]:
+              if contract not in enrichment:
+                  raise SystemExit("Investigator persistent chrome state contract missing: " + contract)
+          if "function clearDetailTray()" not in browser:
+              raise SystemExit("Non-aircraft Investigator views must clear persistent tray")
           print("semantic contracts ok")
           PY
   migration-contracts:
