@@ -855,6 +855,8 @@ Before the QA gate: complete the whole-codebase invariant sweep, including acqui
 
 **Deployment:** the feature branch may intentionally be ahead of production. Do not deploy merely to make branch changes visible. At the larger gate, make the branch deployable coherently, verify migrations/live build, then synthetic-test desktop, phone portrait, short landscape, tablet/split-screen, state/reload, Search/Home/catchment, Sky/Rack/Investigator, navigation, runtime/network failures and Encounter integrity.
 
+Cloudflare Preview builds now require explicit preview resource bindings when production D1 is configured. Production build failures observed on the Foundation PR were preview-configuration failures, not DOAA runtime failures. `wrangler.jsonc` now binds Preview `DB` to the isolated `doaa-memory-preview` D1 database (`939eda3b-4894-497b-9f67-209771761b3f`); production remains bound to `doaa-memory` (`434f90d3-397b-48d3-8249-4c48cf1e8936`). Never point Preview at production D1. The preview database still needs the migration chain applied before D1-dependent preview runtime tests can be considered valid. Production Foundation deployment/schema verification remains the release frontier.
+
 Update this handoff at every meaningful implementation checkpoint and whenever the frontier, invariant set, deployment state or release stage changes. This repository document is canonical project/development truth and must not lag the implementation. Keep it concise rather than turning it into a commit diary.
 
 ---
