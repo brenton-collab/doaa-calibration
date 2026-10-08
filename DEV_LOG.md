@@ -18,6 +18,10 @@ Free-only architecture and operation. The human partner owns product vision; the
 - The precise assistant-led deployment route demonstrated in prior work is not yet reverified in this checkpoint. Recover it from GitHub history and connected deployment tools; do not claim deployment impossible.
 - No package.json or .github/workflows/deploy.yml or .github/workflows/ci.yml was found at the specifically probed paths; other mechanisms may exist.
 
+## 2026-10-08 engine tranche checkpoint
+- Branch: board-classification-truth-20261008. BOARD UI correction in index.html: reuse existing yowLeg classifier and show UNK rather than falsely labelling an unrecognized route DEP. A missing/non-array `flights` response is now treated as feed failure, not a truthful zero-aircraft result.
+- Evidence: direct source inspection and targeted code edit. Syntax/browser regression tests: not run. Live provider payload: not checked. Production/Preview: not deployed or verified. D1: unchanged/not checked.
+- Remaining: verify whether relay /board returns complete airport-centric airborne movements; check provider coverage and both IATA/ICAO matching; test Journey and Encounter boundaries with real fixtures. Recover established deployment procedure before release.
 ## Current frontier: T0 truth and deployment recovery
 1. Recover the previously successful assistant-led deployment path, connected permissions, preview/production workflow, migration procedure and rollback. Verify without pushing a needless deploy.
 2. Check live/preview D1 migration and scheduled collector status without unnecessary writes.
