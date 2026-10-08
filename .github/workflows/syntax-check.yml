@@ -95,12 +95,13 @@ jobs:
               raise SystemExit("Local knowledge without Encounters needs non-historical provenance")
           if "'KNOWN AIRFRAME · NOT OBSERVED'" not in browser or "unobserved?'KNOWN AIRFRAME · NOT OBSERVED'" not in browser:
               raise SystemExit("Unobserved local knowledge must not fall through to synthetic live telemetry")
-          for contract in ["max-height:calc(100dvh", "--inspector-bottom", "function closeDetail()", "function swipeInspector(", "inspector-tabs"]:
+          for contract in ["max-height:calc(100dvh", "--inspector-bottom", "function closeDetail()", "function swipeInspector(", "detail-tray"]:
               if contract not in (browser + enrichment):
                   raise SystemExit("Responsive Investigator contract missing: " + contract)
-          inspector_css = browser.split(".inspector-tabs{",1)[1].split("}",1)[0]
-          if "position:sticky" in inspector_css or "bottom:0" in inspector_css:
-              raise SystemExit("Investigator navigation must scroll in normal card flow")
+          if 'id="detailclose"' not in browser or 'id="detailbody"' not in browser or 'id="detailtray"' not in browser:
+              raise SystemExit("Investigator chrome must exist synchronously in base DOM")
+          if "function renderTray(" not in enrichment or "data-tray-doaa" not in enrichment:
+              raise SystemExit("Investigator persistent tray wiring missing")
           print("semantic contracts ok")
           PY
   migration-contracts:
