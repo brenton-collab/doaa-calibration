@@ -15,8 +15,8 @@ function direction(flight, airport) {
   return arrival ? 'ARR' : departure ? 'DEP' : 'UNKNOWN';
 }
 function boardCoverage(settled) {
-  const failures = settled.map((s, i) => s.status === 'rejected'
-    ? { direction: i === 0 ? 'departures' : 'arrivals', error: String(s.reason?.message || s.reason) }
+  const failures = settled.map((s, i) => (s.status === 'rejected' || !Array.isArray(s.value))
+    ? { direction: i === 0 ? 'departures' : 'arrivals', error: s.status === 'rejected' ? String(s.reason?.message || s.reason) : 'malformed provider response' }
     : null).filter(Boolean);
   return { coverage: failures.length ? 'partial' : 'complete', failures, unavailable: failures.length === settled.length };
 }
