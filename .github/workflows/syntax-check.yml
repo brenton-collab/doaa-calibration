@@ -95,6 +95,9 @@ jobs:
               raise SystemExit("Local knowledge without Encounters needs non-historical provenance")
           if "'KNOWN AIRFRAME · NOT OBSERVED'" not in browser or "unobserved?'KNOWN AIRFRAME · NOT OBSERVED'" not in browser:
               raise SystemExit("Unobserved local knowledge must not fall through to synthetic live telemetry")
+          for contract in ["max-height:calc(100dvh", "--inspector-bottom", "function closeDetail()", "function swipeInspector(", "inspector-tabs"]:
+              if contract not in (browser + enrichment):
+                  raise SystemExit("Responsive Investigator contract missing: " + contract)
           print("semantic contracts ok")
           PY
   migration-contracts:
