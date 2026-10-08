@@ -27,7 +27,8 @@
     "d1_databases": [
       {
         "binding": "DB",
-        "database_id": "939eda3b-4894-497b-9f67-209771761b3f"
+        "database_id": "939eda3b-4894-497b-9f67-209771761b3f",
+        "database_name": "doaa-memory-preview"
       }
     ]
   }
