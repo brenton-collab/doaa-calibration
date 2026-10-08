@@ -841,6 +841,42 @@ After the deployed dossier/Rack/Investigator refactor is validated and concrete 
 
 ---
 
+## 24B. Reconciled execution frontier — 2026-10-08
+
+**Authority:** Field Notes supersedes conflicting visual and interaction details in sections 5, 11 and older backlog entries; domain invariants and provenance rules remain. Code is authoritative for implementation, not this document's older shipped-status language. This reconciliation is based on repository inspection, not a live production acceptance test.
+
+**Actual foundation observed on main:** `index.html` contains Sky/Rack/BOARD and Inspector chrome, with a dark-only root palette, map raster treatment, five-tab tray, and small typography. `src/worker.js` implements relay acquisition, airport/weather lookup and memory ingestion; `doaa-memory.js` contains D1 observation/encounter and journey-leg claim handling. `wrangler.jsonc` declares five-minute collection cron and separate Preview D1 binding. Presence of code/configuration is **not** evidence of successful production operation or migration.
+
+**Supersession and contradiction register**
+- Field Notes Light is the preferred default; the near-black visual rule in section 11 applies to optional Dark, not all themes. Preserve geographic map character, half-arrow markers and tracks in both themes. Do not replace them with silhouettes or a flat blank map.
+- The earlier Investigator invariant lists CONTACT / FLIGHT / AIRCRAFT / MEDIA / ENCOUNTERS; Field Notes also assigns Journey a distinct conceptual purpose. Do **not** silently add a sixth permanent tab. Resolve Journey's placement within the existing navigation or explicitly amend the navigation contract after testing.
+- Section 24 calls BOARD an unimplemented feature; this is obsolete. BOARD has a frontend implementation and flight-data backend, but reported empty/misclassified movement behavior is a **defect under investigation**. Airport-centred airborne YOW acquisition is independent of Sky catchment; unknown/provider failure must not appear as zero traffic.
+- Older dark-only colours, decorative info glyphs and small-font styling are superseded by shared theme tokens, readable datum rows, independent ↗ navigation and ⓘ explanation targets, persistent reserved close chrome, and responsive validation.
+- `Replay = Sky clock detached from now` remains correct for DOAA Observed Replay; externally sourced historical reconstruction is a distinct, explicitly labelled data mode, not an Encounter or DOAA observation. Never blend their evidence.
+- The one-day discipline is a **scope/quality constraint**, not a claim that all accepted extensions must be implemented immediately. OPS, Patterns, ATC transcription and ambitious autonomous knowledge expansion are deferrable.
+- Existing Worker fixed observation-centre coordinates require a privacy/configuration audit against section 22. Do not document, publish or reproduce the precise private observation location in planning.
+- The prior `explainer-wiring` frontier and build numbers in 24A are historical handoff text; do not use them as current branch/release evidence without commit and runtime verification.
+
+**Workload inventory (status is evidence-qualified):**
+1. **Implemented foundation, unverified in production:** Sky/raster/aircraft/tracks, Rack, Inspector five-tab chrome, BOARD rendering, relay/flight acquisition, D1 knowledge/observation machinery, collection cron configuration, Preview DB separation, contextual explainer code. Require browser, payload, schema and deployment checks.
+2. **Defective or reported defective:** Journey BEFORE/NOW/NEXT chronology and NOW/Flight disagreement; BOARD empty/ARR-DEP errors; Investigator overlapping close/readability/isolated controls; potential explainer-wiring regression; Media acquisition-to-render gaps; identity reassignment, data normalization and source-confidence leaks; privacy/configuration inconsistency. Reproduce before marking repaired.
+3. **Partially implemented:** airframe biography and provenance, media single-image presentation, relationship-aware search, persistent encounter/history/replay-ready samples, responsive layout, semantic datum navigation and favourites. Validate actual completeness before claiming delivery.
+4. **Accepted, planned:** Field Notes Light default and optional Dark, global unit display conversions, accessible Investigator datum grammar, grounded photo specificity, gallery with licences, compass-integrated range rings, provenance-aware Journey, Observed Replay and its time isolation.
+5. **Conditional/deferred:** controlled-airspace boundaries pending authentic licensed geometry, multi-contact Replay, external historical reconstruction, OPS, Patterns, sophisticated LOOK/OBV, generalized favourite graph, ambient Sky and ATC integrations. Do not allow these to block correctness and daily usability.
+
+**Dependency-aware weekend tranches:**
+- **T0 — Truth and release baseline (next):** inspect production/preview version and D1 migration state without deploying; reproduce BOARD and Journey against recorded provider payloads; trace source → normalized identity/flight → UI; test explainer click wiring, close overlap and touch targets in browser; verify scheduled collector and Encounter creation boundaries. Add deterministic regression fixtures for BOARD ARR/DEP, zero-data versus zero-traffic, Journey adjacency and NOW/Flight agreement, and external-research non-creation of Encounters. Fix proven defects together only where they share a boundary. Exit: correct classifications, honest unknowns, preserved encounters, tested desktop/phone/landscape.
+- **T1 — Inspector legibility and epistemics:** reserved header/body/tray, accessible independent datum rows ↗ / ⓘ, typography, relationship labels, chronology/biography surface placement, hero specificity. No new acquisition until UI can render known facts faithfully.
+- **T2 — Field Notes visual system:** semantic light/dark tokens with Light default and persisted browser setting; map before/after at identical location/zoom; preserve aircraft glyphs, tracks, hydrography, geographic depth. Include global unit settings with canonical geometry untouched and aviation-specific exceptions.
+- **T3 — Knowledge and media:** claim-level provenance, registration history, full biography data audit, normalization, licensed gallery, attribution, D1/media boundary diagnostics and relationship navigation.
+- **T4 — Time:** validate persistent timestamped observations and collector, implement DOAA Observed Replay without future leakage, then selected/multi-contact only if evidence and usability warrant it. External historical reconstruction is a separately gated future feature.
+- **T5 — Optional aviation depth:** authentic controlled-airspace overlays and integrated compass/rings after map/theme baseline; OPS/Patterns/LOOK only when actual use justifies them. Rings may move into T2 if straightforward, but must not disturb map behavior.
+
+**Current implementation instruction:** Start T0. Avoid simultaneous theme redesign and flight-data correctness repair. The next PR should contain fixture-backed BOARD/Journey/Encounter correctness work and targeted Investigator interaction repairs, not a broad feature expansion. Run local/static checks before CI; avoid unnecessary Actions. No runtime deployment is authorized by this documentation reconciliation.
+
+**Non-negotiable Encounter invariant:** Only timestamped, genuine DOAA observations inside the configured observation domain may create or extend Encounters. Flight schedules, provider history, web research, Search, Journey and external historical reconstruction may enrich knowledge, but must never manufacture observations or Encounters.
+
+---
 ## 24A. Canonical implementation handoff
 
 For a new implementation thread, recover state in this order: read this specification; inspect recent commits on the active branch; treat code/Git history as authoritative for what is actually implemented; then continue the current path in a meaningful autonomous tranche. Do not make Brent act as a next-commit button.
