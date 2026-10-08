@@ -899,6 +899,20 @@ Update this handoff at every meaningful implementation checkpoint and whenever t
 
 ---
 
+## 24C. Standing operating contract — 2026-10-08
+
+**Free is mandatory.** DOAA must remain useful without paid APIs, subscriptions, billable hosting upgrades or infrastructure that inevitably requires payment. Check quotas and free-tier limits before adding requests, scheduled jobs, storage or data providers. Never activate paid billing to unblock a feature. Redesign, defer or omit anything that cannot fit. Conserve scarce GitHub Actions minutes with targeted validation.
+
+**Roles and execution.** The human partner owns creative direction, imagination, product decisions and firsthand feedback. The assistant is the doer: code, investigate, test, operate connected tools, handle GitHub/PRs, document and deploy where capabilities and authorization permit. Do not make the human a routine command runner, copy/paste intermediary or next-commit button. Request only truly necessary product decisions, permissions, credentials or physical-device observations.
+
+**Assistant-led deployment is an established capability, not an assumed impossibility.** Recover the previously successful end-to-end path from repository history, connected tools and prior handoffs before claiming a deployment blocker. The checked Wrangler configuration declares a Cloudflare Worker, static assets, production/preview-isolated D1 and a five-minute cron, but does not by itself establish the exact deploy mechanism, live version or schema state. Document the verified deploy procedure, migration order, preview and production gates, smoke tests and rollback in DEV_LOG.md once recovered. Deployment must be deliberate, tested, free-tier-safe and never automatic merely because docs changed.
+
+**Documentation is part of the implementation.** Update DOAA_SPEC.md whenever decisions, architecture, invariants or priorities change. Update DEV_LOG.md at each meaningful checkpoint and before ending a work session: branch/commit/PR, changed files, tests/results, actual production and preview status, D1 migrations, risks and next executable step. Clearly separate verified facts, user-reported defects and proposals. Do not let a future thread reconstruct the project from conversation archaeology.
+
+**Restart procedure.** Read DOAA_SPEC.md, FIELD_NOTES_DECISIONS_2026-10-08.md, DEV_LOG.md and recent Git history; inspect actual code and deployment connections; resume the documented frontier autonomously. Old section 24A branch and release claims are historical until reverified.
+
+---
+
 ## 25. Build Test
 
 For every addition, ask:
