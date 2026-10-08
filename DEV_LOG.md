@@ -33,6 +33,12 @@ Free-only architecture and operation. The human partner owns product vision; the
 - The assistant can inspect Render deployments and service configuration via connected tools. Cloudflare Worker deployment and D1 migration write access have **not** been verified. The full end-to-end deploy route is still open.
 - Cost watch: Render plan was returned as `free`; continue to monitor free-tier limitations, and do not upgrade.
 
+## 2026-10-08 BOARD feed coverage correction
+- Branch board-feed-evidence-20261008. Relay now marks complete versus partial arrivals/departures provider coverage; if both provider queries fail it returns an error instead of a false empty success. Frontend displays an explicit incomplete-coverage warning for partial or legacy unknown responses.
+- Root defect: `Promise.allSettled` silently dropped failed arrival/departure queries and returned `ok:true` with an empty array. Empty results therefore did not prove no traffic. Both successful queries still do not prove provider inventory completeness.
+- This branch changes relay.js and index.html. Tests: source-level review only; no automated fixtures or live provider validation. Render and Cloudflare deployments not performed. D1 unchanged.
+- Connected Render relay is free-plan and autoDeploy configured, but prior deployment history showed older live commit. Verify actual deployment state after merge; Cloudflare Worker deployment still unverified.
+
 ## Current frontier: T0 truth and deployment recovery
 1. Recover the previously successful assistant-led deployment path, connected permissions, preview/production workflow, migration procedure and rollback. Verify without pushing a needless deploy.
 2. Check live/preview D1 migration and scheduled collector status without unnecessary writes.
