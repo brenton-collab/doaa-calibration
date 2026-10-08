@@ -27,6 +27,12 @@ Free-only architecture and operation. The human partner owns product vision; the
 - This is a conservative correctness guard, not a complete Journey implementation. Historical claims, observations and route lookup remain distinct; no Encounter creation path was added.
 - Tests: source edit verified by GitHub commit; automated runtime/fixture tests not run. Production and Preview not deployed; D1 migration not checked. Next: introduce deterministic operation-identity/adjacency fixtures, verify live flight payload and UI rendering, then deploy only after release gate.
 
+## 2026-10-08 deployment reconnaissance
+- Connected Render workspace verified: `doaa-adsb-relay` is a **free-plan** web service, repository `brenton-collab/doaa-calibration`, branch `main`, autoDeploy configured `yes` / trigger `commit`, start command `node relay.js`, build command `echo DOAA relay`. This is the relay service, **not** the Cloudflare Worker or its D1 database.
+- Render deployment API currently reports its live relay deployment `dep-db2qqj59fdbs738uguc0` at commit `beff09f598ab92cd81d5aa875af59bfc1e1c9290` (2026-10-07). More recent GitHub merges are **not evidenced as live on Render**. Do not conflate Render's configured autoDeploy with actual successful deployment or with Cloudflare production.
+- The assistant can inspect Render deployments and service configuration via connected tools. Cloudflare Worker deployment and D1 migration write access have **not** been verified. The full end-to-end deploy route is still open.
+- Cost watch: Render plan was returned as `free`; continue to monitor free-tier limitations, and do not upgrade.
+
 ## Current frontier: T0 truth and deployment recovery
 1. Recover the previously successful assistant-led deployment path, connected permissions, preview/production workflow, migration procedure and rollback. Verify without pushing a needless deploy.
 2. Check live/preview D1 migration and scheduled collector status without unnecessary writes.
