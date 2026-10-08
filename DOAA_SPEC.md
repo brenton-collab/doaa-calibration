@@ -1,3 +1,5 @@
+> **October 8 Field Notes design and UX decisions:** See [`FIELD_NOTES_DECISIONS_2026-10-08.md`](FIELD_NOTES_DECISIONS_2026-10-08.md). This is canonical agreed direction and defect inventory, not implemented/shipped status. Read alongside this specification and current code.
+
 # DOAA — Canonical Product Specification & Development State
 
 **Status:** Canonical working specification  
