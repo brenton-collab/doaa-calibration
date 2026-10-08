@@ -93,6 +93,8 @@ jobs:
               raise SystemExit("Historical presentation must require observed Encounter evidence")
           if "'DOAA KNOWLEDGE · '" not in browser:
               raise SystemExit("Local knowledge without Encounters needs non-historical provenance")
+          if "'KNOWN AIRFRAME · NOT OBSERVED'" not in browser or "unobserved?'KNOWN AIRFRAME · NOT OBSERVED'" not in browser:
+              raise SystemExit("Unobserved local knowledge must not fall through to synthetic live telemetry")
           print("semantic contracts ok")
           PY
   migration-contracts:
