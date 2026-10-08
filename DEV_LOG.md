@@ -61,3 +61,8 @@ Free-only architecture and operation. The human partner owns product vision; the
 
 ## Required checkpoint format
 Date; branch/commit/PR; changed files; tests and outcomes; preview/production deploy status and versions; D1 migration state; verified defects and risks; next executable step. Write 'not checked' instead of guessing.
+
+## 2026-10-08 actual Node regression execution
+- Ran the exact current `board-core.cjs` and `tests/board.test.cjs` content with Node.js v22.16.0, using a temporary local workspace and `node --test`. Result: 5 passed, 0 failed. No network/provider calls or GitHub Actions minutes.
+- GitHub main remains the release source. Render relay last observed live at October 7 commit `beff09f`; Cloudflare Workers Builds deployment success and D1 schema still not directly verified.
+- Release gate: do not equate merge with deploy. Inspect Render deployment state and Cloudflare deployment/build, then test health and BOARD/Journey on the served Worker. Avoid triggering redundant Render deployment while its autoDeploy integration is enabled; investigate missing auto-build first.
