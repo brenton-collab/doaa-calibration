@@ -77,6 +77,16 @@ jobs:
               raise SystemExit("Conflict-safe claim projection missing")
           if "conflicting_predicates" not in memory:
               raise SystemExit("Conflict metadata missing from search")
+          if "julianday(o.observed_at) BETWEEN julianday(?,'-15 minutes')" not in memory:
+              raise SystemExit("Encounter continuity must compare ISO timestamps numerically")
+          if ".filter(inObservationArea).map(a=>handleMemory" not in worker:
+              raise SystemExit("Viewport acquisition must not persist remote exploration as Encounters")
+          if "['AIR CANADA','ACA','AC']" in worker:
+              raise SystemExit("Broad two-letter airline alias would overmatch local history")
+          if "HISTORICAL · NO LIVE TELEMETRY" not in browser:
+              raise SystemExit("Historical search rows must not manufacture zero live telemetry")
+          if "*3.28084" not in browser or "*0.539957" not in browser:
+              raise SystemExit("Board handoff telemetry normalization missing")
           print("semantic contracts ok")
           PY
   migration-contracts:
