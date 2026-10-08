@@ -843,7 +843,7 @@ After the deployed dossier/Rack/Investigator refactor is validated and concrete 
 
 For a new implementation thread, recover state in this order: read this specification; inspect recent commits on the active branch; treat code/Git history as authoritative for what is actually implemented; then continue the current path in a meaningful autonomous tranche. Do not make Brent act as a next-commit button.
 
-**Active branch:** `foundation-replay-safety`.
+**Active branch:** `post-foundation-qa`.
 
 **Current execution path:** Foundation (data/concurrency + Replay-safe observations; responsive composition; Investigator semantics/ⓘ) → World/Knowledge Plumbing (object graph; federated Search; Airframe Journey) → larger synthetic QA/deployment gate → Time (Replay engine; Replay presentation; Aviation Nerd pass; Why/Curiosity).
 
@@ -856,6 +856,8 @@ Before the QA gate: complete the whole-codebase invariant sweep, including acqui
 **Deployment:** the feature branch may intentionally be ahead of production. Do not deploy merely to make branch changes visible. At the larger gate, make the branch deployable coherently, verify migrations/live build, then synthetic-test desktop, phone portrait, short landscape, tablet/split-screen, state/reload, Search/Home/catchment, Sky/Rack/Investigator, navigation, runtime/network failures and Encounter integrity.
 
 Cloudflare Preview builds now require explicit preview resource bindings when production D1 is configured. Production build failures observed on the Foundation PR were preview-configuration failures, not DOAA runtime failures. `wrangler.jsonc` now binds Preview `DB` to the isolated `doaa-memory-preview` D1 database (`939eda3b-4894-497b-9f67-209771761b3f`); production remains bound to `doaa-memory` (`434f90d3-397b-48d3-8249-4c48cf1e8936`). Never point Preview at production D1. The preview database still needs the migration chain applied before D1-dependent preview runtime tests can be considered valid. Production Foundation deployment/schema verification remains the release frontier.
+
+**Production Foundation gate:** GREEN. The corrected Worker is deployed on production and `/api/schema-health` returned `ok:true` with all nine release-critical observation/provider column and index checks true. Production D1 migration bookkeeping showed only `0001_doaa_memory.sql` recorded; the repository's 0002–0005 schema changes were therefore applied sequentially through the D1 console and verified by the deployed health probe. No speculative forward-repair migration was required. The release frontier is now outside-in synthetic/runtime QA; Replay remains gated on that QA. Because 0002–0005 were applied manually rather than through Wrangler migration application, migration bookkeeping remains behind the physical schema and must be reconciled before any future automated migration run to avoid reapplying ALTER statements. Preview D1 remains isolated and its migration state is still unverified.
 
 Update this handoff at every meaningful implementation checkpoint and whenever the frontier, invariant set, deployment state or release stage changes. This repository document is canonical project/development truth and must not lag the implementation. Keep it concise rather than turning it into a commit diary.
 
