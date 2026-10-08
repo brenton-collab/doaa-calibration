@@ -21,6 +21,8 @@ test('Coverage distinguishes zero traffic from failed queries', () => {
   assert.equal(boardCoverage([success, failure]).coverage, 'partial');
   assert.deepEqual(boardCoverage([failure, failure]).failures.map(x => x.direction), ['departures', 'arrivals']);
   assert.equal(boardCoverage([failure, failure]).unavailable, true);
+  assert.equal(boardCoverage([success, { status: 'fulfilled', value: { error: 'malformed' } }]).coverage, 'partial');
+  assert.equal(boardCoverage([{ status: 'fulfilled', value: null }, { status: 'fulfilled', value: {} }]).unavailable, true);
 });
 test('Known grounded or cancelled records are excluded; unknown status remains evidence-limited', () => {
   assert.equal(isAirborne({ status: 'landed' }), false);
