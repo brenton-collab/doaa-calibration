@@ -1,6 +1,7 @@
 // DOAA durable knowledge layer. Bind a Cloudflare D1 database as env.DB.
 const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'content-type':'application/json;charset=utf-8','cache-control':'no-store'}});
 const norm=v=>String(v??'').trim().toUpperCase().replace(/\s+/g,' ');
+const validDay=day=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(day))return false;const t=Date.parse(day+'T00:00:00Z');return Number.isFinite(t)&&new Date(t).toISOString().slice(0,10)===day};
 const LEAD_PREDICATES={registration:'registration',icao24:'icao24',msn:'msn',serial_number:'msn',previous_registration:'registration',operator_code:'operator_code',callsign:'callsign',icao_type:'icao_type'};
 
 async function ensureEntity(db,kind,key){
@@ -9,7 +10,10 @@ async function ensureEntity(db,kind,key){
 }
 async function rememberIdentifier(db,entityId,scheme,value){
   if(!value)return;
-  await db.prepare(`INSERT INTO identifiers(entity_id,scheme,value,normalized_value) VALUES(?,?,?,?) ON CONFLICT(scheme,normalized_value) DO UPDATE SET entity_id=excluded.entity_id,value=excluded.value,last_seen_at=CURRENT_TIMESTAMP`).bind(entityId,scheme,String(value),norm(value)).run();
+  const s=String(scheme||'').trim().toLowerCase(),v=String(value),n=norm(value);if(!s||!n)return;
+  const owner=await db.prepare(`SELECT entity_id FROM identifiers WHERE scheme=? AND normalized_value=?`).bind(s,n).first();
+  if(owner&&owner.entity_id!==entityId)return;
+  await db.prepare(`INSERT INTO identifiers(entity_id,scheme,value,normalized_value) VALUES(?,?,?,?) ON CONFLICT(scheme,normalized_value) DO UPDATE SET value=excluded.value,last_seen_at=CURRENT_TIMESTAMP`).bind(entityId,s,v,n).run();
 }
 async function ensureSource(db,s){
   const key=s.key||s.url||`${s.kind||'source'}:${s.name}`;
@@ -17,17 +21,17 @@ async function ensureSource(db,s){
   return db.prepare(`SELECT id FROM sources WHERE source_key=?`).bind(key).first();
 }
 async function rememberClaim(db,entityId,c,sourceId){
-  const status=c.status||'supported';
-  await db.prepare(`INSERT INTO claims(entity_id,predicate,value_text,value_normalized,status) VALUES(?,?,?,?,?) ON CONFLICT(entity_id,predicate,value_text) DO UPDATE SET last_supported_at=CURRENT_TIMESTAMP,status=excluded.status`).bind(entityId,c.predicate,String(c.value),norm(c.value),status).run();
-  const claim=await db.prepare(`SELECT id FROM claims WHERE entity_id=? AND predicate=? AND value_text=?`).bind(entityId,c.predicate,String(c.value)).first();
+  const allowed=new Set(['supported','conflicting','superseded','inferred']),status=allowed.has(c.status)?c.status:'supported',predicate=String(c.predicate||'').trim(),value=String(c.value??'').trim();if(!predicate||!value)return null;
+  await db.prepare(`INSERT INTO claims(entity_id,predicate,value_text,value_normalized,status) VALUES(?,?,?,?,?) ON CONFLICT(entity_id,predicate,value_text) DO UPDATE SET last_supported_at=CURRENT_TIMESTAMP,status=excluded.status`).bind(entityId,predicate,value,norm(value),status).run();
+  const claim=await db.prepare(`SELECT id FROM claims WHERE entity_id=? AND predicate=? AND value_text=?`).bind(entityId,predicate,value).first();
   if(sourceId&&status!=='inferred') await db.prepare(`INSERT INTO evidence(claim_id,source_id,evidence_locator,evidence_excerpt,observed_at) VALUES(?,?,?,?,?) ON CONFLICT(claim_id,source_id,evidence_locator) DO UPDATE SET retrieved_at=CURRENT_TIMESTAMP,evidence_excerpt=COALESCE(excluded.evidence_excerpt,evidence.evidence_excerpt)`).bind(claim.id,sourceId,c.locator||'',c.excerpt||null,c.observed_at||null).run();
-  const lt=LEAD_PREDICATES[c.predicate];
-  if(lt) await db.prepare(`INSERT INTO leads(entity_id,lead_type,lead_value,normalized_value,status,discovered_from_claim_id,discovered_from_source_id) VALUES(?,?,?,?,?,?,?) ON CONFLICT(lead_type,normalized_value) DO NOTHING`).bind(entityId,lt,String(c.value),norm(c.value),'pending',claim.id,sourceId||null).run();
+  const lt=LEAD_PREDICATES[predicate];
+  if(lt) await db.prepare(`INSERT INTO leads(entity_id,lead_type,lead_value,normalized_value,status,discovered_from_claim_id,discovered_from_source_id) VALUES(?,?,?,?,?,?,?) ON CONFLICT(lead_type,normalized_value) DO NOTHING`).bind(entityId,lt,value,norm(value),'pending',claim.id,sourceId||null).run();
   return claim.id;
 }
-async function markLead(db,id,status,error=null,retryHours=24){const retry=status==='retry'?new Date(Date.now()+retryHours*3600000).toISOString():null;await db.prepare(`UPDATE leads SET status=?,attempts=attempts+1,last_attempt_at=CURRENT_TIMESTAMP,retry_after=?,last_error=? WHERE id=?`).bind(status,retry,error,id).run()}
+async function markLead(db,id,status,error=null,retryHours=24){const retry=status==='retry'?new Date(Date.now()+retryHours*3600000).toISOString():null,resolved=status==='resolved'?new Date().toISOString():null;await db.prepare(`UPDATE leads SET status=?,attempts=attempts+1,last_attempt_at=CURRENT_TIMESTAMP,retry_after=?,resolved_at=COALESCE(?,resolved_at) WHERE id=?`).bind(status,retry,resolved,id).run()}
 async function dossier(db,entityId){
-  const claims=await db.prepare(`SELECT c.id,c.predicate,c.value_text,c.status,c.first_supported_at,c.last_supported_at,s.source_name,s.source_url,s.source_kind,e.retrieved_at FROM claims c LEFT JOIN evidence e ON e.claim_id=c.id LEFT JOIN sources s ON s.id=e.source_id WHERE c.entity_id=? ORDER BY c.predicate,c.last_supported_at DESC`).bind(entityId).all();
+  const claims=await db.prepare(`SELECT c.id,c.predicate,c.value_text,c.status,c.first_supported_at,c.last_supported_at,s.source_name,s.source_url,s.source_kind,e.retrieved_at FROM claims c LEFT JOIN evidence e ON e.id=(SELECT e2.id FROM evidence e2 WHERE e2.claim_id=c.id ORDER BY e2.retrieved_at DESC,e2.id DESC LIMIT 1) LEFT JOIN sources s ON s.id=e.source_id WHERE c.entity_id=? AND c.status!='superseded' ORDER BY c.predicate,c.last_supported_at DESC`).bind(entityId).all();
   const ids=await db.prepare(`SELECT scheme,value,first_seen_at,last_seen_at FROM identifiers WHERE entity_id=? ORDER BY scheme`).bind(entityId).all();
   const leads=await db.prepare(`SELECT lead_type,lead_value,status,attempts,last_attempt_at,retry_after FROM leads WHERE entity_id=? ORDER BY status,lead_type`).bind(entityId).all();
   return {identifiers:ids.results||[],claims:claims.results||[],leads:leads.results||[]};
@@ -43,19 +47,25 @@ export async function handleMemory(request,env){
     return hit?json({ok:true,entity:hit,...await dossier(env.DB,hit.id)}):json({ok:true,found:false});
   }
   if(u.pathname==='/memory/observe'&&request.method==='POST'){
-    const p=await request.json(),hex=norm(p.icao24||p.contact_key);if(!hex)return json({ok:false,error:'icao24 required'},400);
+    const p=await request.json();if(p.observation_source!=='acquisition')return json({ok:false,error:'observation writes are acquisition-only'},403);const hex=norm(p.icao24||p.contact_key);if(!/^[0-9A-F]{6}$/.test(hex))return json({ok:false,error:'valid icao24 required'},400);
+    const latitude=Number(p.latitude),longitude=Number(p.longitude);if(!Number.isFinite(latitude)||latitude<-90||latitude>90||!Number.isFinite(longitude)||longitude<-180||longitude>180)return json({ok:false,error:'valid coordinates required'},400);
     const entity=await ensureEntity(env.DB,'airframe',hex);await rememberIdentifier(env.DB,entity.id,'icao24',hex);if(p.registration)await rememberIdentifier(env.DB,entity.id,'registration',p.registration);if(p.type_code)await rememberIdentifier(env.DB,entity.id,'icao_type',p.type_code);
-    const at=p.observed_at||new Date().toISOString(),call=norm(p.callsign||''),type=norm(p.type_code||'');
-    let enc=await env.DB.prepare(`SELECT id,first_seen_at,last_seen_at FROM encounters WHERE entity_id=? AND last_seen_at>=datetime(?,'-15 minutes') ORDER BY last_seen_at DESC LIMIT 1`).bind(entity.id,at).first();
+    const parsedAt=p.observed_at?Date.parse(p.observed_at):Date.now();if(!Number.isFinite(parsedAt))return json({ok:false,error:'valid observed_at required'},400);const at=new Date(parsedAt).toISOString(),call=norm(p.callsign||''),type=norm(p.type_code||'');
+    let enc=await env.DB.prepare(`SELECT e.id,e.first_seen_at,e.last_seen_at FROM encounters e WHERE e.entity_id=? AND (EXISTS(SELECT 1 FROM observations o WHERE o.encounter_id=e.id AND o.observed_at BETWEEN datetime(?,'-15 minutes') AND datetime(?,'+15 minutes')) OR (e.observation_count=0 AND e.first_seen_at BETWEEN datetime(?,'-15 minutes') AND datetime(?,'+15 minutes'))) ORDER BY ABS(strftime('%s',e.last_seen_at)-strftime('%s',?)) ASC LIMIT 1`).bind(entity.id,at,at,at,at,at).first();
     if(!enc){const q=await env.DB.prepare(`INSERT INTO encounters(entity_id,contact_key,first_seen_at,last_seen_at,callsign,type_code,min_altitude_ft,max_altitude_ft,observation_count) VALUES(?,?,?,?,?,?,?,?,0) RETURNING id,first_seen_at,last_seen_at`).bind(entity.id,hex,at,at,call||null,type||null,p.altitude_ft??null,p.altitude_ft??null).first();enc=q}
-    await env.DB.prepare(`INSERT INTO observations(encounter_id,observed_at,latitude,longitude,altitude_ft,groundspeed_kt,track_deg,vertical_rate_fpm,squawk) VALUES(?,?,?,?,?,?,?,?,?)`).bind(enc.id,at,p.latitude??null,p.longitude??null,p.altitude_ft??null,p.groundspeed_kt??null,p.track_deg??null,p.vertical_rate_fpm??null,p.squawk??null).run();
-    await env.DB.prepare(`UPDATE encounters SET last_seen_at=?,callsign=COALESCE(NULLIF(?,''),callsign),type_code=COALESCE(NULLIF(?,''),type_code),min_altitude_ft=CASE WHEN ? IS NULL THEN min_altitude_ft WHEN min_altitude_ft IS NULL OR ?<min_altitude_ft THEN ? ELSE min_altitude_ft END,max_altitude_ft=CASE WHEN ? IS NULL THEN max_altitude_ft WHEN max_altitude_ft IS NULL OR ?>max_altitude_ft THEN ? ELSE max_altitude_ft END,observation_count=observation_count+1 WHERE id=?`).bind(at,call,type,p.altitude_ft??null,p.altitude_ft??null,p.altitude_ft??null,p.altitude_ft??null,p.altitude_ft??null,p.altitude_ft??null,enc.id).run();
-    return json({ok:true,encounter_id:enc.id});
+    const registration=norm(p.registration||'');
+    const inserted=await env.DB.prepare(`INSERT OR IGNORE INTO observations(encounter_id,entity_id,observed_at,latitude,longitude,altitude_ft,groundspeed_kt,track_deg,vertical_rate_fpm,squawk,callsign,type_code,registration) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(enc.id,entity.id,at,latitude,longitude,p.altitude_ft??null,p.groundspeed_kt??null,p.track_deg??null,p.vertical_rate_fpm??null,p.squawk??null,call||null,type||null,registration||null).run();
+    const wrote=(inserted?.meta?.changes??0)>0;
+    if(!wrote){const owner=await env.DB.prepare(`SELECT encounter_id FROM observations WHERE entity_id=? AND observed_at=? LIMIT 1`).bind(entity.id,at).first();if(owner?.encounter_id&&owner.encounter_id!==enc.id){await env.DB.prepare(`DELETE FROM encounters WHERE id=? AND observation_count=0 AND NOT EXISTS(SELECT 1 FROM observations WHERE encounter_id=?)`).bind(enc.id,enc.id).run();enc={...enc,id:owner.encounter_id}}}
+    const reconcile=async()=>{let merged=true,passes=0;while(merged&&passes++<32){merged=false;const nearby=await env.DB.prepare(`SELECT DISTINCT e.id FROM encounters e JOIN observations o ON o.encounter_id=e.id WHERE e.entity_id=? AND e.id<>? AND EXISTS(SELECT 1 FROM observations mine WHERE mine.encounter_id=? AND o.observed_at BETWEEN datetime(mine.observed_at,'-15 minutes') AND datetime(mine.observed_at,'+15 minutes')) ORDER BY e.id ASC`).bind(entity.id,enc.id,enc.id).all();const ids=[enc.id,...(nearby.results||[]).map(x=>x.id)].map(Number).filter(Number.isSafeInteger),canonical=Math.min(...ids);if(canonical!==enc.id){enc={...enc,id:canonical};merged=true;continue}for(const other of nearby.results||[]){if(other.id===enc.id)continue;await env.DB.prepare(`UPDATE OR IGNORE observations SET encounter_id=? WHERE encounter_id=?`).bind(enc.id,other.id).run();await env.DB.prepare(`DELETE FROM observations WHERE encounter_id=?`).bind(other.id).run();const gone=await env.DB.prepare(`DELETE FROM encounters WHERE id=? AND NOT EXISTS(SELECT 1 FROM observations WHERE encounter_id=?)`).bind(other.id,other.id).run();if((gone?.meta?.changes??0)>0)merged=true}}const agg=await env.DB.prepare(`SELECT MIN(observed_at) first_seen,MAX(observed_at) last_seen,COUNT(*) n,MIN(altitude_ft) min_alt,MAX(altitude_ft) max_alt FROM observations WHERE encounter_id=?`).bind(enc.id).first();if(agg?.n)await env.DB.prepare(`UPDATE encounters SET first_seen_at=?,last_seen_at=?,observation_count=?,min_altitude_ft=?,max_altitude_ft=? WHERE id=?`).bind(agg.first_seen,agg.last_seen,agg.n,agg.min_alt,agg.max_alt,enc.id).run()};
+    if(wrote) await env.DB.prepare(`UPDATE encounters SET last_seen_at=MAX(last_seen_at,?),first_seen_at=MIN(first_seen_at,?),callsign=COALESCE(NULLIF(?,''),callsign),type_code=COALESCE(NULLIF(?,''),type_code),min_altitude_ft=CASE WHEN ? IS NULL THEN min_altitude_ft WHEN min_altitude_ft IS NULL OR ?<min_altitude_ft THEN ? ELSE min_altitude_ft END,max_altitude_ft=CASE WHEN ? IS NULL THEN max_altitude_ft WHEN max_altitude_ft IS NULL OR ?>max_altitude_ft THEN ? ELSE max_altitude_ft END,observation_count=observation_count+1 WHERE id=?`).bind(at,at,call,type,p.altitude_ft??null,p.altitude_ft??null,p.altitude_ft??null,p.altitude_ft??null,p.altitude_ft??null,p.altitude_ft??null,enc.id).run();
+    await reconcile();
+    return json({ok:true,encounter_id:enc.id,duplicate:!wrote});
   }
   if(u.pathname==='/memory/history'&&request.method==='GET'){
     const scheme=u.searchParams.get('scheme')||'icao24',value=u.searchParams.get('value');if(!value)return json({ok:false,error:'value required'},400);
     const hit=await env.DB.prepare(`SELECT e.id FROM identifiers i JOIN entities e ON e.id=i.entity_id WHERE i.scheme=? AND i.normalized_value=?`).bind(scheme,norm(value)).first();if(!hit)return json({ok:true,found:false});
-    const s=await env.DB.prepare(`SELECT COUNT(*) encounter_count,MIN(first_seen_at) first_seen_at,MAX(last_seen_at) last_seen_at,SUM(observation_count) observation_count FROM encounters WHERE entity_id=?`).bind(hit.id).first();
+    const s=await env.DB.prepare(`SELECT COUNT(*) encounter_count,MIN(first_seen_at) first_seen_at,MAX(last_seen_at) last_seen_at,COALESCE(SUM(observation_count),0) observation_count FROM encounters WHERE entity_id=?`).bind(hit.id).first();
     const recent=await env.DB.prepare(`SELECT id,first_seen_at,last_seen_at,callsign,type_code,min_altitude_ft,max_altitude_ft,observation_count FROM encounters WHERE entity_id=? ORDER BY last_seen_at DESC LIMIT 12`).bind(hit.id).all();
     return json({ok:true,entity_id:hit.id,...s,recent:recent.results||[]});
   }
@@ -63,36 +73,37 @@ export async function handleMemory(request,env){
     const q=norm(u.searchParams.get('q')||'');if(!q)return json({ok:true,results:[]});
     const like='%'+q+'%';
     const rows=await env.DB.prepare(`SELECT e.id,e.kind,e.canonical_key,
-      MAX(CASE WHEN i.scheme='icao24' THEN i.value END) icao24,
-      MAX(CASE WHEN i.scheme='registration' THEN i.value END) registration,
-      MAX(CASE WHEN i.scheme='icao_type' THEN i.value END) icao_type,
-      MAX(CASE WHEN c.predicate='callsign' THEN c.value_text END) callsign,
-      MAX(CASE WHEN c.predicate='manufacturer' THEN c.value_text END) manufacturer,
-      MAX(CASE WHEN c.predicate='model' THEN c.value_text END) model,
-      MAX(CASE WHEN c.predicate='operator' THEN c.value_text END) operator,
-      MAX(CASE WHEN c.predicate='photo_specificity' THEN c.value_text END) photo_specificity,
-      (SELECT COUNT(*) FROM encounters x WHERE x.entity_id=e.id) encounter_count
-      FROM entities e LEFT JOIN identifiers i ON i.entity_id=e.id LEFT JOIN claims c ON c.entity_id=e.id
+      (SELECT CASE WHEN COUNT(DISTINCT si.normalized_value)=1 THEN MAX(si.value) END FROM identifiers si WHERE si.entity_id=e.id AND si.scheme='icao24') icao24,
+      (SELECT CASE WHEN COUNT(DISTINCT si.normalized_value)=1 THEN MAX(si.value) END FROM identifiers si WHERE si.entity_id=e.id AND si.scheme='registration') registration,
+      (SELECT CASE WHEN COUNT(DISTINCT si.normalized_value)=1 THEN MAX(si.value) END FROM identifiers si WHERE si.entity_id=e.id AND si.scheme='icao_type') icao_type,
+      (SELECT CASE WHEN COUNT(DISTINCT sc.value_text)=1 THEN MAX(sc.value_text) END FROM claims sc WHERE sc.entity_id=e.id AND sc.predicate='callsign' AND sc.status!='superseded') callsign,
+      (SELECT CASE WHEN COUNT(DISTINCT sc.value_text)=1 THEN MAX(sc.value_text) END FROM claims sc WHERE sc.entity_id=e.id AND sc.predicate='manufacturer' AND sc.status!='superseded') manufacturer,
+      (SELECT CASE WHEN COUNT(DISTINCT sc.value_text)=1 THEN MAX(sc.value_text) END FROM claims sc WHERE sc.entity_id=e.id AND sc.predicate='model' AND sc.status!='superseded') model,
+      (SELECT CASE WHEN COUNT(DISTINCT sc.value_text)=1 THEN MAX(sc.value_text) END FROM claims sc WHERE sc.entity_id=e.id AND sc.predicate='operator' AND sc.status!='superseded') operator,
+      (SELECT CASE WHEN COUNT(DISTINCT sc.value_text)=1 THEN MAX(sc.value_text) END FROM claims sc WHERE sc.entity_id=e.id AND sc.predicate='photo_specificity' AND sc.status!='superseded') photo_specificity,
+      (SELECT COUNT(*) FROM encounters x WHERE x.entity_id=e.id) encounter_count,
+      (SELECT GROUP_CONCAT(predicate) FROM (SELECT sc.predicate predicate FROM claims sc WHERE sc.entity_id=e.id AND sc.status!='superseded' AND sc.predicate IN ('callsign','manufacturer','model','operator','photo_specificity') GROUP BY sc.predicate HAVING COUNT(DISTINCT sc.value_text)>1 ORDER BY sc.predicate)) conflicting_predicates_csv
+      FROM entities e LEFT JOIN identifiers i ON i.entity_id=e.id LEFT JOIN claims c ON c.entity_id=e.id AND c.status!='superseded'
       WHERE UPPER(e.canonical_key) LIKE ? OR EXISTS(SELECT 1 FROM identifiers si WHERE si.entity_id=e.id AND UPPER(si.value) LIKE ?)
-         OR EXISTS(SELECT 1 FROM claims sc WHERE sc.entity_id=e.id AND UPPER(sc.value_text) LIKE ?)
+         OR EXISTS(SELECT 1 FROM claims sc WHERE sc.entity_id=e.id AND sc.status!='superseded' AND UPPER(sc.value_text) LIKE ?)
       GROUP BY e.id ORDER BY e.updated_at DESC LIMIT 30`).bind(like,like,like).all();
-    return json({ok:true,results:rows.results||[]});
+    const results=(rows.results||[]).map(row=>{const {conflicting_predicates_csv,...rest}=row;return{...rest,conflicting_predicates:conflicting_predicates_csv?String(conflicting_predicates_csv).split(',').filter(Boolean):[]}});return json({ok:true,results});
   }
   if(u.pathname==='/memory/ingest'&&request.method==='POST'){
-    const p=await request.json(),kind=p.entity?.kind||'airframe',key=p.entity?.key||p.identifiers?.icao24||p.identifiers?.registration;
-    if(!key)return json({ok:false,error:'entity key required'},400);
+    const p=await request.json(),kind=String(p.entity?.kind||'airframe').trim().toLowerCase(),key=p.entity?.key||p.identifiers?.icao24||p.identifiers?.registration,identifiers=p.identifiers??{},claims=p.claims??[];
+    if(!key||!kind||kind.length>32||String(key).length>160)return json({ok:false,error:'valid entity kind and key required'},400);if(!identifiers||typeof identifiers!=='object'||Array.isArray(identifiers)||Object.keys(identifiers).length>24)return json({ok:false,error:'identifiers must be a bounded object'},400);if(kind==='airframe'&&identifiers.icao24&&!/^[0-9A-F]{6}$/.test(norm(identifiers.icao24)))return json({ok:false,error:'valid icao24 required'},400);if(!Array.isArray(claims)||claims.length>100)return json({ok:false,error:'claims must be an array of at most 100 items'},400);if(Object.entries(identifiers).some(([scheme,value])=>!scheme||scheme.length>48||value==null||String(value).length>256))return json({ok:false,error:'invalid identifier'},400);if(claims.some(x=>!x||typeof x!=='object'||String(x.predicate||'').length>128||String(x.value??'').length>8192))return json({ok:false,error:'invalid claim'},400);
     const entity=await ensureEntity(env.DB,kind,norm(key));
-    for(const [scheme,value] of Object.entries(p.identifiers||{})) await rememberIdentifier(env.DB,entity.id,scheme,value);
+    for(const [scheme,value] of Object.entries(identifiers)) await rememberIdentifier(env.DB,entity.id,scheme,value);
     let sourceId=null;if(p.source)sourceId=(await ensureSource(env.DB,p.source)).id;
-    for(const c of p.claims||[]) if(c?.predicate&&c?.value!=null) await rememberClaim(env.DB,entity.id,c,sourceId);
+    for(const c of claims) if(c?.predicate&&c?.value!=null) await rememberClaim(env.DB,entity.id,c,sourceId);
     return json({ok:true,entity,...await dossier(env.DB,entity.id)});
   }
-  if(u.pathname==='/memory/lead'&&request.method==='POST'){
-    const p=await request.json();if(!p.id||!['resolved','retry','dead'].includes(p.status))return json({ok:false,error:'id and valid status required'},400);
-    await markLead(env.DB,p.id,p.status,p.error||null,Math.max(1,Math.min(Number(p.retry_hours)||24,720)));return json({ok:true});
+  if(u.pathname==='/memory/history-request'&&request.method==='POST'){const p=await request.json(),hex=norm(p.icao24||''),day=String(p.day||'').slice(0,10);if(!/^[0-9A-F]{6}$/.test(hex)||!validDay(day))return json({ok:false,error:'valid icao24 and day required'},400);const entity=await ensureEntity(env.DB,'airframe',hex);await rememberIdentifier(env.DB,entity.id,'icao24',hex);const key=hex+':'+day;await env.DB.prepare(`INSERT INTO leads(entity_id,lead_type,lead_value,normalized_value,status) VALUES(?,'airframe-day-history',?,?,'pending') ON CONFLICT(lead_type,normalized_value) DO NOTHING`).bind(entity.id,day,key).run();const lead=await env.DB.prepare(`SELECT id,status,attempts,last_attempt_at,retry_after FROM leads WHERE lead_type='airframe-day-history' AND normalized_value=?`).bind(key).first();return json({ok:true,icao24:hex,day,lead})}\n  if(u.pathname==='/memory/history-result'&&request.method==='POST'){const p=await request.json(),hex=norm(p.icao24||''),day=String(p.day||'').slice(0,10),legs=Array.isArray(p.legs)?p.legs:[];if(!/^[0-9A-F]{6}$/.test(hex)||!validDay(day))return json({ok:false,error:'valid icao24 and day required'},400);if(!Array.isArray(p.legs)||legs.length>48)return json({ok:false,error:'legs must be an array of at most 48 items'},400);if(p.source!=null&&(!p.source||typeof p.source!=='object'||Array.isArray(p.source)||String(p.source.key||'').length>256||String(p.source.name||'').length>256||String(p.source.url||'').length>2048||String(p.source.kind||'').length>64))return json({ok:false,error:'invalid history source'},400);const entity=await ensureEntity(env.DB,'airframe',hex);await rememberIdentifier(env.DB,entity.id,'icao24',hex);let sourceId=null;if(p.source)sourceId=(await ensureSource(env.DB,p.source)).id;const activePredicates=[];for(const leg0 of legs){const leg=leg0||{},started=leg.started_at?Date.parse(leg.started_at):NaN,ended=leg.ended_at?Date.parse(leg.ended_at):NaN;if(!Number.isFinite(started)||!Number.isFinite(ended)||ended<=started||new Date(started).toISOString().slice(0,10)!==day)return json({ok:false,error:'invalid historical leg chronology'},400);const value={day,callsign:leg.callsign||null,dep_iata:leg.dep_iata||null,dep_icao:leg.dep_icao||null,arr_iata:leg.arr_iata||null,arr_icao:leg.arr_icao||null,started_at:new Date(started).toISOString(),ended_at:new Date(ended).toISOString(),dep_name:leg.dep_name||null,arr_name:leg.arr_name||null,endpoint_confidence:leg.endpoint_confidence||null,route_evidence:leg.route_evidence||null,basis:leg.basis||null},sig=norm([value.started_at||'na',value.ended_at||'na',value.callsign||'na',value.dep_icao||value.dep_iata||'na',value.arr_icao||value.arr_iata||'na'].join('|')).replace(/[^A-Z0-9]+/g,'-').slice(0,96),predicate='journey-leg:'+day+':'+sig;activePredicates.push(predicate);const valueText=JSON.stringify(value);await rememberClaim(env.DB,entity.id,{predicate,value:valueText,status:leg.status||'supported',observed_at:leg.observed_at||null,locator:p.source?.url||null},sourceId);await env.DB.prepare(`UPDATE claims SET status='superseded',last_supported_at=CURRENT_TIMESTAMP WHERE entity_id=? AND predicate=? AND value_text<>? AND status!='superseded'`).bind(entity.id,predicate,valueText).run()}const prefix='journey-leg:'+day+':',oldClaims=await env.DB.prepare(`SELECT id,predicate FROM claims WHERE entity_id=? AND predicate LIKE ? AND status!='superseded'`).bind(entity.id,prefix+'%').all();for(const row of oldClaims.results||[])if(!activePredicates.includes(row.predicate))await env.DB.prepare(`UPDATE claims SET status='superseded',last_supported_at=CURRENT_TIMESTAMP WHERE id=?`).bind(row.id).run();const legacyPrefix='journey-leg:'+day+':';const legacy=await env.DB.prepare(`SELECT id,predicate FROM claims WHERE entity_id=? AND predicate LIKE ?`).bind(entity.id,legacyPrefix+'%').all();for(const row of legacy.results||[]){const tail=String(row.predicate||'').slice(legacyPrefix.length);if(/^\d+$/.test(tail))await env.DB.prepare(`UPDATE claims SET status='superseded',last_supported_at=CURRENT_TIMESTAMP WHERE id=?`).bind(row.id).run();}const key=hex+':'+day;await env.DB.prepare(`UPDATE leads SET status='resolved',attempts=attempts+1,last_attempt_at=CURRENT_TIMESTAMP,retry_after=NULL,resolved_at=COALESCE(resolved_at,CURRENT_TIMESTAMP) WHERE lead_type='airframe-day-history' AND normalized_value=?`).bind(key).run();return json({ok:true,icao24:hex,day,legs_ingested:legs.length})}\n  if(u.pathname==='/memory/lead'&&request.method==='POST'){
+    const p=await request.json(),id=Number(p.id);if(!Number.isSafeInteger(id)||id<1||!['resolved','retry','exhausted'].includes(p.status))return json({ok:false,error:'positive integer id and valid status required'},400);
+    await markLead(env.DB,id,p.status,p.error||null,Math.max(1,Math.min(Number(p.retry_hours)||24,720)));return json({ok:true});
   }
   if(u.pathname==='/memory/leads'&&request.method==='GET'){
-    const rows=await env.DB.prepare(`SELECT l.*,e.kind,e.canonical_key FROM leads l LEFT JOIN entities e ON e.id=l.entity_id WHERE l.status IN ('pending','retry') AND (l.retry_after IS NULL OR l.retry_after<=CURRENT_TIMESTAMP) ORDER BY CASE l.lead_type WHEN 'registration' THEN 1 WHEN 'icao24' THEN 2 WHEN 'msn' THEN 3 ELSE 4 END,l.attempts ASC LIMIT ?`).bind(Math.min(Number(u.searchParams.get('limit'))||20,100)).all();
+    const rows=await env.DB.prepare(`SELECT l.*,e.kind,e.canonical_key FROM leads l LEFT JOIN entities e ON e.id=l.entity_id WHERE l.status IN ('pending','retry') AND (l.retry_after IS NULL OR l.retry_after<=CURRENT_TIMESTAMP) ORDER BY CASE l.lead_type WHEN 'airframe-day-history' THEN 1 WHEN 'registration' THEN 2 WHEN 'icao24' THEN 3 WHEN 'msn' THEN 4 ELSE 5 END,l.attempts ASC LIMIT ?`).bind(Math.max(1,Math.min(Number(u.searchParams.get('limit'))||20,100))).all();
     return json({ok:true,leads:rows.results||[]});
   }
   return null;

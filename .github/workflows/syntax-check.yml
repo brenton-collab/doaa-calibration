@@ -1,0 +1,130 @@
+name: Syntax check
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '**.js'
+      - 'index.html'
+      - '.github/workflows/syntax-check.yml'
+permissions:
+  contents: read
+jobs:
+  memory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      - run: node --check doaa-memory.js
+  enrichment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      - run: node --check flight-enrichment.js
+  relay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      - run: node --check relay.js
+  helpers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          node --check catchment.js
+          node --check map-overlay.js
+  worker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          cp src/worker.js /tmp/doaa-worker.mjs
+          node --check /tmp/doaa-worker.mjs
+  contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      - name: Static semantic contracts
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          worker=Path("src/worker.js").read_text()
+          memory=Path("doaa-memory.js").read_text()
+          enrichment=Path("flight-enrichment.js").read_text()
+          browser=Path("index.html").read_text()+enrichment
+          public=re.search(r"if\(!\[(.*?)\]\.includes\(u\.pathname\)\)return json\(\{ok:false,error:'not found'\},404\)",worker,re.S)
+          if not public:
+              raise SystemExit("Public memory allowlist guard not found")
+          allowed=set(re.findall(r"['\"](/memory/[^'\"]+)['\"]",public.group(1)))
+          expected={"/memory/health","/memory/dossier","/memory/history","/memory/search"}
+          if allowed != expected:
+              raise SystemExit(f"Public memory surface changed: {sorted(allowed)}")
+          forbidden={"/memory/observe","/memory/ingest","/memory/history-request","/memory/history-result","/memory/lead","/memory/leads"}
+          leaked=[p for p in forbidden if p in browser]
+          if leaked:
+              raise SystemExit(f"Browser mutation path leak: {leaked}")
+          if "p.observation_source!=='acquisition'" not in memory:
+              raise SystemExit("Acquisition-only observation guard missing")
+          if "INSERT OR IGNORE INTO observations" not in memory:
+              raise SystemExit("Observation idempotency insert missing")
+          if "COUNT(DISTINCT sc.value_text)=1" not in memory:
+              raise SystemExit("Conflict-safe claim projection missing")
+          if "conflicting_predicates" not in memory:
+              raise SystemExit("Conflict metadata missing from search")
+          print("semantic contracts ok")
+          PY
+  migration-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate fresh D1 migration chain
+        run: |
+          python3 - <<'PY'
+          import sqlite3
+          from pathlib import Path
+          db=sqlite3.connect(":memory:")
+          db.execute("PRAGMA foreign_keys=ON")
+          for p in sorted(Path("migrations").glob("*.sql")):
+              db.executescript(p.read_text())
+          obs={r[1] for r in db.execute("PRAGMA table_info(observations)")}
+          required_obs={"entity_id","callsign","type_code","registration"}
+          if not required_obs <= obs:
+              raise SystemExit(f"observations missing {sorted(required_obs-obs)}")
+          state={r[1] for r in db.execute("PRAGMA table_info(provider_state)")}
+          required_state={"harvest_epoch","request_cursor","request_epoch"}
+          if not required_state <= state:
+              raise SystemExit(f"provider_state missing {sorted(required_state-state)}")
+          indexes={r[1] for r in db.execute("PRAGMA index_list(observations)")}
+          if "idx_observations_entity_observed_at" not in indexes:
+              raise SystemExit("entity/timestamp observation uniqueness missing")
+          req_indexes={r[1] for r in db.execute("PRAGMA index_list(provider_requests)")}
+          if "idx_provider_requests_event" not in req_indexes:
+              raise SystemExit("provider request event uniqueness missing")
+          print("fresh migration chain ok")
+          PY
+  inline-html:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, subprocess, tempfile
+          html=Path("index.html").read_text()
+          blocks=re.findall(r"<script(?:\s[^>]*)?>([\s\S]*?)</script>",html,re.I)
+          inline=[b for b in blocks if b.strip()]
+          if not inline:
+              raise SystemExit("No inline scripts found")
+          for i,b in enumerate(inline):
+              p=Path(tempfile.gettempdir())/f"doaa-inline-{i}.js"
+              p.write_text(b)
+              subprocess.run(["node","--check",str(p)],check=True)
+          PY
