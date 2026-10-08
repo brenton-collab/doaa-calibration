@@ -39,6 +39,14 @@ Free-only architecture and operation. The human partner owns product vision; the
 - This branch changes relay.js and index.html. Tests: source-level review only; no automated fixtures or live provider validation. Render and Cloudflare deployments not performed. D1 unchanged.
 - Connected Render relay is free-plan and autoDeploy configured, but prior deployment history showed older live commit. Verify actual deployment state after merge; Cloudflare Worker deployment still unverified.
 
+## 2026-10-08 BOARD deterministic test tranche
+- Branch: board-core-regression-20261008. Added pure `board-core.cjs`, wired it into `relay.js`, and added `tests/board.test.cjs` using Node's built-in test runner (no npm dependencies, no GitHub Actions minutes).
+- Regression coverage: YOW/CYOW matching, unrelated routes, circular routes, provider partial/double failure, landed/cancelled/scheduled filtering, and flight-key differentiation by operation date/route.
+- Validation: nine direct helper assertions executed against the fetched branch source, 9/9 passed. The committed Node test file has not been executed in a Node runtime; integration/provider/browser tests not run.
+- Free-tier: no API requests or deployments were initiated for tests. Relay is Render free plan; Cloudflare production status and D1 not checked.
+- Risk: AirLabs `flights` inventory and its `status` semantics remain provider-dependent. Passing helper tests does not establish completeness or genuinely airborne state for records lacking altitude/status evidence.
+- Next: run `node --test tests/board.test.cjs` locally or in an authorized zero-cost environment, verify real relay payload and release procedure, then deploy with explicit gates.
+
 ## Current frontier: T0 truth and deployment recovery
 1. Recover the previously successful assistant-led deployment path, connected permissions, preview/production workflow, migration procedure and rollback. Verify without pushing a needless deploy.
 2. Check live/preview D1 migration and scheduled collector status without unnecessary writes.
