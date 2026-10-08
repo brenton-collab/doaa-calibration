@@ -22,6 +22,11 @@ Free-only architecture and operation. The human partner owns product vision; the
 - Branch: board-classification-truth-20261008. BOARD UI correction in index.html: reuse existing yowLeg classifier and show UNK rather than falsely labelling an unrecognized route DEP. A missing/non-array `flights` response is now treated as feed failure, not a truthful zero-aircraft result.
 - Evidence: direct source inspection and targeted code edit. Syntax/browser regression tests: not run. Live provider payload: not checked. Production/Preview: not deployed or verified. D1: unchanged/not checked.
 - Remaining: verify whether relay /board returns complete airport-centric airborne movements; check provider coverage and both IATA/ICAO matching; test Journey and Encounter boundaries with real fixtures. Recover established deployment procedure before release.
+## 2026-10-08 Journey evidence-boundary checkpoint
+- Branch: journey-evidence-boundary-20261008. In src/worker.js, removed the unsupported assumption that the first record matching a callsign is the current flight and that all earlier/later records are immediately previous/next operations. Chronology remains sorted and sourced, but `position` stays null and `adjacency_established` / `current_assignment_established` are false until a real operation-identity and adjacency resolver exists.
+- This is a conservative correctness guard, not a complete Journey implementation. Historical claims, observations and route lookup remain distinct; no Encounter creation path was added.
+- Tests: source edit verified by GitHub commit; automated runtime/fixture tests not run. Production and Preview not deployed; D1 migration not checked. Next: introduce deterministic operation-identity/adjacency fixtures, verify live flight payload and UI rendering, then deploy only after release gate.
+
 ## Current frontier: T0 truth and deployment recovery
 1. Recover the previously successful assistant-led deployment path, connected permissions, preview/production workflow, migration procedure and rollback. Verify without pushing a needless deploy.
 2. Check live/preview D1 migration and scheduled collector status without unnecessary writes.
