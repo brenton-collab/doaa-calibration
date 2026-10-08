@@ -1,0 +1,24 @@
+# DOAA development log and restart handoff
+
+Updated: 2026-10-08. Evidence-qualified checkpoint; not a live runtime acceptance test.
+
+## Permanent rules
+Free-only architecture and operation. The human partner owns product vision; the assistant owns execution, tooling, GitHub, testing, documentation and deliberate deployment wherever connected capabilities permit. Update this file at every meaningful checkpoint and before ending a work session; update DOAA_SPEC.md for design, architecture and invariant changes. External research must never create DOAA Encounters.
+
+## Verified repo state
+- Canonical specification: DOAA_SPEC.md sections 24B and 24C; product decisions: FIELD_NOTES_DECISIONS_2026-10-08.md.
+- Prior reconciliation: PR #11 squash-merged to main at d507d2224a2cad8f810951bca345f74e49a9ef84.
+- This change is documentation-only. No application deploy or D1 migration was performed.
+- Wrangler configuration specifies Cloudflare Worker entry src/worker.js, static assets, five-minute cron, and separate production/preview D1 bindings. Configuration does not establish deployed state.
+- The precise assistant-led deployment route demonstrated in prior work is not yet reverified in this checkpoint. Recover it from GitHub history and connected deployment tools; do not claim deployment impossible.
+- No package.json or .github/workflows/deploy.yml or .github/workflows/ci.yml was found at the specifically probed paths; other mechanisms may exist.
+
+## Current frontier: T0 truth and deployment recovery
+1. Recover the previously successful assistant-led deployment path, connected permissions, preview/production workflow, migration procedure and rollback. Verify without pushing a needless deploy.
+2. Check live/preview D1 migration and scheduled collector status without unnecessary writes.
+3. Reproduce BOARD ARR/DEP and Journey BEFORE/NOW/NEXT versus Flight from real provider payloads; add deterministic regression fixtures and no-data versus no-traffic tests.
+4. Validate Inspector explainer, close, typography and touch behavior; enforce the genuine-observation-only Encounter invariant.
+5. Implement bounded correctness repairs, test, update spec and log, then deploy only at an appropriate verified release gate.
+
+## Required checkpoint format
+Date; branch/commit/PR; changed files; tests and outcomes; preview/production deploy status and versions; D1 migration state; verified defects and risks; next executable step. Write 'not checked' instead of guessing.
