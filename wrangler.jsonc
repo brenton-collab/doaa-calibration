@@ -6,10 +6,14 @@
   "assets": {
     "directory": ".",
     "binding": "ASSETS",
-    "run_worker_first": ["/api/*"]
+    "run_worker_first": [
+      "/api/*"
+    ]
   },
   "triggers": {
-    "crons": ["*/5 * * * *"]
+    "crons": [
+      "*/5 * * * *"
+    ]
   },
   "d1_databases": [
     {
@@ -18,5 +22,13 @@
       "database_id": "434f90d3-397b-48d3-8249-4c48cf1e8936",
       "migrations_dir": "migrations"
     }
-  ]
+  ],
+  "previews": {
+    "d1_databases": [
+      {
+        "binding": "DB",
+        "database_id": "939eda3b-4894-497b-9f67-209771761b3f"
+      }
+    ]
+  }
 }
