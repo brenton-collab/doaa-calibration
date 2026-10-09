@@ -5,7 +5,7 @@ const validDay=day=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(day))return false;const t=Da
 const LEAD_PREDICATES={registration:'registration',icao24:'icao24',msn:'msn',serial_number:'msn',previous_registration:'registration',operator_code:'operator_code',callsign:'callsign',icao_type:'icao_type'};
 
 async function ensureEntity(db,kind,key){
-  await db.prepare(`INSERT INTO entities(kind,canonical_key) VALUES(?,?) ON CONFLICT(kind,canonical_key) DO UPDATE SET updated_at=CURRENT_TIMESTAMP`).bind(kind,key).run();
+  await db.prepare(`INSERT INTO entities(kind,canonical_key) VALUES(?,?) ON CONFLICT(kind,canonical_key) DO NOTHING`).bind(kind,key).run();
   return db.prepare(`SELECT id,kind,canonical_key FROM entities WHERE kind=? AND canonical_key=?`).bind(kind,key).first();
 }
 async function rememberIdentifier(db,entityId,scheme,value){
@@ -13,7 +13,7 @@ async function rememberIdentifier(db,entityId,scheme,value){
   const s=String(scheme||'').trim().toLowerCase(),v=String(value),n=norm(value);if(!s||!n)return;
   const owner=await db.prepare(`SELECT entity_id FROM identifiers WHERE scheme=? AND normalized_value=?`).bind(s,n).first();
   if(owner&&owner.entity_id!==entityId)return;
-  await db.prepare(`INSERT INTO identifiers(entity_id,scheme,value,normalized_value) VALUES(?,?,?,?) ON CONFLICT(scheme,normalized_value) DO UPDATE SET value=excluded.value,last_seen_at=CURRENT_TIMESTAMP`).bind(entityId,s,v,n).run();
+  await db.prepare(`INSERT INTO identifiers(entity_id,scheme,value,normalized_value) VALUES(?,?,?,?) ON CONFLICT(scheme,normalized_value) DO UPDATE SET value=excluded.value,last_seen_at=CURRENT_TIMESTAMP WHERE identifiers.value<>excluded.value`).bind(entityId,s,v,n).run();
 }
 async function ensureSource(db,s){
   const key=s.key||s.url||`${s.kind||'source'}:${s.name}`;
@@ -59,7 +59,7 @@ export async function handleMemory(request,env){
     if(!wrote){const owner=await env.DB.prepare(`SELECT encounter_id FROM observations WHERE entity_id=? AND observed_at=? LIMIT 1`).bind(entity.id,at).first();if(owner?.encounter_id&&owner.encounter_id!==enc.id){await env.DB.prepare(`DELETE FROM encounters WHERE id=? AND observation_count=0 AND NOT EXISTS(SELECT 1 FROM observations WHERE encounter_id=?)`).bind(enc.id,enc.id).run();enc={...enc,id:owner.encounter_id}}}
     const reconcile=async()=>{let merged=true,passes=0;while(merged&&passes++<32){merged=false;const nearby=await env.DB.prepare(`SELECT DISTINCT e.id FROM encounters e JOIN observations o ON o.encounter_id=e.id WHERE e.entity_id=? AND e.id<>? AND EXISTS(SELECT 1 FROM observations mine WHERE mine.encounter_id=? AND julianday(o.observed_at) BETWEEN julianday(mine.observed_at,'-15 minutes') AND julianday(mine.observed_at,'+15 minutes')) ORDER BY e.id ASC`).bind(entity.id,enc.id,enc.id).all();const ids=[enc.id,...(nearby.results||[]).map(x=>x.id)].map(Number).filter(Number.isSafeInteger),canonical=Math.min(...ids);if(canonical!==enc.id){enc={...enc,id:canonical};merged=true;continue}for(const other of nearby.results||[]){if(other.id===enc.id)continue;await env.DB.prepare(`UPDATE OR IGNORE observations SET encounter_id=? WHERE encounter_id=?`).bind(enc.id,other.id).run();await env.DB.prepare(`DELETE FROM observations WHERE encounter_id=?`).bind(other.id).run();const gone=await env.DB.prepare(`DELETE FROM encounters WHERE id=? AND NOT EXISTS(SELECT 1 FROM observations WHERE encounter_id=?)`).bind(other.id,other.id).run();if((gone?.meta?.changes??0)>0)merged=true}}const agg=await env.DB.prepare(`SELECT MIN(observed_at) first_seen,MAX(observed_at) last_seen,COUNT(*) n,MIN(altitude_ft) min_alt,MAX(altitude_ft) max_alt FROM observations WHERE encounter_id=?`).bind(enc.id).first();if(agg?.n)await env.DB.prepare(`UPDATE encounters SET first_seen_at=?,last_seen_at=?,observation_count=?,min_altitude_ft=?,max_altitude_ft=? WHERE id=?`).bind(agg.first_seen,agg.last_seen,agg.n,agg.min_alt,agg.max_alt,enc.id).run()};
     if(wrote) await env.DB.prepare(`UPDATE encounters SET last_seen_at=MAX(last_seen_at,?),first_seen_at=MIN(first_seen_at,?),callsign=COALESCE(NULLIF(?,''),callsign),type_code=COALESCE(NULLIF(?,''),type_code),min_altitude_ft=CASE WHEN ? IS NULL THEN min_altitude_ft WHEN min_altitude_ft IS NULL OR ?<min_altitude_ft THEN ? ELSE min_altitude_ft END,max_altitude_ft=CASE WHEN ? IS NULL THEN max_altitude_ft WHEN max_altitude_ft IS NULL OR ?>max_altitude_ft THEN ? ELSE max_altitude_ft END,observation_count=observation_count+1 WHERE id=?`).bind(at,at,call,type,p.altitude_ft??null,p.altitude_ft??null,p.altitude_ft??null,p.altitude_ft??null,p.altitude_ft??null,p.altitude_ft??null,enc.id).run();
-    await reconcile();
+    if(wrote) await reconcile();
     return json({ok:true,encounter_id:enc.id,duplicate:!wrote});
   }
   if(u.pathname==='/memory/history'&&request.method==='GET'){
