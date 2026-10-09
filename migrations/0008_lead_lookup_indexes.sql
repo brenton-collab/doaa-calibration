@@ -1,8 +1,4 @@
--- Cover the high-volume dossier lookup by entity without scanning all leads.
+-- The dossier query previously scanned all leads via idx_leads_status_retry.
+-- This covering prefix allows a direct entity lookup and satisfies its ordering.
 CREATE INDEX IF NOT EXISTS idx_leads_entity_status_type
 ON leads(entity_id, status, lead_type);
-
--- Prioritize the scheduled pending/retry lead lookup; the existing
--- (status,retry_after) index remains for status-specific access.
-CREATE INDEX IF NOT EXISTS idx_leads_type_attempts
-ON leads(lead_type, attempts);
