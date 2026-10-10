@@ -38,3 +38,10 @@ Important remaining issues: track drawing is observation-history only while the 
 - No speculative model photos, no on-slide provider fetch, no timed random rotation. An honest waiting state is displayed if no exact media has been encountered.
 - The source checks passed for HTML/style balance, loaded modules, Inspector-to-AMBIENT media event, matching registration, LOOK Inspector navigation, and no independent fetch in AMBIENT or LOOK.
 - **Limitations:** the user must first open an Inspector that reconciles exact media; the existing app does not yet proactively populate media from a bounded D1 cache. Browser acceptance, test execution and production deployment remain undone. A source check does not establish runtime correctness.
+
+## 2026-10-10 — bounded D1 photo cache integration
+- New GET /api/ambient-media?hex=... endpoint reads existing D1 identifiers and supported photo claims for at most 12 ICAO hex identifiers; no D1 writes, provider calls, premium enrichment or new photo searches. Conflicting claims and anything without exact-airframe specificity, registration, license, credit and HTTPS image are rejected.
+- ambient-media.js polls only while AMBIENT SLIDES is open, for at most 12 currently observed registered aircraft, throttled to two minutes for the same set. Results pass through the same registration-matching local media event as Inspector reconciliation. No background network activity in AMBIENT SKY.
+- Added cache-contract test and included it in the deployment gate. Refreshed older assertions to match the verified-media adapter.
+- Connector-side source checks passed eight invariants. Runtime tests and browser validation remain outstanding.
+- Known trade-off: this is a read-only reuse of existing media, not a media ingestion pipeline. It will only show images that were previously verified and saved by existing D1 workflows. No production merge/deployment.
