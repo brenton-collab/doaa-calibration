@@ -7,7 +7,7 @@ const caches=new Map(),inFlights=new Map(),encounters=new Map(),flightCache=new 
 // Protect the shared AirLabs free allowance: enrichment is opt-in and bounded.
 // No budget is inferred from provider metadata; a monthly-limit response still opens the existing circuit.
 const {createAirlabsBudget}=require('./airlabs-budget.cjs');
-const airlabsBudget=createAirlabsBudget({monthlyCap:Math.max(0,Number(process.env.AIRLABS_MONTHLY_CAP)||900),boardReserve:Math.max(0,Number(process.env.AIRLABS_BOARD_RESERVE)||200),enrichmentDailyCap:Math.max(0,Number(process.env.AIRLABS_ENRICHMENT_DAILY_CAP)||10)});
+const airlabsBudget=createAirlabsBudget({monthlyCap:Math.max(0,Number(process.env.AIRLABS_MONTHLY_CAP)||900),boardReserve:Math.max(0,Number(process.env.AIRLABS_BOARD_RESERVE)||200),enrichmentDailyCap:Math.max(0,Number(process.env.AIRLABS_ENRICHMENT_DAILY_CAP)||0)});
 
 const ident=a=>String(a.hex||a.icao||'').toLowerCase(),clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 function observe(list,now){for(const a of list){const id=ident(a),lat=Number(a?.lat),lon=Number(a?.lon);if(!/^[0-9a-f]{6}$/.test(id)||!Number.isFinite(lat)||!Number.isFinite(lon)||lat < -90||lat > 90||lon < -180||lon > 180||a.alt_baro==='ground')continue;let e=encounters.get(id);if(!e)e={id,firstSeen:now,lastSeen:now,points:[]};e.lastSeen=now;const last=e.points[e.points.length-1];if(!last||now-last.t>=25000)e.points.push({lat,lon,t:now,alt:a.alt_baro??a.alt_geom??null,gs:a.gs??null,track:a.track??null});e.points=e.points.filter(p=>now-p.t<TRACK_KEEP);encounters.set(id,e)}for(const[id,e]of encounters)if(now-e.lastSeen>ABSENT_CLOSE)encounters.delete(id)}
