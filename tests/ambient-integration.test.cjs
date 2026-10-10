@@ -4,7 +4,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const read=p=>fs.readFileSync(path.join(__dirname,'..',p),'utf8');
-const html=read('index.html'),ambient=read('ambient.js'),css=read('ambient.css'),look=read('look.js'),worker=read('src/worker.js');
+const html=read('index.html'),ambient=read('ambient.js'),css=read('ambient.css'),look=read('look.js'),enrichment=read('flight-enrichment.js'),worker=read('src/worker.js');
 
 test('ambient is loaded from versioned frontend assets and exposes a shared observation snapshot',()=>{
  assert.match(html,/href="\/ambient\.css"/);
@@ -55,4 +55,13 @@ test('LOOK uses shared SKY snapshot and provides explicit evidence, not a separa
  assert.match(look,/Emergency transponder code 7700/);
  assert.match(look,/not confirmed incidents or complete airspace coverage/);
  assert.doesNotMatch(look,/\bfetch\s*\(/);
+});
+
+test('slides receive only already-reconciled exact-airframe Inspector media',()=>{
+ assert.match(enrichment,/af\.photo_specificity==='exact-airframe'/);
+ assert.match(enrichment,/doaa:airframe-media/);
+ assert.match(ambient,/addEventListener\('doaa:airframe-media'/);
+ assert.match(ambient,/verifiedMedia\.get\(String\(a\.id\)\.toLowerCase\(\)\)/);
+ assert.match(ambient,/String\(media\.registration\)\.toUpperCase\(\)!==String\(a\.reg\)\.toUpperCase\(\)/);
+ assert.doesNotMatch(ambient,/\bfetch\s*\(/);
 });
