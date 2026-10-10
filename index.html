@@ -145,6 +145,26 @@ async function hydrateRack(vis){const now=Date.now();for(const a of vis.slice(0,
 async function searchRack(q){q=String(q||'').trim();if(!q){rackSearchResults=null;searchMatchIds.clear();draw();return}try{const r=await fetch('/api/search?q='+encodeURIComponent(q),{cache:'no-store'}),j=await r.json();rackSearchResults=(j.results||[]).map(x=>{if(x.kind==='airport')return{searchObject:x,aircraft:{id:'airport:'+x.key.toLowerCase(),call:x.label||x.key,lat:+x.lat,lon:+x.lon,alt:0,gs:0,vr:0,d:0,type:'AIRPORT'},airframe:{model:x.name},operator:'EXTERNAL · AIRPORT',history:{encounter_count:0}};if(x.kind==='flight')return{searchObject:x,aircraft:{id:'flight:'+String(x.key).toLowerCase(),call:x.label||x.key,lat:0,lon:0,alt:0,gs:0,vr:0,d:0,type:'FLIGHT'},airframe:{model:[x.dep_iata||x.dep_icao,x.arr_iata||x.arr_icao].filter(Boolean).join(' → ')},operator:(x.scope==='external'?'EXTERNAL · ':'')+(x.operator||'FLIGHT'),flight:{flight_icao:x.key,flight_iata:x.label,dep_iata:x.dep_iata,dep_icao:x.dep_icao,arr_iata:x.arr_iata,arr_icao:x.arr_icao},history:{encounter_count:0}};return{searchObject:x,aircraft:{id:String(x.icao24||x.canonical_key||'').toLowerCase(),call:x.callsign||x.registration||x.canonical_key,lat:0,lon:0,alt:0,gs:0,vr:0,d:0,type:x.icao_type||''},airframe:{reg_number:x.registration,icao:x.icao_type,model:x.model,manufacturer:x.manufacturer,photo_specificity:x.photo_specificity},operator:((x.scope==='local'&&((x.encounter_count||0)>0||x.last_seen_at))?'YOUR HISTORY · ':x.scope==='local'?'DOAA KNOWLEDGE · ':'')+(x.operator||''),history:{encounter_count:x.encounter_count||0,last_seen_at:x.last_seen_at||null}}});searchMatchIds=new Set(rackSearchResults.map(r=>r.aircraft.id));renderRack([]);draw()}catch(_){rack.innerHTML='<div class="meta">Search unavailable.</div>'}}
 
 // Graduated true-bearing chart. Radii are geographic nautical miles, not screen pixels.
+// Coordinate-anchored graticule; spacing adapts to the geographic viewport.
+function drawGraticule(){
+ const a=area(),top=a.top,bottom=innerHeight-a.bottom;
+ const nw=unproject(0,top),se=unproject(a.w,bottom);
+ const latSpan=Math.abs(nw.lat-se.lat),lonSpan=Math.abs(se.lon-nw.lon);
+ const intervals=[1/60,2/60,5/60,10/60,15/60,30/60,1,2,5,10];
+ const latStep=intervals.find(v=>latSpan/v<=7)||10;
+ const lonStep=intervals.find(v=>lonSpan/v<=7)||10;
+ ctx.save();ctx.beginPath();ctx.rect(0,top,a.w,bottom-top);ctx.clip();
+ ctx.strokeStyle='rgba(61,85,96,.105)';ctx.lineWidth=.65;
+ for(let lat=Math.ceil(se.lat/latStep)*latStep;lat<=nw.lat+1e-8;lat+=latStep){
+  const y=project(lat,view.cx).y;
+  ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(a.w,y);ctx.stroke();
+ }
+ for(let lon=Math.ceil(nw.lon/lonStep)*lonStep;lon<=se.lon+1e-8;lon+=lonStep){
+  const x=project(view.cy,lon).x;
+  ctx.beginPath();ctx.moveTo(x,top);ctx.lineTo(x,bottom);ctx.stroke();
+ }
+ ctx.restore();
+}
 function drawRangeRings(){
  const a=area(),origin=project(HOME.lat,HOME.lon),scale=baseScale()*view.zoom;
  if(!Number.isFinite(scale)||scale<=0)return;
@@ -154,49 +174,52 @@ function drawRangeRings(){
  const outer=Math.min(500,Math.ceil(maxRange/step)*step);
  const count=Math.min(12,Math.floor(outer/step));
  if(!count)return;
- ctx.save();ctx.beginPath();ctx.rect(0,a.top,a.w,innerHeight-a.bottom-a.top);ctx.clip();
+ const bottom=innerHeight-a.bottom;
+ ctx.save();ctx.beginPath();ctx.rect(0,a.top,a.w,bottom-a.top);ctx.clip();
+ const visible=[];
  for(let i=1;i<=count;i++){
   const nm=i*step,r=nm*scale;
   ctx.beginPath();ctx.arc(origin.x,origin.y,r,0,Math.PI*2);
-  ctx.strokeStyle=i===count?'rgba(33,86,128,.58)':'rgba(33,86,128,.32)';
-  ctx.lineWidth=i===count?1.25:.85;ctx.stroke();
-  const lx=origin.x+Math.sin(rad(45))*r,ly=origin.y-Math.cos(rad(45))*r;
-  if(lx>8&&lx<a.w-42&&ly>a.top+12&&ly<innerHeight-a.bottom-8){
-   ctx.fillStyle='#244f70';ctx.font='600 11px ui-monospace,monospace';ctx.fillText(nm+' NM',lx+5,ly-5);
-  }
- }
- // Select by actual visible arcs, not by the outermost generated radius.
- const visible=[];
- for(let i=1;i<=count;i++){
-  const radius=i*step*scale;
+  ctx.strokeStyle='rgba(64,91,105,.20)';
+  ctx.lineWidth=.7;ctx.stroke();
   let samples=0;
   for(let d=0;d<360;d+=2){
-   const angle=rad(d),x=origin.x+Math.sin(angle)*radius,y=origin.y-Math.cos(angle)*radius;
-   if(x>=0&&x<=a.w&&y>=a.top&&y<=innerHeight-a.bottom)samples++;
+   const angle=rad(d),x=origin.x+Math.sin(angle)*r,y=origin.y-Math.cos(angle)*r;
+   if(x>=0&&x<=a.w&&y>=a.top&&y<=bottom)samples++;
   }
-  if(samples>=3)visible.push(radius);
+  if(samples>=3)visible.push(r);
+  const lx=origin.x+Math.sin(rad(45))*r,ly=origin.y-Math.cos(rad(45))*r;
+  if(lx>8&&lx<a.w-48&&ly>a.top+12&&ly<bottom-8){
+   ctx.fillStyle='rgba(54,79,93,.62)';ctx.font='500 10px ui-monospace,monospace';
+   ctx.textAlign='left';ctx.fillText(nm+' NM',lx+5,ly-5);
+  }
  }
  const r=visible.length>=2?visible[visible.length-2]:visible[0];
  if(!r){ctx.restore();return;}
- for(let d=0;d<360;d+=1){
+ // At small radii, omit fine marks rather than crowding the chart.
+ const fine=r>=150?1:r>=85?2:5;
+ for(let d=0;d<360;d+=fine){
   const angle=rad(d),sn=Math.sin(angle),cs=Math.cos(angle);
   const x=origin.x+sn*r,y=origin.y-cs*r;
-  if(x<4||x>a.w-4||y<a.top+4||y>innerHeight-a.bottom-4)continue;
+  if(x<3||x>a.w-3||y<a.top+3||y>bottom-3)continue;
   const major=d%30===0,medium=d%10===0,minor=d%5===0;
-  const len=major?16:medium?12:minor?8:4;
+  const len=major?9:medium?6:minor?4:2;
   ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-sn*len,y+cs*len);
-  ctx.strokeStyle=major?'#214b6a':'#2d6187';ctx.lineWidth=major?2:medium?1.5:minor?1.1:.75;ctx.stroke();
-  if(major){
-   const tx=x+sn*24,ty=y-cs*24;
-   if(tx>24&&tx<a.w-24&&ty>a.top+14&&ty<innerHeight-a.bottom-12){
-    ctx.fillStyle='#243d50';ctx.textAlign='center';ctx.font='700 11px ui-monospace,monospace';
-    ctx.fillText(d===0?'N · 000°':String(d).padStart(3,'0')+'°',tx,ty+4);
+  ctx.strokeStyle=major?'rgba(47,76,91,.48)':'rgba(55,83,96,.31)';
+  ctx.lineWidth=major?1.1:medium?.8:.6;ctx.stroke();
+  if(major&&r>=80){
+   const tx=x-sn*17,ty=y+cs*17;
+   if(tx>18&&tx<a.w-18&&ty>a.top+12&&ty<bottom-12){
+    ctx.fillStyle='rgba(46,71,85,.64)';ctx.textAlign='center';
+    ctx.font='500 9px ui-monospace,monospace';
+    ctx.fillText(String(d).padStart(3,'0'),tx,ty+3);
    }
   }
  }
  ctx.restore();
 }
-function draw(){drawTiles();ctx.clearRect(0,0,innerWidth,innerHeight);drawRangeRings();const t=Date.now(),current=new Set(aircraft.map(a=>a.id));for(const [id,e] of tracks)if(!current.has(id)&&t-(e.lastSeen||0)<=GHOST_LIFE)drawTrack(id,e,false,t);for(const a of aircraft.filter(a=>!a.ground&&inView(a))){drawTrack(a.id,tracks.get(a.id),true,t);const p=project(a.lat,a.lon),sel=a.id===selected,dim=!!selected&&!sel;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(rad(a.trk));const sm=rackSearchResults&&searchMatchIds.has(a.id);ctx.globalAlpha=rackSearchResults?(sm?1:.10):(dim?.22:1);ctx.fillStyle=sm?'#175f9b':'#203d55';ctx.beginPath();ctx.moveTo(0,sel?-8:-6);ctx.lineTo(sel?4:3,sel?6:5);ctx.lineTo(0,sel?4:3);ctx.lineTo(sel?-4:-3,sel?6:5);ctx.closePath();ctx.fill();ctx.restore()}for(const ap of AIRPORTS){const p=project(ap.lat,ap.lon),a=area();if(p.x<-20||p.x>a.w+20||p.y<a.top-20||p.y>innerHeight-a.bottom+20)continue;ctx.strokeStyle='rgba(38,94,136,.85)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(p.x,p.y,5,0,Math.PI*2);ctx.moveTo(p.x-8,p.y);ctx.lineTo(p.x+8,p.y);ctx.moveTo(p.x,p.y-8);ctx.lineTo(p.x,p.y+8);ctx.stroke();ctx.fillStyle='#285f88';ctx.font='11px ui-monospace';ctx.fillText(ap.icao,p.x+9,p.y+3)}const vis=aircraft.filter(a=>!a.ground&&inView(a)),live=!manual&&centered(),coverage=cellState.total>1?` · ${cellState.ok}/${cellState.total} CELLS`:'';let link=provider+coverage+' · '+new Date(now).toISOString().slice(11,19)+'Z';if(acquiring)link=`${link} · <span class="partial">REFRESHING ${cellState.pending||''}</span>`;status.innerHTML=`<span class="${live?'live':'view'}">${vis.length} AIRBORNE / ${live?(HOME.iata||HOME.icao)+' '+configured:'VIEW '+extent()}</span><br>${link}`;recenter.style.display=live?'none':'block';renderRack(vis);if(!rackSearchResults)hydrateRack(vis);positionControls()}
+
+function draw(){drawTiles();ctx.clearRect(0,0,innerWidth,innerHeight);drawGraticule();drawRangeRings();const t=Date.now(),current=new Set(aircraft.map(a=>a.id));for(const [id,e] of tracks)if(!current.has(id)&&t-(e.lastSeen||0)<=GHOST_LIFE)drawTrack(id,e,false,t);for(const a of aircraft.filter(a=>!a.ground&&inView(a))){drawTrack(a.id,tracks.get(a.id),true,t);const p=project(a.lat,a.lon),sel=a.id===selected,dim=!!selected&&!sel;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(rad(a.trk));const sm=rackSearchResults&&searchMatchIds.has(a.id);ctx.globalAlpha=rackSearchResults?(sm?1:.10):(dim?.22:1);ctx.fillStyle=sm?'#175f9b':'#203d55';ctx.beginPath();ctx.moveTo(0,sel?-8:-6);ctx.lineTo(sel?4:3,sel?6:5);ctx.lineTo(0,sel?4:3);ctx.lineTo(sel?-4:-3,sel?6:5);ctx.closePath();ctx.fill();ctx.restore()}for(const ap of AIRPORTS){const p=project(ap.lat,ap.lon),a=area();if(p.x<-20||p.x>a.w+20||p.y<a.top-20||p.y>innerHeight-a.bottom+20)continue;ctx.strokeStyle='rgba(38,94,136,.85)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(p.x,p.y,5,0,Math.PI*2);ctx.moveTo(p.x-8,p.y);ctx.lineTo(p.x+8,p.y);ctx.moveTo(p.x,p.y-8);ctx.lineTo(p.x,p.y+8);ctx.stroke();ctx.fillStyle='#285f88';ctx.font='11px ui-monospace';ctx.fillText(ap.icao,p.x+9,p.y+3)}const vis=aircraft.filter(a=>!a.ground&&inView(a)),live=!manual&&centered(),coverage=cellState.total>1?` · ${cellState.ok}/${cellState.total} CELLS`:'';let link=provider+coverage+' · '+new Date(now).toISOString().slice(11,19)+'Z';if(acquiring)link=`${link} · <span class="partial">REFRESHING ${cellState.pending||''}</span>`;status.innerHTML=`<span class="${live?'live':'view'}">${vis.length} AIRBORNE / ${live?(HOME.iata||HOME.icao)+' '+configured:'VIEW '+extent()}</span><br>${link}`;recenter.style.display=live?'none':'block';renderRack(vis);if(!rackSearchResults)hydrateRack(vis);positionControls()}
 function encounterSnapshot(id){return aircraft.find(x=>x.id===id)||lastAircraft.get(id)||null}
 function openDetail(){detail.classList.add('show')}function clearDetailTray(){detailtray.innerHTML='';delete detailbody.dataset.activeSurface}function closeDetail(){detail.classList.remove('show');clearDetailTray();selected=null;draw()}detailclose.onclick=e=>{e.stopPropagation();closeDetail()};window.DOAAInspector={body:detailbody,tray:detailtray,close:closeDetail};function selectEncounter(id){selected=id;const a=encounterSnapshot(id),e=tracks.get(id);if(!a&&!e)return;openDetail();if(a){const live=aircraft.some(x=>x.id===id),ago=e&&e.lastSeen?Math.max(0,Math.round((Date.now()-e.lastSeen)/60000)):null;if(window.DOAAFlight)window.DOAAFlight.show(a,live,ago,detailbody);else detailbody.innerHTML=`<div class="dcall">${a.call}</div><div class="dmeta">RESOLVING FLIGHT…</div>`}else detailbody.innerHTML=`<div class="dcall">${id.toUpperCase()}</div><div class="dmeta">RECENT ENCOUNTER<br>IDENTITY NOT RETAINED IN THIS SESSION</div>`;draw()}
 function segDist(px,py,a,b,c,d){const dx=c-a,dy=d-b,l=dx*dx+dy*dy;if(!l)return Math.hypot(px-a,py-b);const q=Math.max(0,Math.min(1,((px-a)*dx+(py-b)*dy)/l));return Math.hypot(px-(a+q*dx),py-(b+q*dy))}
