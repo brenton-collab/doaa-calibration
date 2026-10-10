@@ -54,3 +54,8 @@ Source inspection found that `/api/flight` and `/api/board` still attempted auto
 A syntax failure in the first BOARD rewrite was corrected immediately; the subsequent Worker source parsed successfully. Static inspection shows the remaining relay calls are ADS-B traffic and administrative provider-event/harvest functions; none are direct flight/airframe/board premium acquisition. **This does not prove the Render relay cannot spend quota autonomously**; relay service configuration and its own code still require verification.
 
 Attempted in-process behavioral execution with a mocked D1 failed because the available code-execution isolate lacks a `URL` global. This is a test-environment limitation, not a passing integration test. Deployment remains withheld pending real runtime tests and relay inspection.
+
+## Render relay investigation (2026-10-10)
+Render workspace `My Workspace`, service `doaa-adsb-relay` (`srv-db2gjhjtqb8s73db5oh0`) is an existing free-plan Node web service using `relay.js` on `main`, configured for automatic commit deployments. Relay source still exposed `/board`, `/flight`, and `/airframe` endpoints capable of calling the central `airlabs()` function. Commit `8fd8464` adds a hard-stop throw at the very start of that central function; the ADS-B traffic function remains untouched.
+
+**Deployment not yet confirmed:** Render's deploy list still showed live commit `2551b3e` when checked after the source commit. No manual deploy was triggered because the service is configured for automatic commit deployment. Do not mistake committed source for live protection. Verify a new live deploy SHA before claiming the relay's hard-stop is active.
