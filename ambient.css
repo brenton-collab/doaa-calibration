@@ -23,3 +23,19 @@
 .ambient-slide-copy p{max-width:570px;line-height:1.6;color:#adc6cf}
 @media(max-width:650px){.ambient-head{align-items:flex-start;flex-direction:column;gap:8px;padding-top:max(20px,env(safe-area-inset-top))}.ambient-foot{flex-wrap:wrap;gap:12px;padding-bottom:max(16px,env(safe-area-inset-bottom))}.ambient-count{order:3;flex-basis:100%}.ambient-slide-copy{padding:25px 20px 100px}}
 @media(prefers-reduced-motion:reduce){#doaa-ambient *{animation:none!important;transition:none!important}}
+
+/* Art direction: ambient SKY is a quiet canvas, not a dashboard. */
+#doaa-ambient{background:#07141c}
+.ambient-vignette{background:radial-gradient(ellipse at 48% 46%,transparent 40%,rgba(0,4,9,.5) 100%)}
+.ambient-head{top:0;display:flex;flex-direction:row;align-items:center;justify-content:flex-end;gap:16px;padding:clamp(16px,2.8vw,36px);background:none}
+.ambient-kicker{order:2;font:600 10px ui-monospace,monospace;letter-spacing:.17em;color:rgba(220,235,238,.75);white-space:nowrap}
+.ambient-switch{order:1;min-height:38px;padding:8px 11px;background:rgba(16,36,46,.35);border:1px solid rgba(171,208,216,.18);border-radius:5px;color:rgba(210,231,236,.68);font:600 10px ui-monospace,monospace;letter-spacing:.08em;cursor:pointer}
+.ambient-switch:hover,.ambient-switch:focus-visible{color:#fff;border-color:#a3d2dc;outline:2px solid #9dcad4;outline-offset:2px}
+.ambient-foot{padding:clamp(14px,2.5vw,30px);background:none;justify-content:flex-end}
+.ambient-status{color:rgba(229,195,148,.62);font:9px ui-monospace,monospace;letter-spacing:.1em}
+.ambient-status:empty,.ambient-count:empty{display:none}
+.ambient-return{min-height:38px;min-width:38px;padding:7px;background:rgba(16,36,46,.24);border:1px solid rgba(171,208,216,.14);border-radius:5px;color:rgba(210,231,236,.45);font:18px system-ui,sans-serif}
+.ambient-return:hover,.ambient-return:focus-visible{color:#fff;border-color:#a3d2dc}
+.ambient-slides-mode .ambient-foot{background:linear-gradient(transparent,rgba(0,6,12,.55))}
+.ambient-slides-mode .ambient-head{background:linear-gradient(rgba(0,6,12,.45),transparent)}
+@media(max-width:650px){.ambient-head{flex-direction:row;align-items:center;gap:9px;padding-top:max(16px,env(safe-area-inset-top))}.ambient-kicker{font-size:9px;letter-spacing:.08em}.ambient-switch{font-size:9px;padding:7px}.ambient-foot{flex-direction:row;align-items:center;justify-content:flex-end;padding-bottom:max(12px,env(safe-area-inset-bottom))}.ambient-count{order:0;flex-basis:auto}}
