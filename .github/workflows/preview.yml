@@ -39,4 +39,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy preview-proxy.js --name doaa-calibration-preview --compatibility-date 2026-10-10 --no-bundle
+          command: deploy --config wrangler.preview.jsonc
