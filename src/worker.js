@@ -44,7 +44,7 @@ async function checkpointObservation(a,stamp,origin,env,cache){
  if(!response.ok)return;
  try{await cache.put(key,new Response(JSON.stringify({at:now,lat,lon,alt:altitude,gs:speed,
  callsign:a.callsign,registration:a.registration,type:a.type,squawk:a.squawk}),
- {headers:{'cache-control':'public, max-age=180'}}))}catch{}
+ {headers:{'cache-control':'public, max-age=900'}}))}catch{}
 }
 async function drainRelayHarvest(env,origin){let state=await env.DB.prepare("SELECT harvest_cursor,harvest_epoch FROM provider_state WHERE provider='AIRLABS'").first(),cursor=Number(state?.harvest_cursor)||0,epoch=state?.harvest_epoch||null,total=0;for(let page=0;page<3;page++){let j=await relay('/harvest?since='+cursor+'&limit=100',6500);if(j.epoch&&epoch&&j.epoch!==epoch){cursor=0;j=await relay('/harvest?since=0&limit=100',6500)}if(j.epoch)epoch=j.epoch;const items=j.items||[];for(const item of items){await persistRelayKnowledge(env,origin,{found:true,flight:item.flight||null,airframe:item.airframe||null});cursor=Number(item.seq)||cursor;await saveHarvestCursor(env,cursor,epoch);total++}if(!j.has_more)break}return{epoch,cursor,total}}
 async function blockAirlabsQuota(env){const now=new Date(),until=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth()+1,1)).toISOString();await env.DB.prepare("INSERT INTO provider_state(provider,provider_remaining,reset_at,authority,observed_at) VALUES('AIRLABS',0,?,'provider',CURRENT_TIMESTAMP) ON CONFLICT(provider) DO UPDATE SET provider_remaining=0,reset_at=excluded.reset_at,authority='provider',observed_at=CURRENT_TIMESTAMP").bind(until).run();return until}
