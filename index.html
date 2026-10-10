@@ -165,16 +165,29 @@ function drawRangeRings(){
    ctx.fillStyle='#244f70';ctx.font='600 11px ui-monospace,monospace';ctx.fillText(nm+' NM',lx+5,ly-5);
   }
  }
- const r=count*step*scale;
- for(let d=0;d<360;d+=10){
+ // Select by actual visible arcs, not by the outermost generated radius.
+ const visible=[];
+ for(let i=1;i<=count;i++){
+  const radius=i*step*scale;
+  let samples=0;
+  for(let d=0;d<360;d+=2){
+   const angle=rad(d),x=origin.x+Math.sin(angle)*radius,y=origin.y-Math.cos(angle)*radius;
+   if(x>=0&&x<=a.w&&y>=a.top&&y<=innerHeight-a.bottom)samples++;
+  }
+  if(samples>=3)visible.push(radius);
+ }
+ const r=visible.length>=2?visible[visible.length-2]:visible[0];
+ if(!r){ctx.restore();return;}
+ for(let d=0;d<360;d+=1){
   const angle=rad(d),sn=Math.sin(angle),cs=Math.cos(angle);
   const x=origin.x+sn*r,y=origin.y-cs*r;
   if(x<4||x>a.w-4||y<a.top+4||y>innerHeight-a.bottom-4)continue;
-  const major=d%30===0,len=major?10:5;
+  const major=d%30===0,medium=d%10===0,minor=d%5===0;
+  const len=major?16:medium?12:minor?8:4;
   ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-sn*len,y+cs*len);
-  ctx.strokeStyle='#2d6187';ctx.lineWidth=major?1.4:1;ctx.stroke();
+  ctx.strokeStyle=major?'#214b6a':'#2d6187';ctx.lineWidth=major?2:medium?1.5:minor?1.1:.75;ctx.stroke();
   if(major){
-   const tx=x+sn*17,ty=y-cs*17;
+   const tx=x+sn*24,ty=y-cs*24;
    if(tx>24&&tx<a.w-24&&ty>a.top+14&&ty<innerHeight-a.bottom-12){
     ctx.fillStyle='#243d50';ctx.textAlign='center';ctx.font='700 11px ui-monospace,monospace';
     ctx.fillText(d===0?'N · 000°':String(d).padStart(3,'0')+'°',tx,ty+4);
