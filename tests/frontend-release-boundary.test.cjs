@@ -21,6 +21,6 @@ test('flight enrichment fallback reads bundled asset, not external origin', () =
 });
 test('Cloudflare assets are bundled with Worker deployment', () => {
   assert.equal(config.assets.binding, 'ASSETS');
-  assert.equal(config.assets.directory, '.');
+  assert.equal(config.assets.directory, './dist');
   assert.ok(config.assets.run_worker_first.includes('/api/*'));
 });
