@@ -66,3 +66,12 @@ Date; branch/commit/PR; changed files; tests and outcomes; preview/production de
 - Ran the exact current `board-core.cjs` and `tests/board.test.cjs` content with Node.js v22.16.0, using a temporary local workspace and `node --test`. Result: 5 passed, 0 failed. No network/provider calls or GitHub Actions minutes.
 - GitHub main remains the release source. Render relay last observed live at October 7 commit `beff09f`; Cloudflare Workers Builds deployment success and D1 schema still not directly verified.
 - Release gate: do not equate merge with deploy. Inspect Render deployment state and Cloudflare deployment/build, then test health and BOARD/Journey on the served Worker. Avoid triggering redundant Render deployment while its autoDeploy integration is enabled; investigate missing auto-build first.
+
+
+## 2026-10-09 — D1 quota repair staged (not yet deployed)
+
+Cloudflare GraphQL query-level analytics for October 9 identified the primary read load: the dossier's `SELECT ... FROM leads WHERE entity_id=? ORDER BY status,lead_type` consumed **3,329,913 rows read**; the pending-leads queue consumed **1,376,955**; encounter reconciliation **222,210**. A live read-only `EXPLAIN QUERY PLAN` showed the dossier query scanning `idx_leads_status_retry`, not seeking by entity. The new migration `0008_lead_lookup_indexes.sql` adds `idx_leads_entity_status_type` to address that exact problem.
+
+On branch `fix/doaa-d1-amplification`, `doaa-memory.js` also avoids unnecessary `entities` upsert updates, avoids updating unchanged identifier values, and skips encounter reconciliation for duplicate observation inserts. Added `tests/d1-observation-efficiency.test.mjs` and `tests/test_d1_indexes.py`. The synthetic SQLite index test passed locally (one test). The Node mock regression has been authored but has **not yet been executed**. Full integration tests and production validation remain outstanding.
+
+Attempt to apply the production index was rejected by Cloudflare error 7500 because the account exceeded its Free D1 row-read quota. No production schema or Worker was changed. A scheduled task is set for **2026-10-10 00:10 UTC** to validate, apply and verify when quota resets. Confirm current quotas before writes. No paid plan upgrades or unrelated resource changes.
