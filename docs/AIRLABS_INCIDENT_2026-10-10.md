@@ -18,11 +18,11 @@ Recorded events: `fleets` 574, `flight` 559, `flights` 19; 1,152 event rows, of 
 
 **Important limitation:** the budget is process-local and resets on restart; it does not prevent exceeding a provider monthly allowance across many restarts or instances. It is an immediate guard, not a production-grade distributed budget. The Render service currently reports one free-plan instance, but restart-safe shared metering and an independently verified provider quota are required before re-enabling enrichment. With zero-default enrichment, the most costly path is contained after deployment, but the existing published BOARD is still not restored by this change.
 
-`airlabs-budget.test.cjs` supplies Node built-in test-runner cases for default-deny, reserve, daily and monthly UTC rollover. The tests were **authored but not executed** in this connector-only session. No production deployment or end-to-end verification occurred.
+`airlabs-budget.test.cjs` supplies Node built-in test-runner cases for default-deny, reserve, daily and monthly UTC rollover. The four budget unit tests were subsequently executed against a byte-for-byte reconstruction of the committed module and test file in a local Node 22 environment: **4 passed, 0 failed**. The full relay, Worker and browser were not executed. No production deployment or end-to-end verification occurred.
 
 ## Release gate
 
-1. Run `node --test airlabs-budget.test.cjs` and `node --check relay.js` on a checked-out branch; inspect live service logs for unexpected call patterns. Do not run GitHub Actions just to execute these tiny tests.
+1. Re-run `node --test airlabs-budget.test.cjs` and `node --check relay.js` against the checked-out GitHub branch (the isolated budget tests passed locally); inspect live service logs for unexpected call patterns. Do not run GitHub Actions just to execute these tiny tests.
 2. Confirm no other AirLabs API path bypasses `airlabs()`; review frontend behavior when enrichment is unavailable.
 3. Merge and deploy containment only after testing, then verify `/health` budget telemetry and zero AirLabs enrichment requests in provider logs. Existing quota remains exhausted until the provider's reset.
 4. Replace process-local counting with durable, shared quota accounting (including BOARD reservations) before allowing enrichment again. Design published BOARD against a lawful, sustainable source; ADS-B observed movements are not a published timetable.
@@ -39,3 +39,7 @@ These changes have not been browser-tested or deployed. The banner is specifical
 ## Critical underlying dependency correction
 
 The Inspector's browser-side `flight-enrichment.js` previously called the Render relay `/flight` and `/airframe` **directly**, bypassing the Worker's D1 quota circuit. That is a confirmed structural defect. The branch now routes flight identity through `/api/flight` (Worker circuit + free route fallback) and uses the existing D1 dossier for airframe details, rather than calling the relay's AirLabs fleets endpoint. This intentionally sacrifices uncached AirLabs-only aircraft facts during outage, but preserves the observed aircraft and known D1 facts and eliminates the bypass. The direct relay remains available to other clients; server-side budget containment is therefore still necessary. No live browser regression tests have been run.
+
+## Additional recovery correction
+
+When the Worker relay `/flight` request fails, it now attempts the same free route resolver used when the D1 quota circuit is open, returning a provider-unavailable indication rather than a hard HTTP 502. This preserves partial route information through a relay outage and does not consume AirLabs quota. Browser-side Inspector flight calls now use that Worker endpoint, not Render directly.
