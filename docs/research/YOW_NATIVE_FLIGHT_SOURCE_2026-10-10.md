@@ -252,6 +252,13 @@ Both no-key test requests returned Cloudflare error 1010 before an API credentia
 
 **Recommendation:** leave the existing integration's behaviour unchanged in this research task. Do not promote the documented schedule endpoint to full airport coverage without verified entitlement, pagination and permission.
 
+
+### Existing integration audit (10-Oct-2026)
+
+Read-only inspection confirms Render `doaa-adsb-relay` is on the free plan and auto-deploys `main`; no PR preview. The relay already has `AIRLABS_API_KEY` support for `flights`, `flight` and `fleets`, but not `schedules`. Existing BOARD makes up to two provider calls per uncached refresh and caches for two minutes. Flight/airframe requests share quota. D1 provider telemetry and a monthly-limit circuit breaker exist, but no schedule-specific budget is reserved. Service metadata does not establish the secret's value or the AirLabs account's entitlement.
+
+At an illustrative 1,000 calls/month, a single two-direction schedule refresh every two hours costs roughly 720 calls/month before pagination or existing usage; a five-minute refresh would cost roughly 17,280. These are estimates, not measured usage. Next gate: read existing provider usage/entitlement without revealing secrets, then consider at most one budgeted arrivals and departures schedule test. No automatic polling, storage or production change until tested.
+
 ### Other decisive primary sources
 
 - **FlightAware:** [website terms](https://www.flightaware.com/about/terms-of-use), Limited License item 7, restrict automated website access to its APIs/data feeds. [Current AeroAPI pricing](https://www.flightaware.com/commercial/aeroapi/) offers a metered Personal plan with up to $5 monthly credit, not an unlimited no-billing feed. Its published [Personal licence](https://www.flightaware.com/commercial/aeroapi/AeroAPI_Personal_License.pdf) also has storage/combination restrictions. No paid or credit-backed account was activated.
