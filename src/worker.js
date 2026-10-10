@@ -93,11 +93,21 @@ async function dossierApi(u,env){
  let mem=await handleMemory(new Request(new URL('/memory/dossier?scheme=icao24&value='+encodeURIComponent(hex),u.origin)),env);
  let mj=await mem.json().catch(()=>({found:false}));
  let hist=await handleMemory(new Request(new URL('/memory/history?scheme=icao24&value='+encodeURIComponent(hex),u.origin)),env),hj=await hist.json().catch(()=>({found:false}));
- let fj=null,afj=null;const adb=await adsbdbDossier(hex,call);
- try{fj=await relay('/flight?call='+encodeURIComponent(call)+'&hex='+encodeURIComponent(hex),6500)}catch{}
- let f=adb?.flight||(fj?.found?fj.flight:null);if(!f?.dep_iata&&!f?.dep_icao){const rf=await adsbdbRoute(call);if(rf)f={...(f||{}),...rf,reg_number:f?.reg_number||observedReg||null,aircraft_icao:f?.aircraft_icao||type||null}}if(!f&&call){const op=operatorFromCall(call);f={flight_icao:call,airline_icao:op?.icao||String(call).slice(0,3),airline_name:op?.name||null,reg_number:observedReg||null,aircraft_icao:type||null,resolution:'callsign-derived'}}const reg=f?.reg_number||observedReg||mj?.identifiers?.find(x=>x.scheme==='registration')?.value||'';
- try{afj=await relay('/airframe?reg='+encodeURIComponent(reg)+'&hex='+encodeURIComponent(hex),6500)}catch{}
- const aa=adb?.aircraft||null,af=afj?.found?afj.airframe:(aa?{reg_number:aa.registration||null,icao:aa.icao_type||null,manufacturer:aa.manufacturer||null,model:aa.type||null,registered_owner:aa.registered_owner||null,flag:aa.registered_owner_country_iso_name||aa.registered_owner_country_name||null,photo_image:aa.url_photo||aa.url_photo_thumbnail||null,photo_page:aa.url_photo||null,photo_specificity:(aa.url_photo||aa.url_photo_thumbnail)?'exact-airframe':null,photo_credit:'airport-data.com via ADSBdb'}:null);
+ // Memory-first: free network lookup only for missing identity/route facts.
+ // Never invoke the metered relay from Inspector. A future premium action must use
+ // explicit user intent and Worker-side atomic quota admission.
+ const remembered=(mj.claims||[]).filter(c=>c.status==='supported');
+ const has=p=>remembered.some(c=>c.predicate===p&&c.value_text);
+ const needIdentity=!has('registration')||!has('icao_type')||!has('manufacturer')||!has('model');
+ const cachedRoute=call?routeClaim(mj.claims||[],call):null;
+ const adb=needIdentity||(!cachedRoute&&call)?await adsbdbDossier(hex,call):null;
+ const fj=null,afj=null;
+ let f=adb?.flight||cachedRoute?.route||null;
+ if(!f?.dep_iata&&!f?.dep_icao&&call){const rf=await resolveRouteFree(call);if(rf)f={...(f||{}),...rf,reg_number:observedReg||null,aircraft_icao:type||null}}
+ if(!f&&call){const op=operatorFromCall(call);f={flight_icao:call,airline_icao:op?.icao||String(call).slice(0,3),airline_name:op?.name||null,reg_number:observedReg||null,aircraft_icao:type||null,resolution:'callsign-derived'}}
+ const reg=observedReg||mj?.identifiers?.find(x=>x.scheme==='registration')?.value||'';
+ const aa=adb?.aircraft||null;
+ const af=aa?{reg_number:aa.registration||null,icao:aa.icao_type||null,manufacturer:aa.manufacturer||null,model:aa.type||null,registered_owner:aa.registered_owner||null,flag:aa.registered_owner_country_iso_name||aa.registered_owner_country_name||null,photo_image:aa.url_photo||aa.url_photo_thumbnail||null,photo_page:aa.url_photo||null,photo_specificity:(aa.url_photo||aa.url_photo_thumbnail)?'exact-airframe':null,photo_credit:'airport-data.com via ADSBdb'}:null;
  // Preserve provenance per provider. A free ADSBdb hit must never be stored as AirLabs evidence.
  const batches=[];
  const addBatch=(source,fields)=>{const claims=Object.entries(fields).filter(([,v])=>v!==null&&v!==undefined&&String(v).trim()!=='').map(([predicate,value])=>({predicate,value:String(value),status:'supported'}));if(claims.length)batches.push({source,claims})};
@@ -110,10 +120,11 @@ async function dossierApi(u,env){
  for(const batch of batches){try{await handleMemory(new Request(new URL('/memory/ingest',u.origin),{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({entity:{kind:'airframe',key:hex},identifiers:{icao24:hex},source:batch.source,claims:batch.claims})}),env)}catch{}}
  let investigatedMedia=null;if(hex||reg||af?.reg_number||f?.reg_number){const iu=new URL('/api/investigate',u.origin);iu.searchParams.set('hex',hex);iu.searchParams.set('registration',af?.reg_number||f?.reg_number||reg);iu.searchParams.set('type',af?.icao||f?.aircraft_icao||type);iu.searchParams.set('model',af?.model||f?.model||'');iu.searchParams.set('manufacturer',af?.manufacturer||f?.manufacturer||'');try{const ir=await investigate(iu,env),ij=await ir.clone().json();investigatedMedia=ij?.discoveries?.[0]||null}catch{}}
  mem=await handleMemory(new Request(new URL('/memory/dossier?scheme=icao24&value='+encodeURIComponent(hex),u.origin)),env);mj=await mem.json().catch(()=>({found:false}));hist=await handleMemory(new Request(new URL('/memory/history?scheme=icao24&value='+encodeURIComponent(hex),u.origin)),env);hj=await hist.json().catch(()=>({found:false}));
- const ids=Object.fromEntries((mj.identifiers||[]).map(x=>[x.scheme,x.value])),known={};for(const c of mj.claims||[]){if(c.status==='inferred')continue;if(known[c.predicate]==null)known[c.predicate]=c.value_text}
+ const ids=Object.fromEntries((mj.identifiers||[]).map(x=>[x.scheme,x.value])),known={},conflicts={};
+ for(const claim of mj.claims||[]){if(claim.status==='inferred'||claim.status==='superseded')continue;const p=claim.predicate;if(!known[p])known[p]=claim.value_text;else if(known[p]!==claim.value_text){const values=conflicts[p]||(conflicts[p]=[known[p]]);if(!values.includes(claim.value_text))values.push(claim.value_text)}}
  const recent=hj.recent||[],prior=recent.filter(x=>String(x.callsign||'').trim()&&String(x.callsign).trim().toUpperCase()!==call),obv=[];
   if(prior[0])obv.push({code:'AIRFRAME_CONTINUITY',label:'SAME AIRFRAME, NEW CALLSIGN',state:'accepted',basis:String(prior[0].callsign)+' → '+(call||'CURRENT')});
- return json({ok:true,build:BUILD,identity:{icao24:hex,registration:ids.registration||known.registration||af?.reg_number||f?.reg_number||null,icao_type:ids.icao_type||known.icao_type||af?.icao||f?.aircraft_icao||type||null},live:{callsign:call||null},flight:f,airframe:{...(af||{}),...known,hex},memory:mj,history:hj,obv,media:{image:investigatedMedia?.image||af?.photo_image||known.photo_image||null,page:investigatedMedia?.page||af?.photo_page||known.photo_page||null,specificity:investigatedMedia?.specificity||mediaSpecificityFrom(investigatedMedia)||af?.photo_specificity||known.photo_specificity||null,credit:investigatedMedia?.credit||investigatedMedia?.artist||af?.photo_credit||known.photo_credit||known.photo_artist||null,license:investigatedMedia?.license||known.photo_license||null}});
+ return json({ok:true,build:BUILD,identity:{icao24:hex,registration:ids.registration||known.registration||af?.reg_number||f?.reg_number||null,icao_type:ids.icao_type||known.icao_type||af?.icao||f?.aircraft_icao||type||null},live:{callsign:call||null},flight:f,airframe:{...(af||{}),...known,hex},memory:mj,history:hj,identity_conflicts:conflicts,enrichment:{premium:'disabled',free_lookup:!!adb},obv,media:{image:investigatedMedia?.image||af?.photo_image||known.photo_image||null,page:investigatedMedia?.page||af?.photo_page||known.photo_page||null,specificity:investigatedMedia?.specificity||mediaSpecificityFrom(investigatedMedia)||af?.photo_specificity||known.photo_specificity||null,credit:investigatedMedia?.credit||investigatedMedia?.artist||af?.photo_credit||known.photo_credit||known.photo_artist||null,license:investigatedMedia?.license||known.photo_license||null}});
 }
 function claimAgeMs(c){const t=Date.parse(c?.retrieved_at||c?.last_supported_at||'');return Number.isFinite(t)?Date.now()-t:Infinity}
 function routeComplete(r){return !!(r&&(r.dep_iata||r.dep_icao)&&(r.arr_iata||r.arr_icao))}
