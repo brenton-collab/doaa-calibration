@@ -84,3 +84,15 @@ Status vocabulary: **Accepted** = decided experience; **Code evidence** = source
 - Airline NDC distribution interfaces must not be confused with public flight-status feeds; an Air Canada API inventory reports no published consumer flight-status API and gated NDC access. https://github.com/api-evangelist/air-canada . Secondary source only.
 
 **Next technical gate:** browser network inspection of YOW's actual page; confirm source operator and access terms. In parallel investigate official airline/airport permission, public open-data feeds, and permitted flight status source partnerships. Prototype only a **source-neutral adapter with real provider fixtures**, never mock records passed off as operational data. Record source timestamp, terms, coverage, per-field provenance and change history.
+
+## Official YOW inspection attempt — 2026-10-10
+
+**Observed:** https://www.yow.ca/flights/arrivals renders a flight-filter and auto-refresh UI but static HTML exposed through public search/open returns only `Loading...`, not flight records. The official homepage names ARR fields (arrival time, origin, airline/flight, carousel, status) and DEP fields (departure time, destination, airline/flight, gate, status). Web evidence: https://www.yow.ca/ and https://www.yow.ca/flights/arrivals .
+
+**Technical limitation:** three direct Python HTTP attempts (official arrivals, homepage, departures) failed at DNS resolution in the current container; web retrieval has no script/network-inspection capability. Therefore **no YOW endpoint, script bundle, payload, schema, provider, authorization or polling rate was captured or verified**. A page that renders in a normal browser does not prove a publicly licensed API. Do not guess a JSON endpoint or deploy scraping.
+
+**Contact path:** https://www.yow.ca/about-yow/contact-us has an official general inquiry form. The airport identifies its Vice President, Communications and Public Consultation, as responsible for online presence: https://www.yow.ca/people/krista-kealey . This is a relevant routing clue, not permission to send an unsolicited message on the user's behalf.
+
+**Commercial baseline:** Cirium/FlightStats explicitly states its FIDS API is **not included in self-service plans** and requires sales contact: https://developer.flightstats.com/products/fids . Do not count the public FlightStats tracker website as licensed FIDS API access.
+
+**Smallest unblock:** a real browser DevTools network capture on YOW arrivals/departures, or authorized airport data-provider guidance. The assistant should use browser-capable Work/Computer Use only if available and worthwhile; otherwise do not delegate routine debugging to the user. Seek authorized written reuse for 30–60-second refresh and storing flight-status changes. The flight data should support independent airport selection, primary/codeshare identity, UTC/local times, status and actual/estimated revisions, not iframe-only display.
