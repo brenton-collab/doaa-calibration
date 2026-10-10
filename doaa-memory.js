@@ -105,7 +105,12 @@ export async function handleMemory(request,env){
     await markLead(env.DB,id,p.status,p.error||null,Math.max(1,Math.min(Number(p.retry_hours)||24,720)));return json({ok:true});
   }
   if(u.pathname==='/memory/leads'&&request.method==='GET'){
-    const rows=await env.DB.prepare(`SELECT l.*,e.kind,e.canonical_key FROM leads l LEFT JOIN entities e ON e.id=l.entity_id WHERE l.status IN ('pending','retry') AND (l.retry_after IS NULL OR l.retry_after<=CURRENT_TIMESTAMP) ORDER BY CASE l.lead_type WHEN 'airframe-day-history' THEN 1 WHEN 'registration' THEN 2 WHEN 'icao24' THEN 3 WHEN 'msn' THEN 4 ELSE 5 END,l.attempts ASC LIMIT ?`).bind(Math.max(1,Math.min(Number(u.searchParams.get('limit'))||20,100))).all();
+    const limit=Math.max(1,Math.min(Number(u.searchParams.get('limit'))||20,100));
+    const historyOnly=u.searchParams.get('type')==='airframe-day-history';
+    const sql=historyOnly
+      ? `SELECT l.*,e.kind,e.canonical_key FROM leads l LEFT JOIN entities e ON e.id=l.entity_id WHERE l.lead_type='airframe-day-history' AND l.status IN ('pending','retry') AND (l.retry_after IS NULL OR l.retry_after<=CURRENT_TIMESTAMP) ORDER BY l.attempts ASC LIMIT ?`
+      : `SELECT l.*,e.kind,e.canonical_key FROM leads l LEFT JOIN entities e ON e.id=l.entity_id WHERE l.status IN ('pending','retry') AND (l.retry_after IS NULL OR l.retry_after<=CURRENT_TIMESTAMP) ORDER BY CASE l.lead_type WHEN 'airframe-day-history' THEN 1 WHEN 'registration' THEN 2 WHEN 'icao24' THEN 3 WHEN 'msn' THEN 4 ELSE 5 END,l.attempts ASC LIMIT ?`;
+    const rows=await env.DB.prepare(sql).bind(limit).all();
     return json({ok:true,leads:rows.results||[]});
   }
   return null;
