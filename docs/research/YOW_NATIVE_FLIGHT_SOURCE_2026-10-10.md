@@ -1,9 +1,22 @@
 # DOAA: native YOW flight-data investigation
 
 **Finding: No source was verified to meet all of the mission's hard constraints.**  
-**Technical result: Partial success.** An anonymous FlightStats response contained structured YOW arrival records. Its usage and retention restrictions prevent recommending it as DOAA's application feed or investigative history.
+**Technical result: Partial success.** An anonymous FlightStats response contained structured YOW arrival records. Its independent extraction/reuse restrictions and incomplete operational fields prevent recommending it as DOAA's live application feed; retention restrictions separately rule out durable history.
 
 Research date: **2026-10-10 (UTC)**. Direct requests were made from the research container; ordinary browser inspection was used for YOW. No production endpoints, credentials, databases or service configurations were changed. No accounts, trials, billing, applications or provider correspondence were initiated.
+
+## 0. Scope correction: live BOARD does not require historical schedule retention
+
+**Product decision (10-Oct-2026):** The minimum acceptable native BOARD is a *current, transient* published-arrivals/departures display. Permanent retention of third-party schedule records, operational-status deltas, and historical schedule claims is **not** a prerequisite. DOAA's own independently observed ADS-B/aircraft history remains separate and retained under its own source permissions.
+
+Reassess every candidate against two distinct gates:
+
+1. **Live-display gate (required):** legitimate automated retrieval, transformation and native display; enough YOW ARR/DEP coverage, timestamps, status/freshness and sustainable no-cost request budget. Keep only ephemeral request processing and the shortest cache allowed by the source. No new schedule D1 writes, snapshots, history or inferred Encounters.
+2. **Historical-claims gate (optional, deferred):** explicit permission to retain normalized schedule/status records, link them with other sources, and preserve changes. This may remain unavailable without blocking live BOARD.
+
+**Revised assessment:** Removing the history requirement does *not* rescue FlightStats: the report documents independent restrictions on automated extraction, copying and combining provider data, and its tested arrival rows lacked status/estimated/actual fields. Official YOW remains an unresolved lead because the feed is unidentified, server retrieval returned 403/1010 and permitted reuse was not established. AirLabs schedules remain a **conditional existing-account investigation**, not a proven free operational board: validate the already configured account's entitlement, quota, source rights and actual YOW schedule payload without exposing secrets or adding spend. None of these sources is approved for polling or deployment by this scope change alone.
+
+**Implementation adjustment:** A source-neutral BOARD schedule response should be renderable from transient in-memory records, with nullable fields, per-direction coverage, source timestamp and explicit stale/error states. Historical persistence must be opt-in per provider and disabled by default. The report's D1 collector/event-history design below is an **optional future architecture**, not the recommended minimum implementation.
 
 ## 1. Executive decision
 
@@ -11,7 +24,7 @@ DOAA should **not enable a new published-schedule collector from the sources inv
 
 The official YOW board displays the right information and refreshes its UI every five minutes. However, an ordinary server-side request received Cloudflare error 1010, no current upstream API/provider was established, and YOW's published terms do not grant the reuse required by a native BOARD. An old FlightView association is not evidence of the current supplier.
 
-FlightStats was the strongest **tested technical lead**: HTTP 200 without credentials, JSON inside its HTML, real YOW airport identity, scheduled flight rows and a codeshare relationship. The retrieved list did not contain operational status or estimated/actual time fields. Its terms restrict copying, combining data and storage beyond three days. That excludes DOAA's durable history even if extraction is technically easy.
+FlightStats was the strongest **tested technical lead**: HTTP 200 without credentials, JSON inside its HTML, real YOW airport identity, scheduled flight rows and a codeshare relationship. The retrieved list did not contain operational status or estimated/actual time fields. Its terms restrict copying, combining data and storage beyond three days. The copying/extraction restrictions remain relevant even when no schedule history is retained.
 
 AirLabs is the strongest **documented API-shaped alternative**, but not a newly verified solution. The free documented fields and request budget do not establish a complete, fresh operational board; the schedule horizon is short, credentials are required, and this investigation obtained no authenticated YOW schedule response. The existing AirLabs integration uses airborne flights, which is a different dataset.
 
