@@ -84,3 +84,9 @@ Attempt to apply the production index was rejected by Cloudflare error 7500 beca
 - Next: confirm the post-aesthetic Cloudflare deployment, inspect served UI on mobile and desktop, verify BOARD/Investigator navigation and D1 usage trend; repair any visual regressions before calling release complete.
 
 - Cloudflare confirms subsequent deployment `b32eacfb-5856-4b20-afe3-3ee1147dde37` at 2026-10-10 01:30:04 UTC, following the Field Notes commit. This confirms a newer Worker release, not a manual visual inspection of served static assets. Live browser UX and post-change D1 metrics remain open verification gates.
+
+## 2026-10-10 — G0 inventory checkpoint
+
+Read-only repository and Cloudflare inspection. Current production deployment reported at 17:27 UTC, newer than this log's previous checkpoint. Five-minute Worker cron is configured. Production and preview D1 databases exist. Current D1 usage and live UX remain unverified.
+
+The repository contains BOARD, quota and D1 efficiency tests. Published airport schedule acquisition remains unresolved under docs/DATA_SOURCES_AND_QUOTAS.md. The frontend contains SKY and BOARD but not AMBIENT compositions. Next: reconcile deployed version, test actual code and document cross-feature release traceability. No production changes made.
