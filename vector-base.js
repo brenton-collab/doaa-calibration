@@ -2,7 +2,8 @@
    A genuine selective map; falls back to existing OSM tiles until loaded. */
 (function(){
 'use strict';
-let map=null,failed=false;
+let map=null,failed=false,errors=0,lastKey='';
+function fallback(reason){failed=true;root.dataset.vectorReady='no';console.warn('DOAA vector fallback:',reason);if(map){try{map.remove()}catch(_){}}map=null;}
 const root=document.documentElement;
 function style(){return {version:8,glyphs:'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf',
 sources:{osm:{type:'vector',url:'https://tiles.openfreemap.org/planet/latest'}},
@@ -22,11 +23,11 @@ if(!map){
 if(!window.maplibregl){failed=true;return}
 try{
 map=new maplibregl.Map({container:'vector-base',style:style(),center:[lon,lat],zoom,interactive:false,attributionControl:false,fadeDuration:0});
-map.on('load',()=>{root.dataset.vectorReady='yes';window.dispatchEvent(new Event('doaa-vector-ready'))});
-map.on('error',e=>{console.warn('DOAA vector error',e.error||e);if(!map.loaded())root.dataset.vectorReady='no'});
-setTimeout(()=>{if(!map.loaded())root.dataset.vectorReady='no'},12000);
-}catch(e){failed=true;console.warn('DOAA vector failed',e)}
+map.on('load',()=>{if(failed)return;errors=0;root.dataset.vectorReady='yes';window.dispatchEvent(new Event('doaa-vector-ready'))});
+map.on('error',e=>{console.warn('DOAA vector error',e.error||e);if(++errors>=3)fallback('repeated map resource errors')});
+setTimeout(()=>{if(!failed&&root.dataset.vectorReady!=='yes')fallback('map initialization timeout')},12000);
+}catch(e){fallback(e)}
 }
-if(map){map.resize();map.jumpTo({center:[lon,lat],zoom:Math.max(0,Math.min(18,zoom))})}
+if(map){const z=Math.max(0,Math.min(18,zoom)),key=[lon.toFixed(6),lat.toFixed(6),z.toFixed(4),innerWidth,innerHeight].join(':');if(key!==lastKey){lastKey=key;map.resize();map.jumpTo({center:[lon,lat],zoom:z})}}
 };
 })();
