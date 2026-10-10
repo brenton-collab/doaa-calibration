@@ -89,7 +89,7 @@ function operatorFromCall(call){const p=String(call||'').trim().toUpperCase().sl
 async function dossierApi(u,env){
  if(!env.DB)return json({ok:false,error:'D1 unavailable'},503);
  const hex=String(u.searchParams.get('hex')||'').trim().toUpperCase(),call=String(u.searchParams.get('call')||'').trim().toUpperCase(),type=String(u.searchParams.get('type')||'').trim().toUpperCase(),observedReg=String(u.searchParams.get('reg')||'').trim().toUpperCase();
- if(!hex)return json({ok:false,error:'hex required'},400);
+ if(!/^[0-9A-F]{6}$/.test(hex))return json({ok:false,error:'valid six-digit ICAO hex required'},400);
  let mem=await handleMemory(new Request(new URL('/memory/dossier?scheme=icao24&value='+encodeURIComponent(hex),u.origin)),env);
  let mj=await mem.json().catch(()=>({found:false}));
  let hist=await handleMemory(new Request(new URL('/memory/history?scheme=icao24&value='+encodeURIComponent(hex),u.origin)),env),hj=await hist.json().catch(()=>({found:false}));
@@ -111,7 +111,7 @@ async function dossierApi(u,env){
  // Preserve provenance per provider. A free ADSBdb hit must never be stored as AirLabs evidence.
  const batches=[];
  const addBatch=(source,fields)=>{const claims=Object.entries(fields).filter(([,v])=>v!==null&&v!==undefined&&String(v).trim()!=='').map(([predicate,value])=>({predicate,value:String(value),status:'supported'}));if(claims.length)batches.push({source,claims})};
- if(aa)addBatch({key:'adsbdb-aircraft',name:'ADSBdb aircraft identity',kind:'api',url:'https://www.adsbdb.com/'},{registration:aa.registration,icao_type:aa.icao_type,manufacturer:aa.manufacturer,model:aa.type,operator:aa.registered_owner});
+ if(aa)addBatch({key:'adsbdb-aircraft',name:'ADSBdb aircraft identity',kind:'api',url:'https://www.adsbdb.com/'},{registration:aa.registration,icao_type:aa.icao_type,manufacturer:aa.manufacturer,model:aa.type,registered_owner:aa.registered_owner});
  if(afj?.found&&afj.airframe){const a=afj.airframe;addBatch({key:'airlabs-fleet',name:'AirLabs fleet',kind:'api'},{registration:a.reg_number,icao_type:a.icao,manufacturer:a.manufacturer,model:a.model,msn:a.msn,built:a.built,engine:a.engine,engine_count:a.engine_count,operator:a.operator_name});}
  if(fj?.found&&fj.flight){const x=fj.flight;addBatch({key:'airlabs-flight',name:'AirLabs flight',kind:'api'},{registration:x.reg_number,icao_type:x.aircraft_icao,manufacturer:x.manufacturer,model:x.model,operator:x.airline_name,operator_code:x.airline_icao});}
  if(adb?.flight){const x=adb.flight;addBatch({key:'adsbdb-route',name:'ADSBdb flight route',kind:'api',url:'https://www.adsbdb.com/'},{operator:x.airline_name,operator_code:x.airline_icao});}
