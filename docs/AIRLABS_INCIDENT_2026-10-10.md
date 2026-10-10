@@ -29,3 +29,9 @@ Recorded events: `fleets` 574, `flight` 559, `flights` 19; 1,152 event rows, of 
 5. Validate SKY, Inspector, Journey, and BOARD user flows under provider-unavailable conditions. Do not call the product fully operational before these pass.
 
 No credentials, subscriptions, quota resets, production data or service settings were changed in this patch.
+
+## In-app usage and warning patch
+
+The existing Usage panel previously displayed only the aggregate request count, provider balance (often null) and reset timestamp, with no per-endpoint breakdown or prominent failure warning. The Worker now exposes grouped request counts and the D1 circuit state through the existing `/api/ops` route; the UI shows the flight/fleet/BOARD counts, a quota-exhausted warning inside Usage, and a clickable global banner when the circuit is open. A `visibilitychange` check refreshes the banner when the app returns to foreground. The endpoint returns `no-store`; it reads D1 and makes **zero** AirLabs calls. A local accounting mismatch is displayed rather than silently concealed.
+
+These changes have not been browser-tested or deployed. The banner is specifically tied to the D1 circuit; an unrecorded upstream failure can still occur without triggering it. No claim is made that all other DOAA functions have been end-to-end verified.
