@@ -79,7 +79,7 @@ jobs:
               raise SystemExit("Conflict metadata missing from search")
           if "julianday(o.observed_at) BETWEEN julianday(?,'-15 minutes')" not in memory:
               raise SystemExit("Encounter continuity must compare ISO timestamps numerically")
-          if ".filter(inObservationArea).map(a=>handleMemory" not in worker:
+          if ".filter(inObservationArea).map(a=>checkpointObservation" not in worker:
               raise SystemExit("Viewport acquisition must not persist remote exploration as Encounters")
           if "['AIR CANADA','ACA','AC']" in worker:
               raise SystemExit("Broad two-letter airline alias would overmatch local history")
