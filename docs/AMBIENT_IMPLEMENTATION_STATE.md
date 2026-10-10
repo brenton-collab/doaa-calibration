@@ -45,3 +45,13 @@ Important remaining issues: track drawing is observation-history only while the 
 - Added cache-contract test and included it in the deployment gate. Refreshed older assertions to match the verified-media adapter.
 - Connector-side source checks passed eight invariants. Runtime tests and browser validation remain outstanding.
 - Known trade-off: this is a read-only reuse of existing media, not a media ingestion pipeline. It will only show images that were previously verified and saved by existing D1 workflows. No production merge/deployment.
+
+## 2026-10-10 — integration execution tranche
+- Executed 17 existing/new test callbacks in an isolated JavaScript compatibility harness against GitHub branch source: all passed. This is **not** a native Node test run and does not replace browser acceptance.
+- Parsed both inline HTML scripts, ambient.js, ambient-media.js, look.js and flight-enrichment.js as JavaScript functions; parsed Worker after removing its ESM import/export wrapper.
+- Executed the ambient-media.js event handler with controlled simulated observations, network response and clock: matching licensed media was emitted exactly once; repeated identical lookup was throttled.
+- Executed Worker ambientMediaApi with simulated read-only D1 responses: returned an exact-airframe photo with canonical registration, rejected invalid ICAO IDs and issued only SELECT statements.
+- Fixed registration-aware media cache signature so changes in observed registration invalidate the throttle.
+- Fixed LOOK refreshing as shared SKY observations change, rather than only on initial navigation.
+- Added executable LOOK user-journey test and included it in the production release test gate.
+- Production remains unchanged. Browser layout, Cloudflare static asset packaging, native Node suite and production release verification remain open.
