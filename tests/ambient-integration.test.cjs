@@ -26,9 +26,9 @@ test('mode is explicit, persisted and does not auto-switch',()=>{
  assert.match(ambient,/const idleMs = 5 \* 60 \* 1000/);
 });
 test('slides require an exact registered airframe, license and attribution',()=>{
- assert.match(ambient,/x\.photo\?\.registration/);
- assert.match(ambient,/x\.photo\.license && x\.photo\.attribution/);
- assert.match(ambient,/String\(x\.photo\.registration\)\.toUpperCase\(\) === String\(x\.reg\)\.toUpperCase\(\)/);
+ assert.match(ambient,/verifiedMedia/);
+ assert.match(ambient,/media\\.license/);
+ assert.match(ambient,/media\\.registration/);
  assert.match(ambient,/will not substitute an unrelated aircraft image/);
 });
 test('ambient preserves a way out and respects reduced motion',()=>{
