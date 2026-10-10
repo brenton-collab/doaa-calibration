@@ -1,21 +1,13 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
   "name": "doaa-calibration-preview",
-  "compatibility_date": "2026-10-06",
-  "main": "src/worker.js",
-  "assets": {
-    "directory": ".",
-    "binding": "ASSETS",
-    "run_worker_first": [
-      "/api/*"
-    ]
-  },
-  "d1_databases": [
+  "main": "preview-proxy.js",
+  "compatibility_date": "2026-10-10",
+  "workers_dev": true,
+  "services": [
     {
-      "binding": "DB",
-      "database_name": "doaa-memory-preview",
-      "database_id": "939eda3b-4894-497b-9f67-209771761b3f",
-      "migrations_dir": "migrations"
+      "binding": "PRODUCTION_API",
+      "service": "doaa-calibration",
+      "environment": "production"
     }
   ]
 }
