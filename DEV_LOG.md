@@ -94,3 +94,7 @@ The repository contains BOARD, quota and D1 efficiency tests. Published airport 
 ## 2026-10-10 — G0 integrated traceability recorded
 
 Detailed source and deployment audit: docs/G0_RELEASE_TRACEABILITY_2026-10-10.md. Critical release-coupling risk: Worker dynamically fetches current main-branch frontend assets, so Worker version alone cannot verify or roll back served UI. Cloudflare reported a newer 17:27 UTC deployment and configured five-minute cron. D1 databases confirmed, usage unmeasured. Render workspace requires user selection and was not accessed. AMBIENT compositions absent from inspected frontend; published BOARD schedule source remains unresolved. No production changes or tests executed. Next: establish immutable frontend release/rollback boundary, reconcile deployed assets and run offline tests before app edits.
+
+## 2026-10-10 — Frontend release isolation branch
+
+Branch `work/immutable-frontend-release` contains the Worker asset-bundle change, static regression tests, deploy syntax-gate integration, and docs/FRONTEND_RELEASE_BOUNDARY_GATE.md. Connector-side checks passed eight source/configuration assertions. Cloudflare read-only settings confirm production ASSETS and DB bindings. Node tests, preview/browser flows and production verification remain outstanding. No merge or deployment was performed. Next: run tests in a safe environment, verify static route behavior, and prepare controlled rollout with bundle-aware rollback.
