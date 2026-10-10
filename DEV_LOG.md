@@ -90,3 +90,7 @@ Attempt to apply the production index was rejected by Cloudflare error 7500 beca
 Read-only repository and Cloudflare inspection. Current production deployment reported at 17:27 UTC, newer than this log's previous checkpoint. Five-minute Worker cron is configured. Production and preview D1 databases exist. Current D1 usage and live UX remain unverified.
 
 The repository contains BOARD, quota and D1 efficiency tests. Published airport schedule acquisition remains unresolved under docs/DATA_SOURCES_AND_QUOTAS.md. The frontend contains SKY and BOARD but not AMBIENT compositions. Next: reconcile deployed version, test actual code and document cross-feature release traceability. No production changes made.
+
+## 2026-10-10 — G0 integrated traceability recorded
+
+Detailed source and deployment audit: docs/G0_RELEASE_TRACEABILITY_2026-10-10.md. Critical release-coupling risk: Worker dynamically fetches current main-branch frontend assets, so Worker version alone cannot verify or roll back served UI. Cloudflare reported a newer 17:27 UTC deployment and configured five-minute cron. D1 databases confirmed, usage unmeasured. Render workspace requires user selection and was not accessed. AMBIENT compositions absent from inspected frontend; published BOARD schedule source remains unresolved. No production changes or tests executed. Next: establish immutable frontend release/rollback boundary, reconcile deployed assets and run offline tests before app edits.
