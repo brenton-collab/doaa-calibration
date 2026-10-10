@@ -79,6 +79,17 @@
 .row,.boardrow{border-color:#bbc5c6}
 .rackprimary,.boardflight{font-weight:700;color:#1b2a32}
 @media(max-width:700px){.detail:before{left:16px}.detail-body{padding-top:34px}}
+
+/* Override legacy inline dark-sky styling from the enrichment renderer. */
+.detail-body [style*="color:#f1fbff"],.detail-body [style*="color:#8faab6"]{color:#253943!important}
+.detail-body [style*="color:#62ddff"],.detail-body [style*="color:#9bb0ba"]{color:#2a6183!important}
+.detail-body [style*="font:8px"],.detail-body [style*="font:9px"]{font-size:11px!important;line-height:1.4!important}
+.detail-body [style*="font:10px"]{font-size:12px!important;line-height:1.4!important}
+.detail-body [style*="font-size:11px"]{font-size:13px!important;line-height:1.4!important}
+.detail-body [style*="border-bottom:1px solid #173443"],.detail-body [style*="border-top:1px solid #153244"]{border-color:#bac4c5!important}
+.detail-body [style*="background:rgba(98,221,255,.025)"]{background:#edf1f0!important}
+.detail-body [style*="border-left:1px solid #274757"]{border-color:#aab9bc!important}
+.detail-body button{font-family:inherit;min-height:28px}
 </style></head><body>
 <canvas id="tiles"></canvas><canvas id="sky"></canvas><div class="top"><div><div class="brand">DOAA · OTTAWA AVIATION</div><div class="title" id="viewtitle">SKY</div><div class="build" id="build" role="button" tabindex="0" aria-expanded="false" aria-controls="quota-panel" title="Open provider usage">UI sky-12.0 · API CHECKING · USAGE ↗</div></div><div class="status" id="status">ACQUIRING…</div></div><section id="quota-panel" class="quota-panel" aria-live="polite"><div class="quota-head"><strong>AIRLABS · PROVIDER USAGE</strong><button type="button" id="quota-close" aria-label="Close provider usage" title="Close provider usage">×</button></div><div id="quota-data">Loading telemetry…</div></section><div id="viewmenu" class="viewmenu"></div><main id="board" class="board"></main><div id="catchment" class="catchment"></div><div id="detail" class="detail"><button id="detailclose" class="detail-close" type="button" aria-label="Close Investigator">×</button><div id="detailbody" class="detail-body"></div><div id="detailtray" class="detail-tray" aria-label="Investigator sections"></div></div><button id="recenter" class="recenter">⌖ LIVE VIEW</button><div id="attrib" class="attrib">MAP OSM · ACQUIRING</div><aside class="rail" id="rail"><div class="pull" id="pull"></div><div class="rackhead"><h2 class="racktitle">NEARBY AIRCRAFT</h2><input id="rackquery" class="rackquery" type="search" autocomplete="off" spellcheck="false" placeholder="SEARCH DOAA"><button id="racksearch" class="racksearch" aria-label="Search DOAA">⌕</button></div><div id="rack"></div></aside>
 <script src="/flight-enrichment.js"></script>
