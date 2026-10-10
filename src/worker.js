@@ -190,6 +190,8 @@ async function ambientMediaApi(u,env){
   const rows=(await env.DB.prepare(sql).bind(...ids).all()).results||[];
   const byId=new Map();
   for(const row of rows){const key=String(row.hex).toUpperCase();if(!byId.has(key))byId.set(key,{hex:key,fields:new Map(),conflicts:new Set()});const entry=byId.get(key);const prior=entry.fields.get(row.predicate);if(prior&&prior!==row.value_text)entry.conflicts.add(row.predicate);else if(!prior)entry.fields.set(row.predicate,row.value_text);}
+  const registrations=(await env.DB.prepare("SELECT h.value AS hex,r.value AS registration FROM identifiers h JOIN identifiers r ON r.entity_id=h.entity_id AND r.scheme='registration' WHERE h.scheme='icao24' AND h.normalized_value IN ("+placeholders+") LIMIT 48").bind(...ids).all()).results||[];
+  for(const row of registrations){const entry=byId.get(String(row.hex).toUpperCase());if(!entry)continue;const previous=entry.fields.get('registration');if(previous&&previous!==row.registration)entry.conflicts.add('registration');else entry.fields.set('registration',row.registration);}
   const media=[];
   for(const entry of byId.values()){const f=entry.fields;if(entry.conflicts.size||f.get('photo_specificity')!=='exact-airframe'||!f.get('registration')||!f.get('photo_image')||!f.get('photo_license')||!(f.get('photo_credit')||f.get('photo_artist')))continue;
    const url=f.get('photo_image');if(!/^https:\/\//i.test(url))continue;
