@@ -52,3 +52,18 @@ Status vocabulary: **Accepted** = decided experience; **Code evidence** = source
 - Audit current main and PR #42 against this matrix; resolve overlapping/stale BOARD statements in the spec without erasing historical rationale.
 - Confirm which Field Notes interaction changes are in served production versus only committed; create narrow test-backed fixes.
 - Continue lawful schedule-feed research separately from UI corrections. Update this matrix and DEV_LOG.md with evidence at each meaningful checkpoint.
+
+## BOARD source reconnaissance — 2026-10-10
+
+**No source approved for production yet.** Public web research verified the following leads; it did not establish authorization to redistribute, endpoint durability, actual JSON payload quality, or refresh capacity. No paid requests, credentials, deployments or production data writes.
+
+1. **Official YOW flight pages**: https://www.yow.ca/flights/arrivals and /departures present a dynamic auto-refresh airport board with earlier/tomorrow navigation; the public HTML accessible to search tools is only a loading shell. Priority: inspect client network activity in a browser-capable environment, identify provider, schema, time zones, pagination, caching and terms. Ask airport for written permission or an authorized feed if necessary. Do not silently scrape or deploy undocumented endpoints.
+2. **FlightStats public web interface**: third-party reverse-engineering documentation at https://github.com/evilsaloon/flightstats-web-api describes `/v2/api-next/flight-tracker/{arr|dep}/{airport}/{year}/{month}/{day}/{startHour}` with 12-hour chunks. This is a **technical feasibility lead only**. Verify current behavior, terms and redistribution authorization before using.
+3. **Airport-specific third-party HTML boards**: https://www.ottawa-airport.com/yow-arrivals and /yow-departures expose current flight numbers, times and statuses in accessible HTML, but explicitly source third-party data and are **not** the official YOW authority. Not approved for republishing; quality, licensing and refresh remain unverified.
+4. **FlightStats licensed FIDS product**: https://developer.flightstats.com/api-docs/fids/v1 explicitly offers airport-board JSON; commercial access and pricing need verification, likely incompatible with free-only constraint.
+5. **Open-source route/history datasets**: OpenFlights explicitly does **not** offer timetables (https://openflights.org/data.php); MrAirspace's quarterly ADS-B-derived flights are historical observations, not published schedules. Useful for PATTERNS/validation, not BOARD timetable.
+6. **SkyLink** advertises 1,000 free requests/month (https://github.com/SkyLink-API/flight-schedules-api), far below a 30–60-second refresh of two directions; already rejected as primary. FlightNerve's public route listing with obscured schedule times is not a free live board.
+
+**Novel avenues worth testing**: a direct permission request to the Ottawa Airport Authority for its public FIDS data; airline-operated flight-status feeds as independent confirmation of flight changes (not assumed to cover all carriers); regional airport open-data portals and airport-operated JSON/ICS feeds; a locally cached, event-diffed publication layer **only after** a licensed upstream source is secured. Combining multiple incomplete feeds must expose coverage gaps, not imply completeness.
+
+**Feasibility gate**: capture actual scheduled future + landed YOW flights, both directions, estimated/actual/status, provenance, local-time conversion and codeshares; measure coverage and freshness; establish lawful automated reuse and realistic free quota. Until then label the current UI as observed/reported airport movements, never a complete published timetable.
