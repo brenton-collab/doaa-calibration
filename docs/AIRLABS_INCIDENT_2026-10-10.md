@@ -43,3 +43,7 @@ The Inspector's browser-side `flight-enrichment.js` previously called the Render
 ## Additional recovery correction
 
 When the Worker relay `/flight` request fails, it now attempts the same free route resolver used when the D1 quota circuit is open, returning a provider-unavailable indication rather than a hard HTTP 502. This preserves partial route information through a relay outage and does not consume AirLabs quota. Browser-side Inspector flight calls now use that Worker endpoint, not Render directly.
+
+## Visual direction
+
+The branch now applies a **cartographic daylight** CSS layer across the existing application shell: warm off-white ground, desaturated geography, navy instrument typography, blue ink controls, field-notes surfaces, and a redesigned accessible Usage breakdown. This is a real CSS implementation, not a mockup. It does not alter underlying ADS-B tracking calculations or routes. **Visual QA remains unverified** until deployed and checked on mobile and desktop. The full illustrated compass rose from the reference is not implemented; do not imply pixel-perfect fidelity.
