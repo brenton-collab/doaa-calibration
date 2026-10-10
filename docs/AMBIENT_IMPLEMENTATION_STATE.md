@@ -55,3 +55,11 @@ Important remaining issues: track drawing is observation-history only while the 
 - Fixed LOOK refreshing as shared SKY observations change, rather than only on initial navigation.
 - Added executable LOOK user-journey test and included it in the production release test gate.
 - Production remains unchanged. Browser layout, Cloudflare static asset packaging, native Node suite and production release verification remain open.
+
+## 2026-10-10 — curated release packaging and executable evidence gates
+- Added scripts/build-assets.cjs with a seven-file explicit browser asset allowlist. Wrangler production assets.directory is now ./dist, never repository root. Build rejects missing assets and unbundled local HTML references. Generated dist is ignored by Git.
+- Updated production workflow to include all new AMBIENT/LOOK file triggers, run the curated packaging step before deployment, and execute new release-assets and media-evidence behavioral tests.
+- Added tests/release-assets.test.cjs, tests/ambient-media-behavior.test.cjs and tests/look-journey.test.cjs to release gate.
+- Source-level compatibility harness executed 20 assertions successfully (17 prior plus three release-assets checks). Separate isolated API simulations accepted a verified exact-airframe photo and rejected conflicting image claims, representative specificity and missing attribution. This is not a native Node test run or browser smoke test.
+- Main and integration branch are diverged (two main commits beyond branch base at inspection). Do not merge without reconciling. No production deployment or external-provider quota consumed.
+- Next: native CI/browser acceptance, correct discovered runtime failures, then reconcile and merge/deploy with explicit verification.
