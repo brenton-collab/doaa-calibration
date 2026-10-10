@@ -46,3 +46,8 @@ At 02:00 UTC on October 9, D1 reported 2,266 read queries and 282,065 rows read,
 
 ## Rollback
 Revert the single `src/worker.js` cursor-batching change; no schema migration or persistent state changes are required.
+
+## Third optimization: observation-write budget (isolated, not deployed)
+`checkpointObservation` previously persisted every 60 seconds, or on a 500-ft altitude change, or 2-NM displacement. It now persists on first sighting, changed callsign/registration/type/squawk, 2,000-ft altitude change, 50-knot ground/air threshold crossing, or a five-minute heartbeat. Normal movement no longer causes a database write. This caps **routine unchanged aircraft** at approximately 12 checkpoints/hour rather than 60, assuming the cache checkpoint survives; other meaningful events may still cause writes. The database observation/encounter model and 80-NM Ottawa acquisition boundary remain unchanged.
+
+Synthetic extracted-function test: first sighting writes; a 20-second 2-NM-plus movement does not; a 2,001-ft altitude change writes; a six-minute heartbeat writes. Three writes as expected; JS syntax check passed. **This is not a real browser or deployed integration test**. A five-minute heartbeat can lose detail about last sighting and short-lived trajectories, so validate the trade-off against real aircraft traces before production rollout. Cache eviction may also increase write frequency; do not describe this as a hard global rate limit.
