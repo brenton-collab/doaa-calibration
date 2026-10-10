@@ -39,7 +39,7 @@ jobs:
           node --check vector-base.js
           node --check flight-enrichment.js
           node --check doaa-memory.js
-          node --test tests/frontend-release-boundary.test.cjs tests/ambient-integration.test.cjs tests/ambient-media-cache.test.cjs tests/look-journey.test.cjs
+          node --test tests/frontend-release-boundary.test.cjs tests/ambient-integration.test.cjs tests/ambient-media-cache.test.cjs tests/look-journey.test.cjs tests/release-assets.test.cjs
           node - <<'NODE'
           const fs = require('node:fs');
           const vm = require('node:vm');
