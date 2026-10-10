@@ -31,3 +31,10 @@ Implemented in branch:
 - Verified via GitHub source inspection that new assets are loaded, LOOK is wired, and neither new module calls fetch. These are source checks, not executed runtime tests.
 
 Important remaining issues: track drawing is observation-history only while the ambient view is active; it does not yet draw older D1 historical tracks. SLIDES still has no real cached licensed-photo bridge or event-driven rotation. Browser/Node execution remains unverified; production unchanged.
+
+## 2026-10-10 — SLIDES evidence handoff
+- Existing flight-enrichment Inspector reconciliation emits a local doaa:airframe-media event only for exact-airframe media with matching observed registration, image, license and attribution. No new external request is introduced by the event.
+- ambient.js maintains a session-only cache of these verified media records, keyed by aircraft ID. Slides selects eligible media only for an aircraft in the current SKY snapshot with the same registration. It changes composition for newly eligible aircraft, with a 45-second minimum hold; quiet periods hold the existing composition.
+- No speculative model photos, no on-slide provider fetch, no timed random rotation. An honest waiting state is displayed if no exact media has been encountered.
+- The source checks passed for HTML/style balance, loaded modules, Inspector-to-AMBIENT media event, matching registration, LOOK Inspector navigation, and no independent fetch in AMBIENT or LOOK.
+- **Limitations:** the user must first open an Inspector that reconciles exact media; the existing app does not yet proactively populate media from a bounded D1 cache. Browser acceptance, test execution and production deployment remain undone. A source check does not establish runtime correctness.
