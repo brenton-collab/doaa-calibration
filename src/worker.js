@@ -28,12 +28,12 @@ async function checkpointObservation(a,stamp,origin,env,cache){
  const altitude=number(a.alt),speed=number(a.gs),lat=number(a.lat),lon=number(a.lon);
  const oldAlt=number(old?.alt),oldSpeed=number(old?.gs),oldLat=number(old?.lat),oldLon=number(old?.lon);
  const elapsed=now-Number(old?.at||0);
- const changed=!old||!Number.isFinite(elapsed)||elapsed<0||elapsed>=60000||
+ // Record an encounter at first sighting, at meaningful identity/flight-state changes,
+ // and at a bounded heartbeat. Do not write a position merely because it moved 2 NM.
+ const changed=!old||!Number.isFinite(elapsed)||elapsed<0||elapsed>=300000||
  ['callsign','registration','type','squawk'].some(k=>String(a[k]??'')!==String(old[k]??''))||
- (altitude!==null&&oldAlt!==null&&Math.abs(altitude-oldAlt)>=500)||
- (speed!==null&&oldSpeed!==null&&(speed<50)!==(oldSpeed<50))||
- (lat!==null&&lon!==null&&oldLat!==null&&oldLon!==null&&
-  Math.hypot((lat-oldLat)*69,(lon-oldLon)*48)>2);
+ (altitude!==null&&oldAlt!==null&&Math.abs(altitude-oldAlt)>=2000)||
+ (speed!==null&&oldSpeed!==null&&(speed<50)!==(oldSpeed<50));
  if(!changed)return;
  const response=await handleMemory(new Request(new URL('/memory/observe',origin),{method:'POST',
  headers:{'content-type':'application/json'},body:JSON.stringify({
