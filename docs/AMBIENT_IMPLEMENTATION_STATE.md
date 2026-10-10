@@ -19,3 +19,15 @@
 
 ## Next integrated work
 Validate runtime syntax and UI flows; add reusable media evidence contract and event-driven slides; integrate LOOK and Inspector navigation; ensure BOARD coverage and freshness labels. Preserve production isolation and avoid metered provider requests.
+
+## 2026-10-10 evening — product-direction correction and LOOK
+User art direction: AMBIENT SKY must be almost textless. DOAA identity badging top right, small explicit composition toggle, very faint map detail, and a feeling of aviation traces emerging as art rather than a softer SKY interface.
+
+Implemented in branch:
+- Replaced radar rings, compass, labels and counters with faint field lines, small aircraft glyphs and accumulated tracks from real successive observations. No synthetic movement, no additional acquisition.
+- Minimal upper-right DOAA identity and SKY/SLIDES switch, quiet bottom-right return affordance, staleness indication only when needed. Mode selection persists; there is no automatic SKY/SLIDES switch.
+- Added LOOK as an observation-first view with explicit explanations and tap-through to SKY Inspector, using only existing aircraft snapshot.
+- Extended ambient integration contract tests to cover text restraint, trace rendering, LOOK navigation and no additional network requests.
+- Verified via GitHub source inspection that new assets are loaded, LOOK is wired, and neither new module calls fetch. These are source checks, not executed runtime tests.
+
+Important remaining issues: track drawing is observation-history only while the ambient view is active; it does not yet draw older D1 historical tracks. SLIDES still has no real cached licensed-photo bridge or event-driven rotation. Browser/Node execution remains unverified; production unchanged.
