@@ -53,6 +53,32 @@
 .detail-tray button{font-size:12px;min-height:36px}.detail-close{color:#263e51}
 .recenter{background:#fbfaf7;color:#235f93;border-color:#9eb2c2}
 .attrib{color:#526575;font-size:9px}
+
+/* Field Notes / aviation plotting sheet: print-weight charcoal and ruled dossier. */
+#tiles{filter:grayscale(1) brightness(.98) contrast(1.12)}
+.detail{background:#f8f7f2;border:1px solid #8c989d;border-radius:3px;box-shadow:0 7px 28px #1b2c3640;color:#1b272d}
+.detail-body{color:#1b272d;font:13px/1.45 system-ui,sans-serif;padding-top:34px}
+.detail-body .inspector-surface{color:#1b272d}
+.detail-body [style*="color:#e5f0f4"],.detail-body [style*="color: #e5f0f4"]{color:#192b34!important;font-size:14px!important;line-height:1.35!important;font-weight:550}
+.detail-body [style*="color:#668899"],.detail-body [style*="color: #668899"]{color:#4b5d65!important;font-size:11px!important;font-weight:650;letter-spacing:.085em}
+.detail-body [style*="color:#62ddff"],.detail-body [style*="color:#9bb0ba"],.detail-body [style*="color:#41697a"]{color:#2c6283!important}
+.detail-body [style*="border-bottom:1px solid #102a38"],.detail-body [style*="border-bottom:1px solid #153244"]{border-bottom:1px solid #b9c3c4!important}
+.detail-body button[data-fact]{color:#1b272d!important;cursor:pointer}
+.detail-body button[data-fact]:focus-visible,.detail-tray button:focus-visible{outline:2px solid #245e8d;outline-offset:2px}
+.detail-body button[data-fact]:active{background:#e5edf0!important}
+.detail-body [style*="grid-template-columns:repeat(2"]{column-gap:14px!important;row-gap:5px}
+.detail-body [style*="grid-template-columns:repeat(2"] > *{padding:9px 0!important}
+.detail-body .dcall{font-size:19px;color:#18272e;font-weight:750;letter-spacing:-.02em}
+.detail-body .dmeta{font-size:12px;color:#485c66}
+.detail:before{content:"DOAA  /  AIRFRAME RECORD";position:absolute;left:18px;top:16px;right:55px;padding-bottom:8px;border-bottom:2px solid #263c48;font:700 10px/1.3 ui-monospace,monospace;letter-spacing:.13em;color:#283e49}
+.detail-close{top:8px;right:8px;background:transparent;color:#263c48;border:1px solid #aeb9bb;border-radius:2px}
+.detail-tray{background:#f0f0eb;border-top:2px solid #263c48}
+.detail-tray button{color:#345e75;font-weight:650}
+.detail-tray button.active{color:#192b34;border-bottom:2px solid #192b34}
+.rail,.board{border-radius:3px;background:#f8f7f2}
+.row,.boardrow{border-color:#bbc5c6}
+.rackprimary,.boardflight{font-weight:700;color:#1b2a32}
+@media(max-width:700px){.detail:before{left:16px}.detail-body{padding-top:34px}}
 </style></head><body>
 <canvas id="tiles"></canvas><canvas id="sky"></canvas><div class="top"><div><div class="brand">DOAA · OTTAWA AVIATION</div><div class="title" id="viewtitle">SKY</div><div class="build" id="build" role="button" tabindex="0" aria-expanded="false" aria-controls="quota-panel" title="Open provider usage">UI sky-12.0 · API CHECKING · USAGE ↗</div></div><div class="status" id="status">ACQUIRING…</div></div><section id="quota-panel" class="quota-panel" aria-live="polite"><div class="quota-head"><strong>AIRLABS · PROVIDER USAGE</strong><button type="button" id="quota-close" aria-label="Close provider usage" title="Close provider usage">×</button></div><div id="quota-data">Loading telemetry…</div></section><div id="viewmenu" class="viewmenu"></div><main id="board" class="board"></main><div id="catchment" class="catchment"></div><div id="detail" class="detail"><button id="detailclose" class="detail-close" type="button" aria-label="Close Investigator">×</button><div id="detailbody" class="detail-body"></div><div id="detailtray" class="detail-tray" aria-label="Investigator sections"></div></div><button id="recenter" class="recenter">⌖ LIVE VIEW</button><div id="attrib" class="attrib">MAP OSM · ACQUIRING</div><aside class="rail" id="rail"><div class="pull" id="pull"></div><div class="rackhead"><h2 class="racktitle">NEARBY AIRCRAFT</h2><input id="rackquery" class="rackquery" type="search" autocomplete="off" spellcheck="false" placeholder="SEARCH DOAA"><button id="racksearch" class="racksearch" aria-label="Search DOAA">⌕</button></div><div id="rack"></div></aside>
 <script src="/flight-enrichment.js"></script>
@@ -106,7 +132,47 @@ return `<div class="row ${a.id===selected?'sel':''}" data-id="${a.id}" style="po
 function renderRack(vis){const before=rack.scrollTop;if(rackSearchResults){rack.innerHTML=rackSearchResults.map(r=>rackStrip(r.aircraft||r,r)).join('')||'<div class="meta">No DOAA matches.</div>'}else rack.innerHTML=vis.slice().sort((a,b)=>a.d-b.d).slice(0,10).map(a=>rackStrip(a,rackData.get(a.id)||{})).join('')||'<div class="meta">No airborne traffic in view.</div>';rack.querySelectorAll('.row').forEach(el=>el.onclick=()=>{const id=el.dataset.id,r=rackSearchResults?.find(x=>x.aircraft.id===id),o=r?.searchObject;if(o?.kind==='airport'){showAirport({icao:o.key,name:o.name||o.label,lat:+o.lat,lon:+o.lon});return}if(o?.kind==='flight'){openDetail();detailbody.innerHTML='<div class="dcall">'+(o.label||o.key)+'</div><div class="dmeta">'+(o.operator||'FLIGHT')+'<br>'+[o.dep_iata||o.dep_icao,o.arr_iata||o.arr_icao].filter(Boolean).join(' → ')+'<br><br>EXTERNAL AVIATION RESULT</div>';return}if(o?.scope==='local'&&o?.kind==='airframe'&&r?.aircraft){selected=id;detail.classList.add('show');const seen=(o.encounter_count||0)>0||!!o.last_seen_at,ago=o.last_seen_at?Math.max(0,Math.round((Date.now()-Date.parse(o.last_seen_at))/60000)):null;if(window.DOAAFlight)window.DOAAFlight.show(r.aircraft,false,seen?ago:null,detailbody);else detailbody.innerHTML='<div class="dcall">'+(o.registration||o.icao24||id.toUpperCase())+'</div><div class="dmeta">'+(seen?'HISTORICAL AIRFRAME':'KNOWN AIRFRAME · NOT OBSERVED')+'</div>';draw();return}selectEncounter(id)});if(before<8)rack.scrollTop=0}
 async function hydrateRack(vis){const now=Date.now();for(const a of vis.slice(0,10)){const old=rackData.get(a.id),key=(a.call||'')+'|'+(a.type||'')+'|'+(a.reg||'');if(old&&old._contactKey===key&&now-(old._hydratedAt||0)<30000)continue;rackData.set(a.id,{...(old||{}),_contactKey:key,_hydratedAt:now});if(window.DOAAFlight?.summary)window.DOAAFlight.summary(a).then(x=>{rackData.set(a.id,{...(x||{}),_contactKey:key,_hydratedAt:Date.now()});draw()}).catch(()=>{})}}
 async function searchRack(q){q=String(q||'').trim();if(!q){rackSearchResults=null;searchMatchIds.clear();draw();return}try{const r=await fetch('/api/search?q='+encodeURIComponent(q),{cache:'no-store'}),j=await r.json();rackSearchResults=(j.results||[]).map(x=>{if(x.kind==='airport')return{searchObject:x,aircraft:{id:'airport:'+x.key.toLowerCase(),call:x.label||x.key,lat:+x.lat,lon:+x.lon,alt:0,gs:0,vr:0,d:0,type:'AIRPORT'},airframe:{model:x.name},operator:'EXTERNAL · AIRPORT',history:{encounter_count:0}};if(x.kind==='flight')return{searchObject:x,aircraft:{id:'flight:'+String(x.key).toLowerCase(),call:x.label||x.key,lat:0,lon:0,alt:0,gs:0,vr:0,d:0,type:'FLIGHT'},airframe:{model:[x.dep_iata||x.dep_icao,x.arr_iata||x.arr_icao].filter(Boolean).join(' → ')},operator:(x.scope==='external'?'EXTERNAL · ':'')+(x.operator||'FLIGHT'),flight:{flight_icao:x.key,flight_iata:x.label,dep_iata:x.dep_iata,dep_icao:x.dep_icao,arr_iata:x.arr_iata,arr_icao:x.arr_icao},history:{encounter_count:0}};return{searchObject:x,aircraft:{id:String(x.icao24||x.canonical_key||'').toLowerCase(),call:x.callsign||x.registration||x.canonical_key,lat:0,lon:0,alt:0,gs:0,vr:0,d:0,type:x.icao_type||''},airframe:{reg_number:x.registration,icao:x.icao_type,model:x.model,manufacturer:x.manufacturer,photo_specificity:x.photo_specificity},operator:((x.scope==='local'&&((x.encounter_count||0)>0||x.last_seen_at))?'YOUR HISTORY · ':x.scope==='local'?'DOAA KNOWLEDGE · ':'')+(x.operator||''),history:{encounter_count:x.encounter_count||0,last_seen_at:x.last_seen_at||null}}});searchMatchIds=new Set(rackSearchResults.map(r=>r.aircraft.id));renderRack([]);draw()}catch(_){rack.innerHTML='<div class="meta">Search unavailable.</div>'}}
-function draw(){drawTiles();ctx.clearRect(0,0,innerWidth,innerHeight);const t=Date.now(),current=new Set(aircraft.map(a=>a.id));for(const [id,e] of tracks)if(!current.has(id)&&t-(e.lastSeen||0)<=GHOST_LIFE)drawTrack(id,e,false,t);for(const a of aircraft.filter(a=>!a.ground&&inView(a))){drawTrack(a.id,tracks.get(a.id),true,t);const p=project(a.lat,a.lon),sel=a.id===selected,dim=!!selected&&!sel;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(rad(a.trk));const sm=rackSearchResults&&searchMatchIds.has(a.id);ctx.globalAlpha=rackSearchResults?(sm?1:.10):(dim?.22:1);ctx.fillStyle=sm?'#175f9b':'#203d55';ctx.beginPath();ctx.moveTo(0,sel?-8:-6);ctx.lineTo(sel?4:3,sel?6:5);ctx.lineTo(0,sel?4:3);ctx.lineTo(sel?-4:-3,sel?6:5);ctx.closePath();ctx.fill();ctx.restore()}for(const ap of AIRPORTS){const p=project(ap.lat,ap.lon),a=area();if(p.x<-20||p.x>a.w+20||p.y<a.top-20||p.y>innerHeight-a.bottom+20)continue;ctx.strokeStyle='rgba(38,94,136,.85)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(p.x,p.y,5,0,Math.PI*2);ctx.moveTo(p.x-8,p.y);ctx.lineTo(p.x+8,p.y);ctx.moveTo(p.x,p.y-8);ctx.lineTo(p.x,p.y+8);ctx.stroke();ctx.fillStyle='#285f88';ctx.font='11px ui-monospace';ctx.fillText(ap.icao,p.x+9,p.y+3)}const vis=aircraft.filter(a=>!a.ground&&inView(a)),live=!manual&&centered(),coverage=cellState.total>1?` · ${cellState.ok}/${cellState.total} CELLS`:'';let link=provider+coverage+' · '+new Date(now).toISOString().slice(11,19)+'Z';if(acquiring)link=`${link} · <span class="partial">REFRESHING ${cellState.pending||''}</span>`;status.innerHTML=`<span class="${live?'live':'view'}">${vis.length} AIRBORNE / ${live?(HOME.iata||HOME.icao)+' '+configured:'VIEW '+extent()}</span><br>${link}`;recenter.style.display=live?'none':'block';renderRack(vis);if(!rackSearchResults)hydrateRack(vis);positionControls()}
+
+// Graduated true-bearing chart. Radii are geographic nautical miles, not screen pixels.
+function drawRangeRings(){
+ const a=area(),origin=project(HOME.lat,HOME.lon),scale=baseScale()*view.zoom;
+ if(!Number.isFinite(scale)||scale<=0)return;
+ const maxRange=Math.hypot(Math.max(origin.x,a.w-origin.x),Math.max(origin.y-a.top,innerHeight-a.bottom-origin.y))/scale;
+ const steps=[1,2,5,10,20,25,50,100,200,500];
+ const target=Math.max(5,maxRange/4),step=steps.find(x=>x>=target)||500;
+ const outer=Math.min(500,Math.ceil(maxRange/step)*step);
+ const count=Math.min(12,Math.floor(outer/step));
+ if(!count)return;
+ ctx.save();ctx.beginPath();ctx.rect(0,a.top,a.w,innerHeight-a.bottom-a.top);ctx.clip();
+ for(let i=1;i<=count;i++){
+  const nm=i*step,r=nm*scale;
+  ctx.beginPath();ctx.arc(origin.x,origin.y,r,0,Math.PI*2);
+  ctx.strokeStyle=i===count?'rgba(33,86,128,.58)':'rgba(33,86,128,.32)';
+  ctx.lineWidth=i===count?1.25:.85;ctx.stroke();
+  const lx=origin.x+Math.sin(rad(45))*r,ly=origin.y-Math.cos(rad(45))*r;
+  if(lx>8&&lx<a.w-42&&ly>a.top+12&&ly<innerHeight-a.bottom-8){
+   ctx.fillStyle='#244f70';ctx.font='600 11px ui-monospace,monospace';ctx.fillText(nm+' NM',lx+5,ly-5);
+  }
+ }
+ const r=count*step*scale;
+ for(let d=0;d<360;d+=10){
+  const angle=rad(d),sn=Math.sin(angle),cs=Math.cos(angle);
+  const x=origin.x+sn*r,y=origin.y-cs*r;
+  if(x<4||x>a.w-4||y<a.top+4||y>innerHeight-a.bottom-4)continue;
+  const major=d%30===0,len=major?10:5;
+  ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-sn*len,y+cs*len);
+  ctx.strokeStyle='#2d6187';ctx.lineWidth=major?1.4:1;ctx.stroke();
+  if(major){
+   const tx=x+sn*17,ty=y-cs*17;
+   if(tx>24&&tx<a.w-24&&ty>a.top+14&&ty<innerHeight-a.bottom-12){
+    ctx.fillStyle='#243d50';ctx.textAlign='center';ctx.font='700 11px ui-monospace,monospace';
+    ctx.fillText(d===0?'N · 000°':String(d).padStart(3,'0')+'°',tx,ty+4);
+   }
+  }
+ }
+ ctx.restore();
+}
+function draw(){drawTiles();ctx.clearRect(0,0,innerWidth,innerHeight);drawRangeRings();const t=Date.now(),current=new Set(aircraft.map(a=>a.id));for(const [id,e] of tracks)if(!current.has(id)&&t-(e.lastSeen||0)<=GHOST_LIFE)drawTrack(id,e,false,t);for(const a of aircraft.filter(a=>!a.ground&&inView(a))){drawTrack(a.id,tracks.get(a.id),true,t);const p=project(a.lat,a.lon),sel=a.id===selected,dim=!!selected&&!sel;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(rad(a.trk));const sm=rackSearchResults&&searchMatchIds.has(a.id);ctx.globalAlpha=rackSearchResults?(sm?1:.10):(dim?.22:1);ctx.fillStyle=sm?'#175f9b':'#203d55';ctx.beginPath();ctx.moveTo(0,sel?-8:-6);ctx.lineTo(sel?4:3,sel?6:5);ctx.lineTo(0,sel?4:3);ctx.lineTo(sel?-4:-3,sel?6:5);ctx.closePath();ctx.fill();ctx.restore()}for(const ap of AIRPORTS){const p=project(ap.lat,ap.lon),a=area();if(p.x<-20||p.x>a.w+20||p.y<a.top-20||p.y>innerHeight-a.bottom+20)continue;ctx.strokeStyle='rgba(38,94,136,.85)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(p.x,p.y,5,0,Math.PI*2);ctx.moveTo(p.x-8,p.y);ctx.lineTo(p.x+8,p.y);ctx.moveTo(p.x,p.y-8);ctx.lineTo(p.x,p.y+8);ctx.stroke();ctx.fillStyle='#285f88';ctx.font='11px ui-monospace';ctx.fillText(ap.icao,p.x+9,p.y+3)}const vis=aircraft.filter(a=>!a.ground&&inView(a)),live=!manual&&centered(),coverage=cellState.total>1?` · ${cellState.ok}/${cellState.total} CELLS`:'';let link=provider+coverage+' · '+new Date(now).toISOString().slice(11,19)+'Z';if(acquiring)link=`${link} · <span class="partial">REFRESHING ${cellState.pending||''}</span>`;status.innerHTML=`<span class="${live?'live':'view'}">${vis.length} AIRBORNE / ${live?(HOME.iata||HOME.icao)+' '+configured:'VIEW '+extent()}</span><br>${link}`;recenter.style.display=live?'none':'block';renderRack(vis);if(!rackSearchResults)hydrateRack(vis);positionControls()}
 function encounterSnapshot(id){return aircraft.find(x=>x.id===id)||lastAircraft.get(id)||null}
 function openDetail(){detail.classList.add('show')}function clearDetailTray(){detailtray.innerHTML='';delete detailbody.dataset.activeSurface}function closeDetail(){detail.classList.remove('show');clearDetailTray();selected=null;draw()}detailclose.onclick=e=>{e.stopPropagation();closeDetail()};window.DOAAInspector={body:detailbody,tray:detailtray,close:closeDetail};function selectEncounter(id){selected=id;const a=encounterSnapshot(id),e=tracks.get(id);if(!a&&!e)return;openDetail();if(a){const live=aircraft.some(x=>x.id===id),ago=e&&e.lastSeen?Math.max(0,Math.round((Date.now()-e.lastSeen)/60000)):null;if(window.DOAAFlight)window.DOAAFlight.show(a,live,ago,detailbody);else detailbody.innerHTML=`<div class="dcall">${a.call}</div><div class="dmeta">RESOLVING FLIGHT…</div>`}else detailbody.innerHTML=`<div class="dcall">${id.toUpperCase()}</div><div class="dmeta">RECENT ENCOUNTER<br>IDENTITY NOT RETAINED IN THIS SESSION</div>`;draw()}
 function segDist(px,py,a,b,c,d){const dx=c-a,dy=d-b,l=dx*dx+dy*dy;if(!l)return Math.hypot(px-a,py-b);const q=Math.max(0,Math.min(1,((px-a)*dx+(py-b)*dy)/l));return Math.hypot(px-(a+q*dx),py-(b+q*dy))}
