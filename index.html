@@ -124,7 +124,7 @@ function tile2ll(x,y,z){const n=2**z;return{lon:x/n*360-180,lat:deg(Math.atan(Ma
 function mapZoom(){const e=extent();return e<=12?11:e<=25?10:e<=50?9:e<=80?8:7}
 // Real vector Base: OpenFreeMap/OpenMapTiles data with deliberately selected features.
 let vectorMap=null,vectorFailed=false;
-function vectorStyle(){return {version:8,sources:{geography:{type:'vector',url:'https://tiles.openfreemap.org/planet/latest'}},layers:[
+function vectorStyle(){return {version:8,glyphs:'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf',sources:{geography:{type:'vector',url:'https://tiles.openfreemap.org/planet/latest'}},layers:[
  {id:'ground',type:'background',paint:{'background-color':'#f3f5f5'}},
  {id:'parks',type:'fill',source:'geography','source-layer':'landcover',filter:['in','class','wood','grass','scrub'],paint:{'fill-color':'#e4eae5','fill-opacity':.6}},
  {id:'urban',type:'fill',source:'geography','source-layer':'landuse',filter:['==','class','residential'],paint:{'fill-color':'#e6e8e7','fill-opacity':.42}},
@@ -145,7 +145,7 @@ function initVectorBase(){
 function syncVectorBase(){
  if(mapLayer!=='base')return;
  initVectorBase();
- if(!vectorMap||!vectorMap.loaded())return;
+ if(!vectorMap)return;
  const scale=baseScale()*view.zoom,pxPerLon=nmlon()*scale;
  const z=Math.log2(pxPerLon*360/512);
  const center=unproject(innerWidth/2,innerHeight/2);
