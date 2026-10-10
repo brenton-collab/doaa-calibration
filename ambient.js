@@ -42,6 +42,7 @@
     lastFrame = 0;
     trails.clear();
     update();
+    window.dispatchEvent(new Event('doaa:ambient-enter'));
   }
   function leave() {
     if (!active) return;
@@ -58,6 +59,7 @@
     updateButtons();
     syncSwitcher();
     enter();
+    window.dispatchEvent(new Event('doaa:ambient-mode'));
     update();
   }
   function dimensions() {
@@ -203,7 +205,7 @@
   document.addEventListener('keydown',event=>{if (!active)lastInteraction=Date.now();if(active&&event.key==='Escape')leave();});
   document.addEventListener('visibilitychange',()=>{lastInteraction=Date.now();});
   window.addEventListener('resize',()=>{if(active)update();});
-  window.DOAAAmbient={enter,leave,choose,openSettings:()=>choice.classList.toggle('show'),get mode(){return mode;}};
+  window.DOAAAmbient={enter,leave,choose,openSettings:()=>choice.classList.toggle('show'),get mode(){return mode;},get active(){return active;}};
   updateButtons();
   setInterval(heartbeat,10000);
 })();
