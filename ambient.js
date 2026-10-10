@@ -74,6 +74,8 @@
   }
   // Persistent strokes accumulate from actual observed movement, never simulated traffic.
   const trails = new Map();
+  const verifiedMedia = new Map();
+  window.addEventListener('doaa:airframe-media', event => {const m=event.detail||{};if(m.id&&m.url&&m.registration&&m.license&&m.attribution)verifiedMedia.set(String(m.id).toLowerCase(),{...m,seenAt:Date.now()});});
   let lastDrawAt = 0;
   function drawSky(snapshot) {
     const {w,h} = dimensions();
@@ -137,9 +139,19 @@
     lastDrawAt=t;
   }
   function slideCandidate(snapshot) {
-    // Only media already resolved by the application may appear. Never search for images here.
-    const a = (snapshot.aircraft || []).find(x => usable(x) && x.photo?.url && x.photo?.registration && x.reg && String(x.photo.registration).toUpperCase() === String(x.reg).toUpperCase() && x.photo.license && x.photo.attribution);
-    return a || null;
+    // Only exact-airframe media already reconciled by an Inspector is eligible.
+    // No image searches or new provider calls are made during composition changes.
+    const available = (snapshot.aircraft||[]).filter(usable).map(a=>{
+      const media=verifiedMedia.get(String(a.id).toLowerCase());
+      if(!media || !a.reg || String(media.registration).toUpperCase()!==String(a.reg).toUpperCase())return null;
+      return {...a,photo:{url:media.url,registration:media.registration,license:media.license,attribution:media.attribution,page:media.page}};
+    }).filter(Boolean);
+    if(!available.length)return null;
+    const previous=available.find(a=>a.id===lastSlideId.split('|')[0]);
+    const unseen=available.filter(a=>!lastCandidates.includes(a.id));
+    const next=unseen[0]||previous||available[0];
+    lastCandidates=available.map(a=>a.id);
+    return next;
   }
   function drawSlides(snapshot) {
     const a = slideCandidate(snapshot);
@@ -147,6 +159,7 @@
     canvas.hidden = true;
     root.classList.add('ambient-slides-mode');
     if (!a) {
+      lastSlideId='';
       photo.style.backgroundImage = '';
       copy.innerHTML = '<div class="ambient-empty-title">Watching for an identified airframe</div><p>No exact-aircraft photograph has been verified in this session. Ambient Slides will not substitute an unrelated aircraft image.</p>';
       count.textContent = 'AWAITING VERIFIED MEDIA';
