@@ -4,7 +4,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const read=p=>fs.readFileSync(path.join(__dirname,'..',p),'utf8');
-const html=read('index.html'),ambient=read('ambient.js'),css=read('ambient.css'),worker=read('src/worker.js');
+const html=read('index.html'),ambient=read('ambient.js'),css=read('ambient.css'),look=read('look.js'),worker=read('src/worker.js');
 
 test('ambient is loaded from versioned frontend assets and exposes a shared observation snapshot',()=>{
  assert.match(html,/href="\/ambient\.css"/);
@@ -39,4 +39,20 @@ test('ambient preserves a way out and respects reduced motion',()=>{
 test('Worker no longer loads frontend code from mutable GitHub main',()=>{
  assert.doesNotMatch(worker,/raw\.githubusercontent\.com/);
  assert.match(worker,/env\.ASSETS\.fetch\(/);
+});
+
+test('ambient SKY is visual-first with only sparse chrome and no aircraft labels',()=>{
+ assert.doesNotMatch(ambient,/fillText\(/);
+ assert.doesNotMatch(ambient,/AIRCRAFT IN CURRENT SNAPSHOT/);
+ assert.match(ambient,/const trails = new Map\(\)/);
+ assert.match(ambient,/\.ambient-switch/);
+ assert.match(css,/\.ambient-head\{top:0;display:flex;flex-direction:row/);
+});
+test('LOOK uses shared SKY snapshot and provides explicit evidence, not a separate provider feed',()=>{
+ assert.match(html,/data-primary="LOOK"/);
+ assert.match(html,/src="\/look\.js"/);
+ assert.match(html,/DOAALook\?\.render\(board,window\.DOAALiveSnapshot\(\)/);
+ assert.match(look,/Emergency transponder code 7700/);
+ assert.match(look,/not confirmed incidents or complete airspace coverage/);
+ assert.doesNotMatch(look,/\bfetch\s*\(/);
 });
