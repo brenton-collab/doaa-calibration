@@ -8,13 +8,13 @@
   const snapshot=window.DOAALiveSnapshot?.();
   const aircraft=(snapshot?.aircraft||[]).filter(a=>/^[a-f0-9]{6}$/i.test(String(a.id||''))&&a.reg).slice(0,12);
   const ids=aircraft.map(a=>String(a.id).toUpperCase()).sort();
-  const signature=ids.join(',');
+  const signature=aircraft.map(a=>String(a.id).toUpperCase()+':'+String(a.reg).toUpperCase()).sort().join(',');
   if(!signature||inflight||(signature===lastQuery&&Date.now()-lastAt<INTERVAL))return;
   lastQuery=signature;lastAt=Date.now();inflight=true;
   try{
    const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),8000);
    let response;
-   try{response=await fetch('/api/ambient-media?hex='+encodeURIComponent(signature),{cache:'no-store',signal:controller.signal})}finally{clearTimeout(timer)}
+   try{response=await fetch('/api/ambient-media?hex='+encodeURIComponent(ids.join(',')),{cache:'no-store',signal:controller.signal})}finally{clearTimeout(timer)}
    if(!response.ok)return;
    const body=await response.json();
    for(const media of body.media||[]){
