@@ -23,6 +23,20 @@ These are **row counts, not billing metrics**. The diagnostic aggregate query it
 
 Synthetic test against the actual extracted function: 100 events -> 100 persistence calls, **one cursor write instead of 100**. Injected failure on item 50 -> no cursor advancement, permitting replay. This is a **98–99% reduction in cursor writes for full pages**, not a claim of equivalent overall D1 savings.
 
+## Measured production usage (Cloudflare D1 Analytics)
+For October 9–10 UTC, the production database reported **94,907 read queries**, **58,359 write queries**, **7,480,985 rows read**, and **159,701 rows written**. These metrics span a period with unusually high activity and are not a steady-state daily projection.
+
+At 02:00 UTC on October 9, D1 reported 2,266 read queries and 282,065 rows read, but only six write queries. In subsequent idle hours it repeatedly reported 12 read queries and 61,740 rows read per hour, consistent with a five-minute cron scanning leads. Correlation is not full query attribution.
+
+**Direct query comparison on the same live database (read-only):**
+- Existing `/memory/leads?limit=2` SQL: **7,068 rows read**, returned two registration leads, neither actionable by `processHistoryLeads`.
+- New targeted `/memory/leads?limit=2&type=airframe-day-history` SQL: **9 rows read**, returned zero actionable leads.
+- This is a **99.87% reduction in rows read per idle cron lookup** under the measured dataset, while preserving the five-minute schedule and history-lead throughput.
+- There are **no pending history leads** at inspection; seven history leads are resolved. Thousands of other pending leads remain intentionally untouched by the history-only processor.
+
+## Second safe optimization
+`processHistoryLeads` now requests `type=airframe-day-history`; `/memory/leads` uses a selective SQL query for that type. Its original unfiltered behavior remains available to other consumers. No schema migration and no cron cadence change.
+
 ## Next gate: quantify before changing observation semantics
 - Obtain D1 Analytics usage trend and correlate with traffic requests, board requests, and cron frequency.
 - Introduce a separate short-lived working-state layer or bounded per-aircraft write budget. Preserve meaningful encounter first/last sightings and turning points; avoid unconditional 60-second writes.
