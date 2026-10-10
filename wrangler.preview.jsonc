@@ -1,0 +1,13 @@
+{
+  "name": "doaa-calibration-preview",
+  "main": "preview-proxy.js",
+  "compatibility_date": "2026-10-10",
+  "workers_dev": true,
+  "services": [
+    {
+      "binding": "PRODUCTION_API",
+      "service": "doaa-calibration",
+      "environment": "production"
+    }
+  ]
+}
