@@ -29,3 +29,16 @@ A simple read-only query of `entities` joined to `claims`, selecting only `canon
 A real conflict was found: `C06183` / `C-GKYC` has two stored `icao_type` claims, `DH8D` and `E295`. Do not resolve by arbitrary row order. Check each claim's evidence timestamps and source before selecting current identity. Some stored registration strings (e.g. `CA-GZQR`) also merit validation.
 
 **Reference blocker remains:** the execution container cannot resolve external DNS. GitHub's UTF-8 file fetch returned zero content for tar1090-db's binary `aircraft.csv.gz`, even when requesting base64; a content SHA was returned but no usable bytes. No real Mictronics cross-source match percentage has been measured. Next: retrieve the binary reference via an appropriate download-capable channel, then compare the extracted sample. Never claim D1 itself is inaccessible.
+
+## Inspector implementation gate (2026-10-10)
+Worker source commits `631b4a8`, `31e66e3`, `44f66dc` implement a memory-first Inspector:
+- Read D1 dossier and history before any external identity request.
+- Consult free ADSBdb aircraft identity only if registration, type, manufacturer or model is missing, or the requested callsign lacks a fresh route.
+- Use cached route evidence first, then free route resolvers; retain fallback callsign inference as inference rather than a published schedule.
+- **No `relay('/flight')` or `relay('/airframe')` in `dossierApi`**; premium remains disabled, not merely guarded by an unreliable process-local quota.
+- Persist ADSBdb aircraft, ADSBdb route and ADS-B observations under distinct evidence sources; treat registered owner separately from operator.
+- Expose `identity_conflicts` in dossier JSON and reject malformed hex inputs.
+
+Verification: Worker source parsed successfully as JavaScript, and a static inspection confirmed there are no `relay()` calls within `dossierApi`. **Not deployed, not exercised against a live Worker/D1, and not a complete local Mictronics importer.** Other API routes may still invoke the relay and require independent quota hardening. The original AirLabs-supported claims remain intact.
+
+Next: run behavioral tests with a mocked D1 and fetch, inspect the Inspector UI's consumption of `identity_conflicts`, then deploy only after checking the target Cloudflare environment and authorization. The unresolved reference-database coverage measurement is a separate validation task.
