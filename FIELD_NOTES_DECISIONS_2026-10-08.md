@@ -32,3 +32,6 @@ Validate the merged explainer-wiring change and any late PR review feedback in t
 
 ## Implementation guardrails
 Separate data correctness repairs from visual treatment where practical. Prefer shared tokens and reusable datum interaction components, reversible map treatment and real-device comparison. Preserve the existing Encounter invariant and update the main handoff to point here when repository writes permit.
+
+## Locked design review decisions (2026-10-10)
+- **Inspector viewport: HYBRID (locked).** On mobile, use a map-aware compact bottom sheet by default with deliberate expansion into a larger investigation workspace. Keep SKY visible in compact state; expansion must not happen automatically on selection. On wider screens use a docked panel that preserves a usable SKY viewport. Reserve independent header/close and navigation regions, scroll the content separately, and prevent BASE/STREET map controls from overlapping Inspector controls. Validate on actual phone portrait/landscape, tablet, and desktop. This is a design decision, **not an assertion that current UI implements it**.
