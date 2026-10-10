@@ -22,3 +22,19 @@ Verified commercial alternative: Cirium/FlightStats explicitly documents a JSON/
 5. Test real upstream, rate limits, codeshares, midnight, no-feed, and mobile UX before production.
 
 **Decision:** SKY home aerodrome remains a personal view setting; BOARD is explicitly YOW and not tied to SKY catchment.
+
+
+## Concrete source candidate: SkyLink API (2026-10-10)
+
+- Official API documentation: https://skylinkapi.com/docs/v3/schedules/
+- Departures: `GET https://data.skylinkapi.com/v3/schedules/departures?icao=CYOW`
+- Arrivals: `GET https://data.skylinkapi.com/v3/schedules/arrivals?icao=CYOW`
+- Uses an `x-api-key` header. Flight-row field names are title-cased (e.g. `Time`, `Flight`, `Status`). Pagination is documented; do not assume one request retrieves all flights.
+- Trial: https://skylinkapi.com/apply — 1,000 requests/month, application-only, noncommercial, subject to approval. The trial is **not** a permanent free production tier. Paid Basic starts at $19/month; overages exist. Do not subscribe without authorization.
+- Capacity: two directions polled every 45 minutes would use about 1,920 requests per 30-day month **before pagination**. A 2-hour refresh uses ~720, also before pagination, but is not truly live. Build hard quota/circuit protections.
+- Terms: https://skylinkapi.com/terms/ — display and reasonable caching allowed under a subscription; raw resale restricted; aviation safety disclaimer.
+- Status: **documented source found, not live-tested; no API key provisioned**. Requires user-owned account approval/key, with key stored only in Cloudflare secret, never GitHub or client code.
+
+Alternative: aviationstack free tier is 100 requests/month, noncommercial, and free tier excludes future flight schedules (https://aviationstack.com/pricing), so is not suitable for a continuously refreshed full BOARD.
+
+Next: request trial access if user agrees, then test CYOW coverage, response schema, pagination, correctness against YOW official page, and source quality before switching production.
