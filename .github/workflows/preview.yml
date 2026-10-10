@@ -23,6 +23,7 @@ jobs:
         run: |
           set -euo pipefail
           node --check vector-base.js
+          node --check preview-proxy.js
           node --check src/worker.js
           node --check doaa-memory.js
           node - <<'NODE'
@@ -38,4 +39,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy --config wrangler.preview.jsonc
+          command: deploy preview-proxy.js --name doaa-calibration-preview --compatibility-date 2026-10-10 --no-bundle
