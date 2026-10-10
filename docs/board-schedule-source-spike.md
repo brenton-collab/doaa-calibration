@@ -7,7 +7,7 @@ The public HTML exposed to a text crawler shows a **Loading...** placeholder, fi
 
 A separate public Airportia YOW page exposes actual flight-number/schedule/status rows in its HTML, confirming the *data shape* and a possible comparison reference, **not** authorization to republish its data. Third-party listings may contain codeshares, and are not a substitute for official gate/carousel information.
 
-Network inspection of YOW's JavaScript/XHR requests is blocked in the current execution environment (outbound DNS unavailable). Do not guess an endpoint, claim a live integration, or deploy scraping without validating permissions and reliability.
+Verified commercial alternative: Cirium/FlightStats explicitly documents a JSON/XML FIDS endpoint for arrivals and departures, but identifies it as a premium **Contract-plan-only** API: https://developer.cirium.com/apis/flightstats-apis/fids . FlightAware AeroAPI also lists per-result-set charges for scheduled arrivals and departures: https://www.flightaware.com/commercial/aeroapi/ . Neither satisfies DOAA's zero-incremental-cost default. No credentials or paid service should be provisioned.\n\nNetwork inspection of YOW's JavaScript/XHR requests is blocked in the current execution environment (outbound DNS unavailable). Do not guess an endpoint, claim a live integration, or deploy scraping without validating permissions and reliability.
 
 ## Completed spike
 
