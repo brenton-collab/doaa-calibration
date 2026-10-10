@@ -24,10 +24,16 @@ async function checkpointObservation(a,stamp,origin,env,cache){
  if(!/^[0-9A-F]{6}$/.test(id))return;
  const key=new Request(origin+'/__observation_checkpoint/'+id);
  let old=null;try{const r=await cache.match(key);if(r)old=await r.json()}catch{}
- const changed=!old||now-old.at>=60000||now<old.at||
+ const number=v=>v===null||v===undefined||v===''?null:Number.isFinite(Number(v))?Number(v):null;
+ const altitude=number(a.alt),speed=number(a.gs),lat=number(a.lat),lon=number(a.lon);
+ const oldAlt=number(old?.alt),oldSpeed=number(old?.gs),oldLat=number(old?.lat),oldLon=number(old?.lon);
+ const elapsed=now-Number(old?.at||0);
+ const changed=!old||!Number.isFinite(elapsed)||elapsed<0||elapsed>=60000||
  ['callsign','registration','type','squawk'].some(k=>String(a[k]??'')!==String(old[k]??''))||
- (Number.isFinite(+a.alt)&&Number.isFinite(+old?.alt)&&Math.abs(+a.alt-(+old.alt))>=500)||
- (Number.isFinite(+a.lat)&&Number.isFinite(+old?.lat)&&Math.abs(+a.lat-(+old.lat))>=.025);
+ (altitude!==null&&oldAlt!==null&&Math.abs(altitude-oldAlt)>=500)||
+ (speed!==null&&oldSpeed!==null&&(speed<50)!==(oldSpeed<50))||
+ (lat!==null&&lon!==null&&oldLat!==null&&oldLon!==null&&
+  Math.hypot((lat-oldLat)*69,(lon-oldLon)*48)>2);
  if(!changed)return;
  const response=await handleMemory(new Request(new URL('/memory/observe',origin),{method:'POST',
  headers:{'content-type':'application/json'},body:JSON.stringify({
@@ -36,7 +42,7 @@ async function checkpointObservation(a,stamp,origin,env,cache){
  altitude_ft:a.alt,groundspeed_kt:a.gs,track_deg:a.trk,vertical_rate_fpm:a.vr,squawk:a.squawk
  })}),env);
  if(!response.ok)return;
- try{await cache.put(key,new Response(JSON.stringify({at:now,lat:a.lat,alt:a.alt,
+ try{await cache.put(key,new Response(JSON.stringify({at:now,lat,lon,alt:altitude,gs:speed,
  callsign:a.callsign,registration:a.registration,type:a.type,squawk:a.squawk}),
  {headers:{'cache-control':'public, max-age=180'}}))}catch{}
 }
