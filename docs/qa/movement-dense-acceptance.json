@@ -1,0 +1,86 @@
+{
+  "date": "2026-10-11T18:30:05.549Z",
+  "browser": "151.0.7922.34",
+  "data": "Offline deterministic published schedule fixtures; never provider availability or acceptance",
+  "files": {
+    "index.html": "fc5b048a1d7e56b8b81dbc466a870c18e5ae4477caa267579e612a5a7621510a",
+    "flight-enrichment.js": "5d4cc272645b35296bc0a0d5c13f485ea6260c782c483a9fbbcf3816fc5344c9",
+    "movement-core.js": "27b0b4cc8bd71f602af1090e2b1b06658c21b77865e8378b621fadb4c54f99eb",
+    "movement-workspace.js": "f67b621add3b203c50157cb55478a7e814c19d4c4f130b146d4d5e0225fbb0f8",
+    "movement-workspace.css": "623076b3792b6609496852ddf79a81ae892b7a5dff20984ab0c81743a87fe033"
+  },
+  "viewports": [
+    {
+      "viewport": {
+        "name": "desktop",
+        "width": 1440,
+        "height": 900
+      },
+      "flows": [
+        "mixed arrival/departure published chronology",
+        "restrained delay/cancellation/diversion emphasis",
+        "keyboard filters",
+        "published Flight timing navigation",
+        "BOARD scroll restoration",
+        "meaningful update indicator without historical auto-scroll",
+        "Live return and no indicator for unchanged polling",
+        "shared Airfield rows and filters without reacquisition"
+      ],
+      "errors": []
+    },
+    {
+      "viewport": {
+        "name": "phone",
+        "width": 393,
+        "height": 851
+      },
+      "flows": [
+        "mixed arrival/departure published chronology",
+        "restrained delay/cancellation/diversion emphasis",
+        "keyboard filters",
+        "published Flight timing navigation",
+        "BOARD scroll restoration",
+        "meaningful update indicator without historical auto-scroll",
+        "Live return and no indicator for unchanged polling",
+        "shared Airfield rows and filters without reacquisition"
+      ],
+      "errors": []
+    },
+    {
+      "viewport": {
+        "name": "landscape",
+        "width": 851,
+        "height": 393
+      },
+      "flows": [
+        "mixed arrival/departure published chronology",
+        "restrained delay/cancellation/diversion emphasis",
+        "keyboard filters",
+        "published Flight timing navigation",
+        "BOARD scroll restoration",
+        "meaningful update indicator without historical auto-scroll",
+        "Live return and no indicator for unchanged polling",
+        "shared Airfield rows and filters without reacquisition"
+      ],
+      "errors": []
+    },
+    {
+      "viewport": {
+        "name": "tablet",
+        "width": 820,
+        "height": 1180
+      },
+      "flows": [
+        "mixed arrival/departure published chronology",
+        "restrained delay/cancellation/diversion emphasis",
+        "keyboard filters",
+        "published Flight timing navigation",
+        "BOARD scroll restoration",
+        "meaningful update indicator without historical auto-scroll",
+        "Live return and no indicator for unchanged polling",
+        "shared Airfield rows and filters without reacquisition"
+      ],
+      "errors": []
+    }
+  ]
+}

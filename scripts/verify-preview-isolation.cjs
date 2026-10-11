@@ -1,0 +1,15 @@
+'use strict';
+const fs=require('node:fs'),assert=require('node:assert/strict');
+const preview=JSON.parse(fs.readFileSync('wrangler.preview.jsonc','utf8'));
+const production=JSON.parse(fs.readFileSync('wrangler.jsonc','utf8'));
+assert.equal(preview.name,'doaa-calibration-preview');
+assert.equal(preview.main,'src/worker.js');
+assert.equal(preview.assets.run_worker_first,true,'all static app assets require authentication');
+assert.equal(preview.assets.directory,'./dist');
+assert.equal(preview.d1_databases.length,1);
+assert.equal(preview.d1_databases[0].binding,'DB');
+assert.equal(preview.d1_databases[0].database_id,'939eda3b-4894-497b-9f67-209771761b3f');
+assert.notEqual(preview.d1_databases[0].database_id,production.d1_databases[0].database_id);
+assert.equal((preview.services||[]).length,0,'no Production service forwarding');
+assert.equal((preview.triggers?.crons||[]).length,0,'no automatic Preview research/collection');
+console.log('Preview isolation configuration verified: separate D1, versioned assets, authentication gate, no Production service or cron.');

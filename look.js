@@ -11,7 +11,7 @@
      else if(code==='7600')reasons.push([90,'Radio failure code 7600']);
      else if(code==='7500')reasons.push([95,'Unlawful interference code 7500']);
      const d=a.d==null||a.d===''?NaN:Number(a.d),alt=a.alt==null||a.alt===''?NaN:Number(a.alt);
-     if(Number.isFinite(d)&&Number.isFinite(alt)&&alt>0&&d<=8&&alt<5000)reasons.push([25,'Low-altitude contact within 8 NM of selected airport']);
+     if(Number.isFinite(d)&&Number.isFinite(alt)&&alt>0&&d<=8&&alt<5000)reasons.push([25,'Low-altitude contact within '+window.DOAAUnits.format(8,'distance')+' of selected airport']);
      else if(Number.isFinite(d)&&Number.isFinite(alt)&&alt>0&&d<=20&&alt<3000)reasons.push([18,'Low-altitude contact near selected airport']);
      if(Math.abs(Number(a.vr)||0)>=2000)reasons.push([12,'Rapid vertical movement in current observation']);
      return reasons.length?{a,reasons,score:Math.max(...reasons.map(r=>r[0]))}:null;
@@ -26,7 +26,7 @@
      const focused=typeof document!=='undefined'&&board.contains?.(document.activeElement)?document.activeElement?.dataset?.lookId:null;
      board.innerHTML='<div class="boardhead"><span>LOOK · WORTH NOTICING</span><span>'+ (fresh?'RECENT OBSERVATIONS':'OBSERVATIONS PAUSED') +'</span></div>'+
        '<p class="look-intro">Signals surfaced from aircraft already visible to SKY. These are observational cues, not confirmed incidents or complete airspace coverage.</p>'+
-       (items.length?items.map(({a,reasons},i)=>'<button class="look-item" type="button" data-look-index="'+i+'" data-look-id="'+esc(a.id)+'"><strong>'+esc(a.call||a.reg||a.id)+'</strong><span>'+esc(a.reg||a.type||a.id.toUpperCase())+' · '+(a.d!=null&&a.d!==''&&Number.isFinite(Number(a.d))?Math.round(Number(a.d))+' NM':'DISTANCE UNKNOWN')+' · '+(a.alt!=null&&a.alt!==''&&Number.isFinite(Number(a.alt))?Math.round(Number(a.alt))+' FT':'ALTITUDE UNKNOWN')+'</span><small>'+reasons.map(r=>esc(r[1])).join(' · ')+'</small></button>').join(''):'<p class="look-empty">'+(fresh?'No noteworthy cues in the available observations. This does not mean the sky is empty.':'Observations are aging or unavailable. LOOK will resume when recent aircraft evidence arrives.')+'</p>');
+       (items.length?items.map(({a,reasons},i)=>'<button class="look-item" type="button" data-look-index="'+i+'" data-look-id="'+esc(a.id)+'"><strong>'+esc(a.call||a.reg||a.id)+'</strong><span>'+esc(a.reg||a.type||a.id.toUpperCase())+' · '+(a.d!=null&&a.d!==''&&Number.isFinite(Number(a.d))?window.DOAAUnits.format(a.d,'distance'):'DISTANCE UNKNOWN')+' · '+(a.alt!=null&&a.alt!==''&&Number.isFinite(Number(a.alt))?window.DOAAUnits.format(a.alt,'altitude'):'ALTITUDE UNKNOWN')+'</span><small>'+reasons.map(r=>esc(r[1])).join(' · ')+'</small></button>').join(''):'<p class="look-empty">'+(fresh?'No noteworthy cues in the available observations. This does not mean the sky is empty.':'Observations are aging or unavailable. LOOK will resume when recent aircraft evidence arrives.')+'</p>');
      board.querySelectorAll('[data-look-index]').forEach(el=>el.addEventListener('click',()=>{const item=items[Number(el.dataset.lookIndex)];if(item)onSelect(item.a.id);}));
      if(focused!=null){const match=[...board.querySelectorAll('[data-look-index]')].find(el=>el.dataset.lookId===focused);match?.focus({preventScroll:true});}
    }

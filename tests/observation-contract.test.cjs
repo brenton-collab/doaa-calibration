@@ -27,11 +27,11 @@ test('all frontend inline scripts parse',()=>{
  assert.ok(count>=2);
  new Function(look);
  new Function(ambient);
- new Function(worker.replace(/^import .*$/gm,'').replace(/export default\{/,'const defaultExport={'));
+ new Function(worker.replace(/^import .*$/gm,'').replace(/export default /,'const defaultExport='));
 });
 test('SKY normalization rejects missing coordinates and preserves unknown telemetry',()=>{
  const src=functionSource(html,'norm','function resize');
- const norm=new Function('const HOME={lat:45.3,lon:-75.7};const hav=()=>1,bearing=()=>1;'+src+';return norm')();
+ const norm=new Function('const ACTIVE={lat:45.3,lon:-75.7};const hav=()=>1,bearing=()=>1;'+src+';return norm')();
  assert.equal(norm({hex:'abc123',lat:null,lon:-75}),null);
  assert.equal(norm({hex:'abc123',lat:45,lon:''}),null);
  assert.equal(norm({hex:'abc123',lat:95,lon:-75}),null);
@@ -96,16 +96,16 @@ test('Inspector live classification excludes pinned and aging aircraft',()=>{
  assert.match(src,/Date\.now\(\)-now<90000/);
  assert.match(src,/!x\._pinned/);
  assert.match(src,/Date\.now\(\)>=now/);
- assert.match(html,/const a=\{_pinned:true,id:id\|\|\('board:/);
- assert.match(html,/if\(!a\._pinned\)drawTrack/);
+ assert.doesNotMatch(html,/id:id\|\|\('board:/);
+ assert.match(html,/for\(const \[id,e\] of tracks\)drawTrack/);
  assert.match(html,/if\(a\._pinned\)ctx\.globalAlpha\*=\.42/);
 });
 
-test('BOARD ignores superseded responses for the same airport',()=>{
- assert.match(html,/let boardRequestSeq=0/);
- assert.match(html,/requestSeq=\+\+boardRequestSeq/);
- assert.match(html,/requestSeq!==boardRequestSeq/);
- assert.match(html,/HOME\.icao===requestedHome&&requestSeq===boardRequestSeq/);
+test('shared movement workspace aborts disposed requests and never overwrites another surface',()=>{
+ const movements=fs.readFileSync(path.join(__dirname,'../movement-workspace.js'),'utf8');
+ assert.match(movements,/controller\?\.abort\(\)/);
+ assert.match(movements,/if\(!valid\(\)\)return/);
+ assert.match(html,/DOAAMovements.mount\(board/);
 });
 test('acquisition and presentation reject false freshness',()=>{
  assert.match(html,/Number\(e\.data\.now\)>0/);

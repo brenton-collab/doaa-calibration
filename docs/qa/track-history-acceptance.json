@@ -1,0 +1,98 @@
+{
+  "date": "2026-10-11T15:06:51.654Z",
+  "browser": "151.0.7922.34",
+  "data": "Offline deterministic fixtures, never provider acceptance",
+  "files": {
+    "index.html": "8e011a83ffba993ffe6f30b5a1dbbb9a3a42eaf7039575addaaeb997bff9d0a5",
+    "flight-enrichment.js": "b5abfe6c2fefcafb611748c7218066f4fc8077a248e48a7981ea6faf46d42f4a",
+    "track-history.js": "2f9f8dc7c64a8a3a191f7619da62ac7af062f36c229b845e4583152a6fd6b8af",
+    "track-core.js": "6e5bb098e9460f9ab76418f4099dc5528b7f49e070794ce0c552ec8ec9aa37d0",
+    "track-history.css": "45a23a33d4677f260ff4d849699d76a4b8fb06357fea4dd2565c08cf4634e6c7"
+  },
+  "viewports": [
+    {
+      "viewport": {
+        "name": "desktop",
+        "width": 1440,
+        "height": 900
+      },
+      "flows": [
+        "SKY Rack to Contact",
+        "Track History",
+        "synchronized map/charts cursor",
+        "observed event navigation",
+        "gap visibility",
+        "deliberate picker",
+        "union clock",
+        "60x playback/pause",
+        "remove Track 2",
+        "close/context return",
+        "service failure/retry"
+      ],
+      "errors": []
+    },
+    {
+      "viewport": {
+        "name": "phone",
+        "width": 393,
+        "height": 851
+      },
+      "flows": [
+        "SKY Rack to Contact",
+        "Track History",
+        "synchronized map/charts cursor",
+        "observed event navigation",
+        "gap visibility",
+        "deliberate picker",
+        "union clock",
+        "60x playback/pause",
+        "remove Track 2",
+        "close/context return",
+        "service failure/retry"
+      ],
+      "errors": []
+    },
+    {
+      "viewport": {
+        "name": "landscape",
+        "width": 851,
+        "height": 393
+      },
+      "flows": [
+        "SKY Rack to Contact",
+        "Track History",
+        "synchronized map/charts cursor",
+        "observed event navigation",
+        "gap visibility",
+        "deliberate picker",
+        "union clock",
+        "60x playback/pause",
+        "remove Track 2",
+        "close/context return",
+        "service failure/retry"
+      ],
+      "errors": []
+    },
+    {
+      "viewport": {
+        "name": "tablet",
+        "width": 820,
+        "height": 1180
+      },
+      "flows": [
+        "SKY Rack to Contact",
+        "Track History",
+        "synchronized map/charts cursor",
+        "observed event navigation",
+        "gap visibility",
+        "deliberate picker",
+        "union clock",
+        "60x playback/pause",
+        "remove Track 2",
+        "close/context return",
+        "service failure/retry"
+      ],
+      "errors": []
+    }
+  ]
+}

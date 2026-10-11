@@ -23,7 +23,9 @@ jobs:
         run: |
           set -euo pipefail
           node --check vector-base.js
-          node --check preview-proxy.js
+          node --check src/auth.mjs
+          node --check src/personal.mjs
+          node --check track-history.js
           node --check src/worker.js
           node --check doaa-memory.js
           node - <<'NODE'
@@ -34,6 +36,10 @@ jobs:
           for (const [,code] of scripts) if (code.trim()) new vm.Script(code);
           console.log('Validated',scripts.length,'inline script blocks');
           NODE
+      - name: Verify Preview isolation and package versioned assets
+        run: |
+          node scripts/verify-preview-isolation.cjs
+          node scripts/build-assets.cjs
       - name: Publish isolated Cloudflare preview
         uses: cloudflare/wrangler-action@v3
         with:

@@ -5,7 +5,7 @@ const fs=require('node:fs');
 const read=p=>fs.readFileSync(require('node:path').join(__dirname,'..',p),'utf8');
 const worker=read('src/worker.js'),client=read('ambient-media.js'),html=read('index.html');
 test('bounded read-only media cache endpoint',()=>{
- const start=worker.indexOf('async function ambientMediaApi('),end=worker.indexOf('export default{',start);
+ const start=worker.indexOf('async function ambientMediaApi('),end=worker.indexOf('const application=',start);
  assert.ok(start>=0&&end>start);
  const route=worker.slice(start,end);
  assert.match(route,/\.slice\(0,12\)/);

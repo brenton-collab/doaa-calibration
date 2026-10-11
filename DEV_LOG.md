@@ -1,3 +1,153 @@
+## 2026-10-11 — D1 quota guard and sign-in clarification
+
+- Google sign-in code is already implemented and locally tested; Preview lacks OAuth configuration and the two approved stable account identifiers. No new Google accounts are required. User accepts database-backed username/password sign-in if Google setup proves too complicated; fallback is not yet implemented.
+- Airport import preparation now defaults to the five built-in airports, rather than worldwide coverage. The verified source yields five airport rows, twelve runway records and seven SQL statements. Explicit custom/worldwide preparation stays local only; plans require remote quota review and distinguish coverage in their snapshot identity. Index writes must be counted when reviewing D1 budget; SQL statement counts are not billed write counts.
+- Verification: 130 Node tests pass, including scoped preparation and incomplete-snapshot readiness against SQLite. Preview isolation, asset packaging and diff checks pass. Frontend source is unchanged, so the previous four-viewport browser acceptance remains applicable.
+- This session’s one remote D1 schema query reported 90 rows read and zero written. No remote migration/import or deployment was performed. The earlier 41,214-airport verification was local SQLite only. Runway selection, unit changes and tab returns reuse loaded reference data.
+
+## 2026-10-11 — sourced runway reference workspace
+
+- Published the prior Airport weather/navigation batch as `646118d`; the connected commit's tree exactly matched local `ffabe59`. Draft PR #48 now describes the full implemented scope and remaining release gates.
+- Added geographically sourced runway diagram, physical-strip and reciprocal-end selection, dimensions/surface/lighting-reference flags, end-specific true heading/elevation/displaced threshold and shared units. Selection survives units and tab changes; unknown approaches, declared distances, historical changes, runway activity and current operational status remain explicit. North-up geometry uses published endpoints, including antimeridian handling; labels avoid the observed 04/14 overlap. Variable wind does not get an invented direction.
+- Added additive `0013` reference-only schema and local preparation script. Runtime reads a small D1 record rather than fetching/scanning the worldwide dataset. Partial imports never replace a ready source; missing schema/snapshot stays unavailable, and a missing airport in the latest complete snapshot does not resurrect older data. No personal or DOAA observation records are modified.
+- Actual public-domain OurAirports source was downloaded and normalized; **41,214 airport records / 48,336 runway records** were imported and verified in local SQLite, with immutable checksum and complete-snapshot readiness. This was local only: no remote migration/import or deployment. Contract/runbook: `docs/AIRFIELD_REFERENCE_CONTRACT.md`.
+- **129 Node tests pass; all four final Chromium fixture workflows pass**, adding sourced runway/end selection, persistent selection through units/tabs and failed reference-refresh recovery. Exact frontend hashes: `docs/qa/airfield-reference-acceptance.json`. All four runway screenshots inspected. Preview isolation, allowlisted packaging, self-contained eight-module package and diff checks pass. Captured reference fixtures do not prove actual private Preview/provider/physical-device acceptance.
+- Full 184-decision contract remains unfinished. Actual isolated schema/import, Google enrollment, authenticated Preview and remaining product/data content remain gates. Production/main remain unchanged; no paid provider activation or Actions run.
+
+## 2026-10-11 — connected Airport Inspector and weather
+
+- Published the prior verified units/catchments/account/bookmark snapshot as `d346bd2` on the approved branch through connected GitHub. Its tree exactly matches both original local commits. User permission resolved the public-repository disclosure hold; shell push had no credentials. Main, Production and repository visibility are unchanged.
+- Map airport markers and relationship links now enter one shared four-tab Airport Inspector. Added sourced METAR decoding, UTC observation/retrieval times, freshness, zero/variable/calm wind, gusts, lower-bound visibility, cloud ceiling, temperature/dew point, altimeter and source category. Raw METAR remains unchanged. Successful no-data, failure/retry, wrong-station and late-response states stay distinct.
+- Airport Movements now renders the same BOARD airport evidence and opens individual Flight with Back context. Reported route association and track inference remain explicit; neither is labelled a completed arrival/departure. State/Condition and absent runway geometry retain honest unavailable states.
+- **121 Node tests passed; all four final Chromium fixture viewport workflows passed**, including actual airport map-marker selection, METAR/source/raw/explanations, stale/failure/retry, canonical movements/Flight/Back and late response isolation, plus all earlier account/bookmark/catchment/playback/comparison regression flows. Exact source hashes: `docs/qa/airport-inspector-acceptance.json`. Desktop/phone/landscape/tablet screenshots inspected. Asset packaging, Preview isolation and diff checks passed.
+- Source contract: `docs/AIRPORT_WEATHER_CONTRACT.md`, verified against the primary AWC API/OpenAPI. Matrix retains all 184 rows and explicit partial scope. Full product is unfinished; live-provider, physical-device and signed-in Preview acceptance are unverified. No paid provider, remote migration, Preview/Production deployment or Actions run in this batch.
+
+## 2026-10-11 — saved moments and publication hold
+
+- Added `bookmarks.js` and connected replay/account UI: actual observation-ID save, original moment/provenance and exact-encounter timestamp restore, current-Airframe route, chronological/grouped cards, direct removal and truthful network failure recovery. No new aviation evidence, provider cost or remote schema changes.
+- **114 Node tests pass; all four final Chromium fixture workflows pass**, including two distinct moments, exact saved-time replay, current profile, grouping, failed save/removal and retry, plus prior units/catchment/account/Inspector/playback regressions. Hash report: `docs/qa/saved-moments-acceptance.json`; desktop/phone gallery screenshots inspected. Packaging, isolation and diff checks passed. Matrix rows 95–102/107 retain explicit remaining identity-revision/media/live-Contact/actual-account gates.
+- Second batch local commit `246ed0e` is not pushed. Auto-review rejected its push for unverified public disclosure. Connected GitHub confirms correct repository ID/origin/branch/draft PR #48 but reports repository **public**, contradicting the mandate's private description. Publication held pending explicit owner authorization; no alternate upload/ref-update bypass. No production/main/Preview deployment or D1 migration.
+- Next: obtain publication authorization for the verified commits, then push only the work branch and continue complete Inspector/Airfield/BOARD evidence and remaining scope. Full release and authenticated Preview remain incomplete.
+
+## 2026-10-11 — recovered continuation: units/catchments/Inspector/account preferences
+
+- Branch `work/product-recovery-mobile-sky`, draft PR #48; continuation from `f0ad996`. Recovered the usage-limit interruption without discarding local changes.
+- Added shared units, saved-Home/active-exploration separation, semantic Inspector datum controls and contextual Back, account-scoped preference UI/bootstrap/retry/snapshot synchronization. Updated Worker/build allowlists and local fixtures; no new provider or remote migration.
+- Executed **114 Node tests passed**, isolation/build/check-diff passed. **Four final responsive Chromium fixture workflows passed** (desktop/phone/short landscape/tablet); report/source hashes in `docs/qa/units-catchment-account-acceptance.json`. Inspected track screenshots at all four sizes. Browser testing found and repaired chart unit-label mismatch, settings dismissal on radius change, Return Home visibility, Inspector/header overlap, account-button pointer handling, and native browser timer receiver binding. Reload acceptance now waits for authenticated preference bootstrap.
+- Full 184-row JSON/Markdown matrix preserved with qualified evidence. Production/main and Preview deployment are unchanged in this continuation; authenticated Preview remains blocked by Google configuration. Basemap external-provider acceptance and remaining product content remain open. This is a verified implementation batch, not a finished product.
+- Next: saved-moment/bookmark UI, then connected Inspector/airport/BOARD evidence and remaining locked requirements. See `docs/RELEASE_RC_CHECKPOINT.md` for current execution state. The earlier interrupted checkpoint is retained as history and is superseded by this entry after this batch is committed.
+
+## 2026-10-11 — observed replay, comparison and private release boundary
+
+- Implemented encounter-restricted observed Track History, actual geographic projection/grid, altitude/groundspeed charts and one absolute-time scrubber. Real interval playback, Play/Pause, five speeds, gap handling, stop-at-end and opt-in Loop; literal observed changes navigate to their exact sample. No historical position interpolation or invented operation.
+- Added deliberate recorded two-aircraft selector, overlap/proximity ranking/search, union clock and coverage, explicit camera Follow/overview. Either track can be replaced/removed while preserving the other. Cancelled obsolete Inspector enrichment and context requests/playback.
+- Added observation provenance migration 0011 and source position-time/receipt separation. Added private Google OIDC/PKCE/state/nonce/verified-RSA gate for all app assets and HTTP aviation APIs; account-owned bookmark/preferences/favourite API and additive migration 0012. Actual Google client and David/Brent subject enrollment remain unavailable. Session renewal/provider revocation and account product UI remain outstanding; this is not a completed sign-in experience.
+- **Executed: 107 Node tests passed, 0 failed**, including real SQLite track ownership/pagination, account isolation and cryptographic verification. **Four actual Chromium responsive fixture workflows passed**: desktop 1440×900, phone 393×851, short landscape 851×393, tablet 820×1180. Exercised scrubbing/map+chart cursor, unknown support, literal event navigation, deliberate Compare, union bounds, playback/pause, replacement/removal of either track, close/context return, outage/retry. Durable report with tested source hashes: `docs/qa/track-history-acceptance.json`.
+- Geographic external tiles were unavailable in this environment; the UI exposes a labelled coordinate-grid fallback. No live provider or physical Android acceptance claim. Single-track layouts now respond to the actual narrow Inspector width so chart typography remains readable.
+- Replaced legacy Preview config with own-D1/no-Production-service/no-cron configuration. Added reproducible allowlisted multipart package, isolation guard, and CREATE-only fresh Preview schema. Historical destructive repair migrations are not run remotely. Actual Preview deployment/binding verification follows this commit.
+- Updated all 184 dispositions: 127 partial, 56 missing, 1 blocked; none falsely certified complete. Full scope remains mandatory. See `docs/RELEASE_RC_CHECKPOINT.md` for implementation evidence, precise limitations, secure configuration, release and rollback procedure.
+- Committed on the work branch only; not merged or deployed to Production. No Actions runs or paid provider/service activation. Next execution: isolated Preview deploy/verify, then shared units/Home/Explore/Inspector and rolling observed trails.
+
+## 2026-10-11 — full product execution audit (PR #48)
+
+- Branch `work/product-recovery-mobile-sky`, baseline `3e6aa0ff98aaf02ac570c19a63625673bf4ad42a`; only this branch is writable. Production and main remain unchanged.
+- Read canonical Field Notes, SPEC, log, release safety plan, workflows and actual source. Added the full 184-entry matrix (JSON plus complete Markdown contract); retained six unnumbered BOARD refinements and recorded explicit numbering/supersession ambiguities.
+- Executed `node --test tests/*.test.cjs tests/*.test.mjs src/*.test.mjs airlabs-budget.test.cjs`: **85 passed, 0 failed**. These baseline tests include source contracts/mocks, not real browser acceptance.
+- Connected Cloudflare GET confirms Production DB `434f90d3-397b-48d3-8249-4c48cf1e8936`; deployed Preview only binds `PRODUCTION_API`, not a D1. Separate Preview DB `939eda3b-4894-497b-9f67-209771761b3f` exists. Configuration's claimed Preview isolation does not hold in deployed runtime. No migrations or infrastructure writes yet.
+- Verified gaps: Track History is a placeholder; Home and Explore are conflated; no approved Google authentication/account gate, private moment bookmark model or account preferences; MET/NAV/universal units incomplete. Current release is **not ready**.
+- Next executable work: implement safe observed-track read API + synchronized map/charts/interval playback and deliberate two-track comparison; repair obsolete async Inspector updates; configure genuine isolated Preview and verify migration chain there.
+
+## Airport movement lifecycle verification
+
+- [x] Added request sequencing and a distinct loading label.
+- [x] Executed five isolated asynchronous checks: success, network failure, tab switch, airport switch, and out-of-order responses. All five passed; module parses.
+- [ ] Live endpoint and actual browser/device interactions remain unverified. Node regression suite outstanding.
+- Production unchanged; no paid CI.
+
+## Airport evidence integration checkpoint
+
+- [x] Airport sections retain the looked-up airport identity; Overview retains known coordinates.
+- [x] Airport Movements calls the existing free observed `/api/board` endpoint with airport coordinates, showing source and evidence counts without claiming verified movements.
+- [x] Isolated successful-response exercise passed; complete JavaScript parsed.
+- [ ] Live network response, DOM lifecycle, mobile acceptance and full suite remain unverified. Operations and Airfield remain coverage-limited.
+- No production change or paid CI.
+
+## Airport lookup and navigation checkpoint
+
+- [x] Successful and unresolved Airport lookups retain Airport context and wire the Inspector tray.
+- [x] Airport Overview renders retained airport identity when returning from other tabs.
+- [x] Four Airport section dispatches executed successfully with a representative CYOW/YOW record; full JavaScript parses.
+- [ ] Real DOM click-through, operational data integration, Node suite, and mobile acceptance remain pending.
+- Production unchanged; no paid CI.
+
+## Airport Inspector checkpoint
+
+- [x] Airport four-tab navigation committed and executed in isolated JavaScript checks.
+- [x] Specialist sections expose unavailable-data states rather than invented activity.
+- [x] Unresolved airport lookup resets object context; complete source parses.
+- [ ] Successful airport lookup context, tab event wiring, real operational data, and browser acceptance remain outstanding.
+- Production unchanged.
+
+## Inspector related-object navigation fix
+
+- [x] Corrected active Flight context for resolved and unresolved related-flight drilldowns.
+- [x] Corrected active Airframe context for related-airframe drilldowns.
+- [x] Checked three affected branches in current source and parsed the complete JavaScript module successfully.
+- [ ] Browser click-through and airport contextual tabs remain unverified/unimplemented.
+- Production unchanged; no CI spending.
+
+## 2026-10-11 — Inspector rendering exercise
+
+- [x] Executed 12 isolated Inspector render-dispatch cases against branch source with representative and missing flight/airframe fields: all 12 returned without errors.
+- [ ] Browser DOM, navigation events, live network and visual acceptance remain unverified.
+- [ ] Complete feature content and Node suite still pending; production unchanged.
+
+## 2026-10-11 — Inspector execution checkpoint
+
+- [x] Executed nine isolated JavaScript checks against the current branch source: nine passed. Checks covered syntax, contextual navigation, render routing, Journey provenance, and telemetry freshness gates.
+- [ ] The committed Node tests, browser interactions, and device acceptance remain unexecuted.
+- [ ] Release remains gated; production unchanged. No paid CI used.
+
+## Inspector checkpoint — 2026-10-11
+
+- [x] Fifth Inspector regression test committed (`fe295db`).
+- [x] Progress provenance clarification committed (`40cab89`).
+- [ ] Run Node tests: local runtime lacks checkout and GitHub DNS access.
+- [ ] Browser acceptance, complete Inspector functionality, preview and release gates.
+- No production deployment or paid CI.
+
+## 2026-10-11 — Inspector regression checklist (PR #48)
+
+- [x] Added `tests/inspector-contexts.test.cjs` (commit e8dbce4): four Node tests for locked object tab sets, render routing, observed-vs-unknown progress/timing, and shared evidence-qualified Journey.
+- [x] Connector-side static inspection confirms all six new render branches exist, two shared Journey calls, and correct contextual tab declarations.
+- [ ] **Execute** `node --test tests/inspector-contexts.test.cjs` and the existing regression suite in a runnable repository checkout. No claim that these tests passed: repository source was inspected through GitHub, not executed by Node.
+- [ ] Browser/device acceptance and non-production deployment remain pending. Production unchanged; no paid CI, migration, or provider call.
+- Next: obtain a runnable repository artifact without billable CI, run tests, fix failures, and continue full Inspector content.
+
+## 2026-10-11 — Inspector implementation checklist (PR #48; not released)
+
+- [x] Read DEV_LOG.md, DOAA_SPEC.md, and all Field Notes decisions. Decision 176 supersedes the earlier Flight two-tab lock; Decision 177 governs Airport. Decision 179/180 defines release scope.
+- [x] Commit contextual Flight tabs Overview / Timing / Progress / Journey and Contact tabs Overview / Journey / Track History; Airframe tabs Overview / BIO / Operations / Media / Sightings in flight-enrichment.js.
+- [x] Add separate Flight Timing scheduled/estimated/actual fields and observation-qualified Progress; reuse existing Journey chronology on Flight and Contact.
+- [x] Make unavailable Track History synchronized replay and Airframe cross-source Operations explicit rather than inventing data.
+- [ ] Build full Track History map/charts, cross-source Operations, Airport tabs, and Flight route progress/map to locked specification.
+- [ ] Execute Node regression suite, syntax checks, and real browser/mobile Inspector interactions. Changes currently committed but not runtime verified.
+- [ ] Verify preview and release gates; production unchanged, no migrations or paid provider calls.
+- **Risk:** Current Inspector content and navigation remain transitional. New tab labels alone do not satisfy locked feature completeness. Avoid treating this branch as release-ready.
+- **Next:** targeted Inspector regression tests and complete actual data-backed content before preview deployment.
+
+
+## 2026-10-11 — Product recovery branch (PR #48, not released)
+
+- Branch: `work/product-recovery-mobile-sky`; production unchanged.
+- SKY: provider quota warning reduced to a compact, accessible status control; mobile navigation spacing adjusted.
+- Inspector: compact mobile bottom sheet with explicit expand/collapse and independent content scrolling. Navigation now uses contact/airframe context and Sightings terminology. Browser acceptance still pending; complete locked object-tab model is not implemented.
+- SLIDES: cache loader and actual renderer now permit verified exact-airframe photographs for live ICAO24 contacts without a registration, while rejecting conflicting/stale registrations. Added identity regression tests.
+- SLIDES discovery: cache-first, viewport-scoped fallback to the existing `/api/investigate` endpoint for registration-bearing contacts lacking verified cached media. Initial cap: one investigation per five minutes, six per page session, 12-second timeout; delayed at least 30 seconds after a cache lookup. The existing server investigator performs provider access and D1 claim reconciliation. Results are never displayed directly; only subsequent licensed, attributed, exact-airframe D1 media qualifies. No new provider or paid service introduced.
+- Added tests `ambient-media-hex-only.test.cjs`, `ambient-slide-identity.test.cjs`, and `ambient-media-discovery.test.cjs`.
+- **Unverified:** test suite has not run against this branch; no Android/browser interaction checks; no preview or production deployment. The independent discovery path is bounded but does not yet offer model/type representative fallback, shared durable rate accounting, or provider-wide quota enforcement.
+- Next: execute tests and real mobile acceptance, fix defects, then implement lawful representative fallback and Inspector contextual content before a controlled release.
+
 # DOAA development log and restart handoff
 
 Updated: 2026-10-08. Evidence-qualified checkpoint; not a live runtime acceptance test.
@@ -159,3 +309,40 @@ Branch `work/immutable-frontend-release` contains the Worker asset-bundle change
 ## 2026-10-10 evening — integrated AMBIENT and LOOK branch
 
 On `work/immutable-frontend-release`: ambient.js/css, shared live snapshot bridge, minimal art-directed AMBIENT SKY with observed-position trails and sparse upper-right branding/mode switch, AMBIENT SLIDES guarded shell, and LOOK view with explainable cues and SKY Inspector tap-through. Integration contract tests expanded and deployment syntax gate references them. GitHub source checks confirm module inclusion, shared snapshot and no new provider fetch in AMBIENT/LOOK. Detailed status: docs/AMBIENT_IMPLEMENTATION_STATE.md on branch. **Not executed in browser/Node, not merged or deployed.** Next: runtime validation, photo evidence adapter, event-driven SLIDES, and coherent integrated release acceptance.
+## 2026-10-11 — units, Home/Explore and Inspector continuation interrupted
+
+Published baseline `f0ad996`, branch `work/product-recovery-mobile-sky`, draft PR #48. Added shared units/catchment modules and connected display/preferences changes; separated Inspector datum controls, accessible favourites and contextual back navigation. Latest Node run: 110 passed, zero failed. Expanded browser acceptance found three genuine defects which were repaired, but the final run is uncollected and requires a clean rerun against final source. This batch is **uncommitted, unpushed and undeployed**. Automatic approval review could not complete the browser polling call because the usage limit was reached; this was not an unsafe-action determination. Full state, limitations and exact recovery actions: `docs/RECOVERY_CHECKPOINT_2026-10-11_UNCOMMITTED.md`. Production/main and remote databases unchanged in this continuation. Next: complete browser/visual acceptance, update matrix rows, commit/push this batch, then implement account-owned preference synchronization and remaining connected product scope.
+
+## 2026-10-11 — Flight/Airframe Inspector verified checkpoint and CHAT handoff
+
+Implemented shared source-qualified Flight timing/progress, immediate Contact telemetry, Airframe unknown/conflict handling and BIO milestone separation, recorded Sighting to encounter-specific Track History, context-preserving navigation, and bounded account-scoped dossier/favourite caches. Rack summaries no longer acquire dossiers; the Worker dossier read performs no automatic research/claim/media writes and makes at most one bounded free lookup. These runtime protections are not deployed.
+
+Verification: 141 Node tests passed. Final Chromium offline fixture acceptance passed desktop, phone, landscape and tablet at 2026-10-11T17:33:34.671Z; all report source hashes match final source. Timing/Progress screenshots were visually inspected for all four sizes. Short landscape uses content scrolling and scrollable tab navigation. Isolation, asset/package construction and diff checks passed. See docs/qa/flight-airframe-acceptance.json and docs/FLIGHT_INSPECTOR_CONTRACT.md. No signed-in Preview/live-provider/physical-device acceptance is implied.
+
+Brent requested conservation of WORK credit. This session stops at the verified checkpoint and hands requirements/source/configuration review to CHAT through docs/CHAT_HANDOFF_2026-10-11.md. BOARD/Airport Movements implementation is deferred to the next engineering session. Matrix remains 0 complete, 134 partial, 49 missing and 1 blocked; full release is not complete. Google private configuration and lawful schedule sources remain unresolved; username/password fallback is accepted but unimplemented.
+
+No remote D1 writes, migrations/imports, deployment, main merge, paid activation or Actions run. Earlier Preview schema query was 90 rows read/zero written; current read-budget tests were local SQLite. Existing Preview binding is its own DB, but this branch is not deployed. Publish only work/product-recovery-mobile-sky and retain draft PR #48.
+
+## 2026-10-11 — UX push: shared BOARD / Airfield Movements
+
+Continued from published Inspector checkpoint 0395487. Implemented shared chronological movement model and responsive renderer; date/Today/Live navigation, direction/evidence filters, independent provenance disclosures, Flight/recorded Contact/provisional navigation, cache reuse and preserved reading state. Phone/short-landscape controls start compact. Airport-local reference zones are explicit; unknown zones remain UTC. Header overlap, off-screen Return Home, independent BOARD scroll and broken map tile failure were repaired through real browser work.
+
+Verification: 149 Node tests passed. Final full browser regression and focused dense BOARD suites each passed desktop, phone, short landscape and tablet; source hashes matched final source. Reports: docs/qa/movement-ux-acceptance.json and docs/qa/movement-dense-acceptance.json. Screenshots visually inspected; board-ux-desktop.png and board-ux-phone.png preserve explicitly labelled offline fixtures. Isolation, asset/package construction and diff checks passed. These are browser fixture results, not live schedule/provider, authenticated Preview or physical-device acceptance.
+
+Decisions 19–23 and shared UX Decisions 1–3 have additional implementation evidence. No whole row is marked complete: matrix remains 0 complete, 134 partial, 49 missing, 1 blocked. Historical/future archive windows, full matching/revisions, sourced schedules, runway activity/Stats and continuous budgeted live updates remain open. Exact scope: MOVEMENTS_UX_CONTRACT.md and UX_PUSH_2026-10-11.md. CHAT_HANDOFF_2026-10-11.md supersedes its earlier wholesale BOARD deferral and identifies source/configuration review for CHAT; retained universal search (67–77) is the next strong WORK UX tranche.
+
+No remote D1 writes, imports/migrations, deployment, main merge, paid activation or Actions run. This batch adds no Worker BOARD D1 query/write and no automatic polling. Existing authentication/upstream costs remain; no live quota claim is made. Code protections and UX changes are not deployed. Authorized publication is only work/product-recovery-mobile-sky, with PR #48 retained as draft. Rollback reference is the preceding Inspector checkpoint; no data deletion is needed.
+
+## 2026-10-11 — header and preferences UX refinements
+
+Fixed AMBIENT overflowing its view-switcher surface on narrow screens. Moved Account to the bottom of catchment/preferences, after the settings and recent areas. Source Coverage is now an expandable pill. Removed routine successful-save text; pending/failure feedback and Retry save remain available. Simplified account prose without changing preference synchronization.
+
+Validation: 149 Node tests passed; full browser regression and dense movement acceptance each passed desktop, phone, landscape and tablet against the final source. Updated reports and labelled offline-fixture screenshots are in docs/qa. This is local fixture acceptance, not signed-in Preview or live-provider acceptance. No new D1 acquisition, remote database writes, migration, deployment, main merge or Actions run. PR #48 stays draft. CHAT handoff scope is unchanged.
+
+## 2026-10-11 — bounded SKY map UX push
+
+Implemented a compact MAP sheet separating Mode / Base style / Layers, with NAV and MET visibly unavailable pending lawful verified sources. Fresh selected observations enable north-up, zoom-preserving follow with a forward offset where reported direction supports it; pan/pinch/wheel pause, explicit resume preserves selection, and stale positions cannot recenter the camera. One-hour in-session trails retain loaded history through empty acquisition/outages, age on a local redraw timer, use fixed blue endpoint altitude gradients with grey unknowns, stay visible without selection-based dimming, and are visual-only. A session-only trail toggle resets on reload; the altitude legend lives in map settings. Worker change is the static-asset allowlist only.
+
+Validation: 152 Node tests and targeted SKY browser workflows passed at desktop, phone, short landscape and tablet. Full browser and dense movement regressions each passed the same four sizes; final report source hashes matched. Screenshots are explicitly offline fixtures, not live/authenticated Preview acceptance. An initial SKY run exposed header pointer-event inheritance, repaired before final checks; one unconfirmed follow-resume assertion failed before the repeated four-viewport run passed. Broader regression needed active-dialog scoping after adding the reusable map sheet. Evidence/limits: SKY_MAP_UX_CONTRACT.md and docs/qa/sky-map-acceptance.json. Map source licensing, MET time/layers, unified search, cross-device history, complete identity/conflict reconciliation, per-point altitude provenance, animation/discontinuities and live acceptance remain open.
+
+No remote D1 reads/writes, migrations/imports, deployment, main merge, paid activation or Actions run. Added map controls/follow/trail redraw do not acquire data; existing camera-dependent traffic and geographic tile loading retain their costs. Matrix: 0 complete, 149 partial, 34 missing, 1 blocked. No full decision completion or release acceptance is claimed. CHAT handoff updated; publication stays on work/product-recovery-mobile-sky and draft PR #48. Rollback source reference: 84199e0, with no data rollback needed.
