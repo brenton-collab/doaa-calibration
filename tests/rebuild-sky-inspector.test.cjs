@@ -200,3 +200,8 @@ test('Aircraft fallback provenance is specific to registration and ICAO type',()
  assert.match(helper,/field\.state==='reported'\?fallbackSource/);
  assert.doesNotMatch(aircraft,/f\?\.reg_number|f\?\.aircraft_icao/);
 });
+
+test('Aircraft biography includes effective end date',()=>{
+ const helper=fs.readFileSync(require('node:path').join(__dirname,'../inspector-flight.js'),'utf8');
+ assert.ok(helper.includes('q.effective_to'));
+});
