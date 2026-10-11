@@ -138,3 +138,13 @@ test('relay requires known per-aircraft position age',()=>{
  assert.equal(predicate({}),false);
  assert.equal(predicate({seen:'invalid'}),false);
 });
+
+test('SKY rack and count exclude historical and aging aircraft',()=>{
+ assert.match(html,/const vis=aircraft\.filter\(a=>!a\._pinned&&!a\.ground&&inView\(a\)&&now>0/);
+ assert.match(html,/a\._pinned\|\|\(now>0&&Date\.now\(\)>=now/);
+});
+test('AMBIENT slides preserve unknown telemetry',()=>{
+ assert.match(ambient,/ALT UNKNOWN/);
+ assert.match(ambient,/SPEED UNKNOWN/);
+ assert.doesNotMatch(ambient,/Math\.round\(Number\(a\.alt\)\|\|0\)/);
+});
