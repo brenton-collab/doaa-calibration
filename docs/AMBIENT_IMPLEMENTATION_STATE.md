@@ -85,3 +85,8 @@ Important remaining issues: track drawing is observation-history only while the 
 - dd165e9: revalidates latest aircraft registration after cache response and permits retries after failed reads.
 - e0c05f3: adds regression contracts. Native tests and browser acceptance not yet executed.
 - No CI, production deployment, D1 writes, or premium provider calls in this tranche.
+
+## 2026-10-10 — executable media-adapter acceptance
+- Executed four isolated V8 behavioral scenarios against GitHub-fetched ambient-media.js: successful exact-airframe event, stale registration rejection, exit-before-response rejection, and HTTP-failure retry. All passed. Also parsed ambient.js, ambient-media.js, look.js and build-assets.cjs successfully.
+- f58e0e5 adds permanent Node vm-based runtime tests covering those four scenarios. 76ef781 adds the test file to the production deployment gate. The committed Node tests themselves remain unexecuted until a native checkout is available; V8 isolated equivalents passed.
+- No GitHub Actions run, Cloudflare deploy, premium provider calls or D1 mutations. Full regression/browser release acceptance still pending.
