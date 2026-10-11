@@ -214,7 +214,7 @@ test('Dated Aircraft claims do not imply resolved current identity',()=>{
 test('Related Airframe link excludes flight lookup identity',()=>{
  const source=fs.readFileSync(require('node:path').join(__dirname,'../flight-enrichment.js'),'utf8');
  const related=source.slice(source.indexOf('function relatedObjects('),source.indexOf('function rememberInspector('));
- assert.ok(related.includes('reg=af?.reg_number||a.reg'));
+ assert.ok(related.includes("reg=af?.reg_number||a.reg||('ICAO24 '"));
  assert.ok(related.includes('[af?.manufacturer,af?.model]'));
  assert.ok(!related.includes('f?.reg_number'));
  assert.ok(!related.includes('f?.manufacturer'));
