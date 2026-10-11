@@ -2,6 +2,14 @@
 
 **Not a finished product or an accepted release candidate.** Full contract and current disposition: `DECISION_IMPLEMENTATION_MATRIX.json`. Work branch: `work/product-recovery-mobile-sky`; draft PR #48. Production/main are unchanged. No GitHub Actions runs were requested.
 
+## Fourth execution batch — connected Airport Inspector and weather
+
+- Published the prior verified units/catchments/account/bookmark snapshot as `d346bd2` on the approved branch through connected GitHub. Its tree exactly matches both original local commits. User permission resolved the public-repository disclosure hold; shell push had no credentials. Main, Production and repository visibility are unchanged.
+- Map airport markers and relationship links now enter one shared four-tab Airport Inspector. Added sourced METAR decoding, UTC observation/retrieval times, freshness, zero/variable/calm wind, gusts, lower-bound visibility, cloud ceiling, temperature/dew point, altimeter and source category. Raw METAR remains unchanged. Successful no-data, failure/retry, wrong-station and late-response states stay distinct.
+- Airport Movements now renders the same BOARD airport evidence and opens individual Flight with Back context. Reported route association and track inference remain explicit; neither is labelled a completed arrival/departure. State/Condition and absent runway geometry retain honest unavailable states.
+- **121 Node tests passed; all four final Chromium fixture viewport workflows passed**, including actual airport map-marker selection, METAR/source/raw/explanations, stale/failure/retry, canonical movements/Flight/Back and late response isolation, plus all earlier account/bookmark/catchment/playback/comparison regression flows. Exact source hashes: `docs/qa/airport-inspector-acceptance.json`. Desktop/phone/landscape/tablet screenshots inspected. Asset packaging, Preview isolation and diff checks passed.
+- Source contract: `docs/AIRPORT_WEATHER_CONTRACT.md`, verified against the primary AWC API/OpenAPI. Matrix retains all 184 rows and explicit partial scope. Full product is unfinished; live-provider, physical-device and signed-in Preview acceptance are unverified. No paid provider, remote migration, Preview/Production deployment or Actions run in this batch.
+
 ## Third execution batch — saved moments
 
 - Replay can save the actual supported observation at the shared cursor with one action; unsupported gaps expose no save control. Saved references remain idempotent by observation ID and never create/delete observation or encounter evidence.
@@ -10,11 +18,11 @@
 - Removal is one action affecting only the personal reference; failed removals leave the card and disclose failure. Saved states reconcile after a complete account collection read.
 - Executed: **114 Node tests passed** (including SQLite privacy/idempotence/non-mutation checks), Preview isolation and final asset packaging passed. **All four final Chromium fixture workflows passed**, including two distinct moments on one aircraft, original time/telemetry replay, current profile navigation, optional grouping and failed save/removal recovery. Source hashes and exact flows: `docs/qa/saved-moments-acceptance.json`. Desktop/phone collection screenshots inspected. Actual signed-in Preview and later identity-revision resolution remain unverified; imagery and live Contact capture are unfinished matrix requirements.
 
-## Publication hold
+## Publication authorized and verified
 
-Local verified commit `246ed0e` contains the second batch; the next commit contains the third batch and this checkpoint. Neither has been pushed. Automatic approval review rejected the feature-branch push as an unverified destination/disclosure. Subsequent connected GitHub checks verified repo ID `1407366985`, clone URL matching origin, approved branch and open draft PR #48 — but repository metadata reports **public** visibility, conflicting with the user's description of a private repository. Do not retry or bypass the rejected push. Obtain explicit permission for publication to this currently public destination, or resolve privacy with the owner before publishing. Making the repository private may affect existing public-source asset loading; do not silently change visibility.
+The user explicitly authorized publication to the currently public `brenton-collab/doaa-calibration` repository after disclosure of its visibility. Shell push then failed for lack of GitHub credentials, rather than approval. Connected GitHub publication succeeded only on `work/product-recovery-mobile-sky` as `d346bd20ddb5e97cde1cf7d5974bafaec165c8cb`, based on `f0ad996`. Its tree `6a708bf0ec46d6767b6db1108a5cdae72d03603c` exactly matches the two verified local commits `246ed0e` and `cade4fc`; local tracking was reconciled only after that equality check. The earlier publication hold is resolved. Repository visibility was not changed; main and Production were not modified.
 
-Production/main, deployed Preview and remote schema are unchanged by the second/third batches. Google OAuth client and approved subject enrollment still block actual signed-in Preview. Application is not finished or release-ready. Next executable work after publication permission: push verified commits only to `work/product-recovery-mobile-sky`, then continue complete Inspector/Airfield/BOARD evidence and the remaining matrix requirements. No production merge/deployment is authorized.
+Google OAuth client and approved subject enrollment still block actual signed-in Preview. Application is not finished or release-ready. Continue Inspector/Airfield/BOARD and the remaining matrix requirements. No production merge/deployment is authorized.
 
 ## Second execution batch — units, catchments, Inspector and account preferences
 

@@ -696,13 +696,18 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "tests/inspector-contexts.test.cjs"
+        "tests/inspector-contexts.test.cjs",
+        "airport-weather.js",
+        "tests/airport-weather.test.cjs",
+        "tests/airport-api.test.cjs",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
+        "2026-10-11 Airport continuation (partial): Shared Airport Inspector with Overview/Operations/Movements/Airfield, sourced METAR dashboard and explicit absent runway/operational evidence. Local tests and browser fixture evidence: docs/qa/airport-inspector-acceptance.json. No live-provider or signed-in Preview acceptance.",
         "Inspector shell, cells, renderSurface, openObject, contextual tab dispatch",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
       ],
-      "outstanding_engineering_work": "Complete grounded contextual content, independent datum controls, history/back, source-level missing states and responsive interaction.",
+      "outstanding_engineering_work": "Remaining full contract: sourced runway geometry/end dossiers, state/condition notices, weather/forecast/map relationship, historical canonical deduplicated movement model and actual private Preview acceptance.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -742,13 +747,18 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "src/board-schedule.mjs"
+        "src/board-schedule.mjs",
+        "airport-weather.js",
+        "tests/airport-weather.test.cjs",
+        "tests/airport-api.test.cjs",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
+        "2026-10-11 Airport continuation (partial): Airport Movements uses the same /api/board adapter, distinguishes reported associations from track inference, and opens Flight with preserved Back context. Local tests and browser fixture evidence: docs/qa/airport-inspector-acceptance.json. No live-provider or signed-in Preview acceptance.",
         "hydrateBoard / boardApi / airportMovementEvidence / airport lookup",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
       ],
-      "outstanding_engineering_work": "Unify canonical movement records and timelines; separate Home/Explore; add date/evidence/runway navigation and sourced Airport conditions/geometry.",
+      "outstanding_engineering_work": "Remaining full contract: sourced runway geometry/end dossiers, state/condition notices, weather/forecast/map relationship, historical canonical deduplicated movement model and actual private Preview acceptance.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -2053,13 +2063,18 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "src/board-schedule.mjs"
+        "src/board-schedule.mjs",
+        "airport-weather.js",
+        "tests/airport-weather.test.cjs",
+        "tests/airport-api.test.cjs",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
+        "2026-10-11 Airport continuation (partial): Sourced METAR observation dashboard: true/variable/calm wind, gust, lower-bound visibility, ceiling, temperature/dew point, altimeter, source category, observation/retrieval times, raw report, freshness and request recovery. Runway-relative diagram and forecast remain unimplemented. Local tests and browser fixture evidence: docs/qa/airport-inspector-acceptance.json. No live-provider or signed-in Preview acceptance.",
         "hydrateBoard / boardApi / airportMovementEvidence / airport lookup",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
       ],
-      "outstanding_engineering_work": "Unify canonical movement records and timelines; separate Home/Explore; add date/evidence/runway navigation and sourced Airport conditions/geometry.",
+      "outstanding_engineering_work": "Remaining full contract: sourced runway geometry/end dossiers, state/condition notices, weather/forecast/map relationship, historical canonical deduplicated movement model and actual private Preview acceptance.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -2131,13 +2146,18 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "src/board-schedule.mjs"
+        "src/board-schedule.mjs",
+        "airport-weather.js",
+        "tests/airport-weather.test.cjs",
+        "tests/airport-api.test.cjs",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
+        "2026-10-11 Airport continuation (partial): Overview and Operations explicitly state No current condition report available; never infer ground condition from METAR or missing reports. Local tests and browser fixture evidence: docs/qa/airport-inspector-acceptance.json. No live-provider or signed-in Preview acceptance.",
         "hydrateBoard / boardApi / airportMovementEvidence / airport lookup",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
       ],
-      "outstanding_engineering_work": "Unify canonical movement records and timelines; separate Home/Explore; add date/evidence/runway navigation and sourced Airport conditions/geometry.",
+      "outstanding_engineering_work": "Remaining full contract: sourced runway geometry/end dossiers, state/condition notices, weather/forecast/map relationship, historical canonical deduplicated movement model and actual private Preview acceptance.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -2170,13 +2190,18 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "src/board-schedule.mjs"
+        "src/board-schedule.mjs",
+        "airport-weather.js",
+        "tests/airport-weather.test.cjs",
+        "tests/airport-api.test.cjs",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
+        "2026-10-11 Airport continuation (partial): Overview/Operations show Unknown operational status and explicitly distinguish absent notices from evidenced open operations. Authority notices/state hero remain unimplemented. Local tests and browser fixture evidence: docs/qa/airport-inspector-acceptance.json. No live-provider or signed-in Preview acceptance.",
         "hydrateBoard / boardApi / airportMovementEvidence / airport lookup",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
       ],
-      "outstanding_engineering_work": "Unify canonical movement records and timelines; separate Home/Explore; add date/evidence/runway navigation and sourced Airport conditions/geometry.",
+      "outstanding_engineering_work": "Remaining full contract: sourced runway geometry/end dossiers, state/condition notices, weather/forecast/map relationship, historical canonical deduplicated movement model and actual private Preview acceptance.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -2214,14 +2239,19 @@
         "track-history.js",
         "look.js",
         "ambient.js",
-        "tests/units-catchment.test.cjs"
+        "tests/units-catchment.test.cjs",
+        "airport-weather.js",
+        "tests/airport-weather.test.cjs",
+        "tests/airport-api.test.cjs",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
+        "2026-10-11 Airport continuation (partial): METAR quantities use shared independent units; original raw METAR is preserved. Includes visibility lower-bound semantics and true-direction convention. Local tests and browser fixture evidence: docs/qa/airport-inspector-acceptance.json. No live-provider or signed-in Preview acceptance.",
         "BASE/STREET exists; no MET workspace, temporal weather adapters, NAV dataset or global quantity preferences",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
         "2026-10-11 continuation: Independent distance/speed/altitude/temperature/pressure/visibility/vertical-speed selectors and Aviation standard reset; display conversions across currently present SKY/Rack/Inspector/LOOK/SLIDES/replay paths. Canonical inputs unchanged, unknown and zero distinguished, chart labels convert together with values. Latest complete Node suite: 114 pass. Final Chromium fixture acceptance passed desktop, phone portrait, short landscape and tablet; independent explanation/favourite/drill/back, replay unit changes/cursor preservation, Home/Explore/BOARD propagation, account failed-save/retry/reload and recent catchments. Hash-qualified report: docs/qa/units-catchment-account-acceptance.json. See RELEASE_RC_CHECKPOINT.md."
       ],
-      "outstanding_engineering_work": "Finish weather/runway/new Inspector quantity coverage as remaining data/content is implemented; actual signed-in Preview acceptance and future map-layer unit presentation.",
+      "outstanding_engineering_work": "Remaining universal quantity coverage as runway, forecast and MET layers are implemented; real private Preview and provider acceptance.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -7081,13 +7111,18 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "tests/inspector-contexts.test.cjs"
+        "tests/inspector-contexts.test.cjs",
+        "airport-weather.js",
+        "tests/airport-weather.test.cjs",
+        "tests/airport-api.test.cjs",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
+        "2026-10-11 Airport continuation (partial): Map airport markers and relationship links enter the same four-tab Airport Inspector; Movements connects the canonical BOARD evidence to individual Flight/back, without claiming confirmed completion. Local tests and browser fixture evidence: docs/qa/airport-inspector-acceptance.json. No live-provider or signed-in Preview acceptance.",
         "Inspector shell, cells, renderSurface, openObject, contextual tab dispatch",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
       ],
-      "outstanding_engineering_work": "Complete grounded contextual content, independent datum controls, history/back, source-level missing states and responsive interaction.",
+      "outstanding_engineering_work": "Remaining full contract: sourced runway geometry/end dossiers, state/condition notices, weather/forecast/map relationship, historical canonical deduplicated movement model and actual private Preview acceptance.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -7384,6 +7419,5 @@
         "production_verified": false
       }
     }
-  ],
-  "continuation_checkpoint": "docs/RELEASE_RC_CHECKPOINT.md"
+  ]
 }

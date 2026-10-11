@@ -6,7 +6,7 @@ function track(hex='c00001',id=17){const observations=points(hex,id,hex==='c0000
 const first=track(),second=track('c00002',18),airport={icao:'CYOW',iata:'YOW',name:'Ottawa Macdonald-Cartier',lat:45.3225,lon:-75.6692};
 const flight={flight_icao:'TEST234',flight_iata:'TEST234',reg_number:'C-TEST',aircraft_icao:'E295',airline_name:'Acceptance fixture',dep_iata:'YOW',dep_icao:'CYOW',arr_iata:'YYZ',arr_icao:'CYYZ',dep_time:new Date(epoch).toISOString(),arr_time:new Date(epoch+3600000).toISOString()};
 const bookmarks=new Map(),favorites=new Set();let preferences=null,revision=0;
-const assets=new Set(['index.html','vector-base.js','flight-enrichment.js','ambient.js','ambient.css','ambient-media.js','look.js','track-core.js','track-history.js','track-history.css','units.js','catchment-core.js', 'preference-core.js', 'bookmarks.js', 'account.js']);
+const assets=new Set(['index.html','vector-base.js','flight-enrichment.js','ambient.js','ambient.css','ambient-media.js','look.js','track-core.js','track-history.js','track-history.css','airport-weather.js', 'units.js','catchment-core.js', 'preference-core.js', 'bookmarks.js', 'account.js']);
 module.exports=http.createServer((req,res)=>{const u=new URL(req.url,'http://localhost'),send=(j,status=200)=>{res.writeHead(status,{'content-type':'application/json','x-doaa-fixture':'true','cache-control':'no-store'});res.end(JSON.stringify(j));};
  if(u.pathname==='/__fixture/reset'&&req.method==='POST'){preferences=null;revision=0;favorites.clear();bookmarks.clear();return send({ok:true});}
  if(u.pathname==='/api/account')return send({ok:true,subject:'offline-acceptance-user'});
@@ -19,10 +19,10 @@ module.exports=http.createServer((req,res)=>{const u=new URL(req.url,'http://loc
  if(u.pathname==='/api/favorite'){const key=u.searchParams.get('kind')+':'+u.searchParams.get('key');if(req.method==='POST')favorites.add(key);if(req.method==='DELETE')favorites.delete(key);return send({ok:true,favorite:favorites.has(key)});}
  if(u.pathname==='/api/ambient-media')return send({ok:true,media:[]});
  if(u.pathname==='/api/airport-lookup')return send({ok:true,airport:u.searchParams.get('q')==='YHZ'?{icao:'CYHZ',iata:'YHZ',name:'Halifax Stanfield',lat:44.88,lon:-63.51}:airport,source:'OFFLINE FIXTURE'});
- if(u.pathname==='/api/airport')return send({ok:true,icao:'CYOW',metar:null});
+ if(u.pathname==='/api/airport'){const icao=u.searchParams.get('icao');return send({ok:true,icao,source:'OFFLINE WEATHER FIXTURE',retrieved_at:new Date().toISOString(),metar:{icaoId:icao,obsTime:Math.floor(Date.now()/1000)-600,wdir:'VRB',wspd:10,wgst:15,visib:'10+',temp:0,dewp:-2,altim:1013.25,clouds:[{cover:'BKN',base:3000}],fltCat:'MVFR',rawOb:icao+' FIXTURE VRB10G15KT 10SM BKN030 00/M02 A2992'}});}
  if(u.pathname==='/api/search')return send({ok:true,results:[]});
  if(u.pathname==='/api/ops')return send({ok:true,usage:{},source:'OFFLINE FIXTURE'});
- if(u.pathname==='/api/board')return send({ok:true,source:'OFFLINE FIXTURE',flights:[],nearby_aircraft_count:2,itinerary_count:0,inferred_count:0});
+ if(u.pathname==='/api/board')return send({ok:true,source:'OFFLINE FIXTURE',at:Date.now(),coverage:'observed',flights:[{...flight,hex:'c00001',inference:'ITINERARY',board_direction:'DEP'}],nearby_aircraft_count:2,itinerary_count:1,inferred_count:0});
  if(u.pathname.startsWith('/api/'))return send({ok:true,provider:'OFFLINE ACCEPTANCE FIXTURE',now:Date.now(),aircraft:[{hex:'c00001',flight:'TEST234',r:'C-TEST',t:'E295',lat:45.32,lon:-75.68,alt_baro:8000,gs:264,track:72,baro_rate:400,seen_pos:1}],tracks:{c00001:{firstSeen:epoch,lastSeen:Date.now(),points:first.observations.map(p=>({lat:p.latitude,lon:p.longitude,t:Date.parse(p.observed_at),alt:p.altitude_ft,gs:p.groundspeed_kt,track:p.track_deg}))}}});
  const file=u.pathname==='/'?'index.html':u.pathname.slice(1);if(!assets.has(file)||!fs.existsSync(path.join(root,file))){res.writeHead(404);return res.end('Not found');}
  let body=fs.readFileSync(path.join(root,file));if(file==='index.html')body=body.toString().replace('</body>','<div style="position:fixed;bottom:4px;left:4px;z-index:99999;background:#203d55;color:#fff;font:10px system-ui;padding:3px 6px;border-radius:8px;pointer-events:none">OFFLINE FIXTURE ACCEPTANCE</div></body>');

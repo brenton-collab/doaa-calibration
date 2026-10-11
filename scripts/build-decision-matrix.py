@@ -57,11 +57,12 @@ existing.write_text(json.dumps(out,indent=2,ensure_ascii=False)+'\n')
 md=['# Decision implementation matrix','', 'This is the complete implementation contract and evidence register, not a completion claim. Machine-readable source: `DECISION_IMPLEMENTATION_MATRIX.json`.','', 'Baseline: `'+out['baseline_commit']+'`; 85 Node tests passed. No Preview/browser/Production acceptance at audit.','', '## Contradictions and supersessions','']+['- '+s for s in contradictions]+['','## Inventory','', '| Decision | Status | Release | Requirement | Evidence / code | Work / verification |','|---|---|---|---|---|---|']
 for e in entries:
     clean=lambda s:s.replace('|',' / ').replace('\n',' ')
-    md.append('| '+str(e['decision'])+' | '+e['status']+' | Required | '+clean(e['title'])+' | '+clean('; '.join(e['files_and_code_paths'])+' — '+e['evidence'][0])+' | '+clean(e['outstanding_engineering_work'])+' |')
+    md.append('| '+str(e['decision'])+' | '+e['status']+' | Required | '+clean(e['title'])+' | '+clean('; '.join(e['files_and_code_paths'])+' — '+(e['evidence'][0] if e['evidence'][0].startswith('2026-') else e['evidence'][-1]))+' | '+clean(e['outstanding_engineering_work'])+' |')
 md+=['','## Full requirements and acceptance criteria','']
 for e in entries:
     md+=['### Decision '+str(e['decision'])+' — '+e['title'],'',e['requirement'],'']
     if e['amendments']:md+=['Amendments:','']+['- '+a for a in e['amendments']]+['']
+    md+=['Status: '+e['status']+'; release completion is not implied.', '', 'Evidence history (later implementation entries supersede earlier baseline gaps):', '']+['- '+a for a in e['evidence']]+['', 'Outstanding: '+e['outstanding_engineering_work'], '']
     md+=['Acceptance: '+e['acceptance_criteria'],'','Dependencies: '+ '; '.join(e['dependencies']), '', 'Verification: '+ '; '.join(e['verification']), '']
 (root/'docs/DECISION_IMPLEMENTATION_MATRIX.md').write_text('\n'.join(md)+'\n')
 print('Indexed',len(entries),'decisions; retained',len(implicit[20:]),'additional BOARD locks. Counts:',{s:sum(e['status']==s for e in entries) for s in ['complete','partial','missing','blocked','explicitly deferred']})
