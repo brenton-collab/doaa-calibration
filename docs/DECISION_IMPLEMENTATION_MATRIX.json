@@ -965,21 +965,27 @@
       "title": "Decision 25 — synchronized Track History map and charts (locked 2026-10-10).",
       "requirement": "Contact > Track History gives equal visual importance to the geographically grounded observed track map and synchronized altitude/speed telemetry charts. A shared time cursor/scrubber moves the aircraft position and chart cursors together; selecting a detected event navigates both to its observed timestamp/segment. Show heading, relevant telemetry, timestamps, observation freshness, source attribution and gaps without falsely interpolating missing tracks or presenting schematic curves as observed geometry. Responsive layout may place views side by side on wide screens and stacked on mobile, preserving synchronization and accessible keyboard/touch navigation. Detected phases/manoeuvres remain evidence-qualified, not claims about pilot intent. Design lock; implementation pending.",
       "amendments": [],
-      "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "acceptance_criteria": "Recorded coordinates and real telemetry share one absolute cursor; no future observation leaks or position interpolation; gap/unknown/provider state is explicit; literal detected changes jump both map and chart cursors.",
+      "status": "partial",
       "files_and_code_paths": [
+        "track-core.js",
+        "track-history.js",
+        "track-history.css",
+        "src/track-history.mjs",
         "flight-enrichment.js",
-        "doaa-memory.js",
-        "src/worker.js"
+        "tests/track-playback.test.cjs",
+        "tests/track-history-api.test.mjs",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
-        "renderSurface(track-history) currently renders unavailable placeholder; /memory/history returns aggregates, not track samples",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Actual observed-sample map/charts/shared absolute clock and two-aircraft union comparison implemented; local SQLite queries and four responsive Chromium fixture workflows passed. See docs/RELEASE_RC_CHECKPOINT.md and docs/qa/track-history-acceptance.json.",
+        "Playback, no-future/no-interpolation support, gaps, optional loop/follow, deliberate recorded picker, replacement/removal of either track, service failure/retry and obsolete-selection guards exercised."
       ],
-      "outstanding_engineering_work": "Add encounter-scoped observed samples, geographically grounded map and shared telemetry/time cursor; real interval playback; deliberate two-aircraft comparison, union clock, follow and loop.",
+      "outstanding_engineering_work": "Authenticated Preview with real collected observations, accessible/provider geographic basemap acceptance, live/physical-device acceptance; global-unit conversion follows the shared units batch.",
       "dependencies": [
-        "Shared timestamp/provenance/identity contracts",
-        "Isolated Preview D1 and non-production release gate"
+        "Preview observation schema 0011",
+        "Approved Google subjects/OAuth configuration for signed-in Preview acceptance",
+        "Free geographic basemap availability"
       ],
       "verification": [
         "Targeted executed regression fixtures",
@@ -988,14 +994,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -1003,21 +1010,27 @@
       "title": "Decision 26 — Track History playback (locked 2026-10-10).",
       "requirement": "Contact Track History includes real time-based Play/Pause, timeline scrubber and playback-speed controls, synchronized with observed track map and telemetry charts. Replay respects actual timestamp intervals, marks missing observation gaps, and never invents continuous positions. Controls remain accessible; playback is paused/stopped when leaving context as appropriate. **Multi-aircraft comparison (promising direction, not yet locked):** an optional expanded Compare Tracks workspace may allow multiple Contacts/airframes to be replayed on a shared absolute clock with separate observed tracks and gaps, while ordinary Contact Track History stays single-target by default. Do not align tracks by percentage of flight completion or fabricate simultaneous encounters. Design lock for playback only; implementation pending.",
       "amendments": [],
-      "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "acceptance_criteria": "Play/Pause and 1×/5×/15×/30×/60× use actual timestamp intervals; scrub synchronizes all representations; dispose pauses and aborts; no unsupported intermediate positions.",
+      "status": "partial",
       "files_and_code_paths": [
+        "track-core.js",
+        "track-history.js",
+        "track-history.css",
+        "src/track-history.mjs",
         "flight-enrichment.js",
-        "doaa-memory.js",
-        "src/worker.js"
+        "tests/track-playback.test.cjs",
+        "tests/track-history-api.test.mjs",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
-        "renderSurface(track-history) currently renders unavailable placeholder; /memory/history returns aggregates, not track samples",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Actual observed-sample map/charts/shared absolute clock and two-aircraft union comparison implemented; local SQLite queries and four responsive Chromium fixture workflows passed. See docs/RELEASE_RC_CHECKPOINT.md and docs/qa/track-history-acceptance.json.",
+        "Playback, no-future/no-interpolation support, gaps, optional loop/follow, deliberate recorded picker, replacement/removal of either track, service failure/retry and obsolete-selection guards exercised."
       ],
-      "outstanding_engineering_work": "Add encounter-scoped observed samples, geographically grounded map and shared telemetry/time cursor; real interval playback; deliberate two-aircraft comparison, union clock, follow and loop.",
+      "outstanding_engineering_work": "Authenticated Preview with real collected observations, accessible/provider geographic basemap acceptance, live/physical-device acceptance; global-unit conversion follows the shared units batch.",
       "dependencies": [
-        "Shared timestamp/provenance/identity contracts",
-        "Isolated Preview D1 and non-production release gate"
+        "Preview observation schema 0011",
+        "Approved Google subjects/OAuth configuration for signed-in Preview acceptance",
+        "Free geographic basemap availability"
       ],
       "verification": [
         "Targeted executed regression fixtures",
@@ -1026,14 +1039,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -1043,21 +1057,27 @@
       "amendments": [
         "Decision 27 refinement — compact synchronized compare telemetry (user-directed 2026-10-10). In Compare Tracks, retain the large shared replay map and playback controls, but show simple horizontally aligned **Track 1 / Track 2** readouts directly beneath playback, each with speed, altitude and heading or ground track at the same absolute timestamp. This supersedes the earlier shorthand 'no stats' for multi mode: no full charts or dense per-aircraft analytical dashboard, but essential side-by-side instantaneous telemetry is desired, particularly for nearby aircraft. Label heading versus ground track correctly according to sourced telemetry, show missing/stale values honestly, and avoid implied separation precision without synchronized reliable observations. For additional tracks, maintain legible comparable alignment. Visual refinement captured; implementation pending."
       ],
-      "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "acceptance_criteria": "Expanded actual geographic map with distinguishable tracks, shared absolute clock, speed/scrub/gaps and compact telemetry; no per-aircraft charts/statistics in multi mode.",
+      "status": "partial",
       "files_and_code_paths": [
+        "track-core.js",
+        "track-history.js",
+        "track-history.css",
+        "src/track-history.mjs",
         "flight-enrichment.js",
-        "doaa-memory.js",
-        "src/worker.js"
+        "tests/track-playback.test.cjs",
+        "tests/track-history-api.test.mjs",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
-        "renderSurface(track-history) currently renders unavailable placeholder; /memory/history returns aggregates, not track samples",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Actual observed-sample map/charts/shared absolute clock and two-aircraft union comparison implemented; local SQLite queries and four responsive Chromium fixture workflows passed. See docs/RELEASE_RC_CHECKPOINT.md and docs/qa/track-history-acceptance.json.",
+        "Playback, no-future/no-interpolation support, gaps, optional loop/follow, deliberate recorded picker, replacement/removal of either track, service failure/retry and obsolete-selection guards exercised."
       ],
-      "outstanding_engineering_work": "Add encounter-scoped observed samples, geographically grounded map and shared telemetry/time cursor; real interval playback; deliberate two-aircraft comparison, union clock, follow and loop.",
+      "outstanding_engineering_work": "Authenticated Preview with real collected observations, accessible/provider geographic basemap acceptance, live/physical-device acceptance; global-unit conversion follows the shared units batch.",
       "dependencies": [
-        "Shared timestamp/provenance/identity contracts",
-        "Isolated Preview D1 and non-production release gate"
+        "Preview observation schema 0011",
+        "Approved Google subjects/OAuth configuration for signed-in Preview acceptance",
+        "Free geographic basemap availability"
       ],
       "verification": [
         "Targeted executed regression fixtures",
@@ -1066,14 +1086,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -1081,21 +1102,27 @@
       "title": "Decision 28 — Compare Tracks exactly two aircraft (locked 2026-10-10).",
       "requirement": "Compare Tracks supports a maximum of two simultaneously replayed aircraft, not expandable to three or four. Maintain a shared absolute-time map and playback controls with two horizontally aligned compact telemetry panels immediately beneath them (speed, altitude, sourced heading or ground track). The two-track limit preserves direct comparison and phone usability. Allow replacement/removal of either selected track without losing the other; unavailable observations are explicit. Design lock, implementation pending.",
       "amendments": [],
-      "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "acceptance_criteria": "Exactly two tracks; two horizontal compact telemetry panels; either track can be replaced or removed without losing the other; unavailable support is explicit.",
+      "status": "partial",
       "files_and_code_paths": [
+        "track-core.js",
+        "track-history.js",
+        "track-history.css",
+        "src/track-history.mjs",
         "flight-enrichment.js",
-        "doaa-memory.js",
-        "src/worker.js"
+        "tests/track-playback.test.cjs",
+        "tests/track-history-api.test.mjs",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
-        "renderSurface(track-history) currently renders unavailable placeholder; /memory/history returns aggregates, not track samples",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Actual observed-sample map/charts/shared absolute clock and two-aircraft union comparison implemented; local SQLite queries and four responsive Chromium fixture workflows passed. See docs/RELEASE_RC_CHECKPOINT.md and docs/qa/track-history-acceptance.json.",
+        "Playback, no-future/no-interpolation support, gaps, optional loop/follow, deliberate recorded picker, replacement/removal of either track, service failure/retry and obsolete-selection guards exercised."
       ],
-      "outstanding_engineering_work": "Add encounter-scoped observed samples, geographically grounded map and shared telemetry/time cursor; real interval playback; deliberate two-aircraft comparison, union clock, follow and loop.",
+      "outstanding_engineering_work": "Authenticated Preview with real collected observations, accessible/provider geographic basemap acceptance, live/physical-device acceptance; global-unit conversion follows the shared units batch.",
       "dependencies": [
-        "Shared timestamp/provenance/identity contracts",
-        "Isolated Preview D1 and non-production release gate"
+        "Preview observation schema 0011",
+        "Approved Google subjects/OAuth configuration for signed-in Preview acceptance",
+        "Free geographic basemap availability"
       ],
       "verification": [
         "Targeted executed regression fixtures",
@@ -1104,14 +1131,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -1119,21 +1147,27 @@
       "title": "Decision 29 — Compare Tracks second-aircraft picker (locked 2026-10-10).",
       "requirement": "From Contact > Track History, **Compare with…** opens a deliberate Track 2 selector. Prioritize other actually observed Contacts with overlapping observation windows and geographic proximity, and provide callsign/registration search to find a specific recorded Contact. Never auto-select a comparison aircraft, infer an unobserved encounter, or imply missing history is available. After selection, open the two-aircraft Compare Tracks workspace with one absolute-time playback clock, grounded map tracks and aligned compact speed/altitude/heading-or-track telemetry. Allow replacement of Track 2. Design lock; implementation pending.",
       "amendments": [],
-      "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "acceptance_criteria": "Deliberate recorded Track 2 picker, observed overlap/proximity priority, callsign/registration search; no automatic or unobserved selection.",
+      "status": "partial",
       "files_and_code_paths": [
+        "track-core.js",
+        "track-history.js",
+        "track-history.css",
+        "src/track-history.mjs",
         "flight-enrichment.js",
-        "doaa-memory.js",
-        "src/worker.js"
+        "tests/track-playback.test.cjs",
+        "tests/track-history-api.test.mjs",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
-        "renderSurface(track-history) currently renders unavailable placeholder; /memory/history returns aggregates, not track samples",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Actual observed-sample map/charts/shared absolute clock and two-aircraft union comparison implemented; local SQLite queries and four responsive Chromium fixture workflows passed. See docs/RELEASE_RC_CHECKPOINT.md and docs/qa/track-history-acceptance.json.",
+        "Playback, no-future/no-interpolation support, gaps, optional loop/follow, deliberate recorded picker, replacement/removal of either track, service failure/retry and obsolete-selection guards exercised."
       ],
-      "outstanding_engineering_work": "Add encounter-scoped observed samples, geographically grounded map and shared telemetry/time cursor; real interval playback; deliberate two-aircraft comparison, union clock, follow and loop.",
+      "outstanding_engineering_work": "Authenticated Preview with real collected observations, accessible/provider geographic basemap acceptance, live/physical-device acceptance; global-unit conversion follows the shared units batch.",
       "dependencies": [
-        "Shared timestamp/provenance/identity contracts",
-        "Isolated Preview D1 and non-production release gate"
+        "Preview observation schema 0011",
+        "Approved Google subjects/OAuth configuration for signed-in Preview acceptance",
+        "Free geographic basemap availability"
       ],
       "verification": [
         "Targeted executed regression fixtures",
@@ -1142,14 +1176,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -1157,21 +1192,27 @@
       "title": "Decision 30 — full combined Compare Tracks playback window (locked 2026-10-10).",
       "requirement": "For two recorded aircraft, Compare Tracks uses the union of their observed time ranges rather than restricting playback to the overlap. The common absolute-time timeline distinguishes Track 1 coverage, Track 2 coverage, and overlapping periods; each aircraft marker and its instantaneous telemetry appear only where observation support is sufficient. Clearly show gaps, one-aircraft-only intervals and no-data periods, without manufacturing positions or proximity. Keep playback and scrubbing coherent across the whole combined range. Design lock; implementation pending.",
       "amendments": [],
-      "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "acceptance_criteria": "Union observed time range with both coverage bands; each marker/telemetry only within supported observation intervals; no fabricated proximity.",
+      "status": "partial",
       "files_and_code_paths": [
+        "track-core.js",
+        "track-history.js",
+        "track-history.css",
+        "src/track-history.mjs",
         "flight-enrichment.js",
-        "doaa-memory.js",
-        "src/worker.js"
+        "tests/track-playback.test.cjs",
+        "tests/track-history-api.test.mjs",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
-        "renderSurface(track-history) currently renders unavailable placeholder; /memory/history returns aggregates, not track samples",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Actual observed-sample map/charts/shared absolute clock and two-aircraft union comparison implemented; local SQLite queries and four responsive Chromium fixture workflows passed. See docs/RELEASE_RC_CHECKPOINT.md and docs/qa/track-history-acceptance.json.",
+        "Playback, no-future/no-interpolation support, gaps, optional loop/follow, deliberate recorded picker, replacement/removal of either track, service failure/retry and obsolete-selection guards exercised."
       ],
-      "outstanding_engineering_work": "Add encounter-scoped observed samples, geographically grounded map and shared telemetry/time cursor; real interval playback; deliberate two-aircraft comparison, union clock, follow and loop.",
+      "outstanding_engineering_work": "Authenticated Preview with real collected observations, accessible/provider geographic basemap acceptance, live/physical-device acceptance; global-unit conversion follows the shared units batch.",
       "dependencies": [
-        "Shared timestamp/provenance/identity contracts",
-        "Isolated Preview D1 and non-production release gate"
+        "Preview observation schema 0011",
+        "Approved Google subjects/OAuth configuration for signed-in Preview acceptance",
+        "Free geographic basemap availability"
       ],
       "verification": [
         "Targeted executed regression fixtures",
@@ -1180,14 +1221,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -1195,21 +1237,27 @@
       "title": "Decision 31 — hybrid Track History / Compare Tracks camera (locked 2026-10-10).",
       "requirement": "Both single-contact Track History and two-aircraft Compare Tracks initially fit the complete geographically grounded observed tracks in a fixed overview, preserving spatial context during playback. Offer an optional explicit **Follow** control to keep the replaying aircraft in view; in two-track comparison, Follow must clearly identify its target and not imply both aircraft can always be framed tightly. Any manual pan/zoom disengages Follow immediately, preserving user control. Camera changes must not alter the shared playback clock or telemetry. Design lock; implementation pending.",
       "amendments": [],
-      "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "acceptance_criteria": "Initially fixed full-track fit; explicit labelled Follow target; manual pan/zoom disengages Follow and does not change scrub time.",
+      "status": "partial",
       "files_and_code_paths": [
+        "track-core.js",
+        "track-history.js",
+        "track-history.css",
+        "src/track-history.mjs",
         "flight-enrichment.js",
-        "doaa-memory.js",
-        "src/worker.js"
+        "tests/track-playback.test.cjs",
+        "tests/track-history-api.test.mjs",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
-        "renderSurface(track-history) currently renders unavailable placeholder; /memory/history returns aggregates, not track samples",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Actual observed-sample map/charts/shared absolute clock and two-aircraft union comparison implemented; local SQLite queries and four responsive Chromium fixture workflows passed. See docs/RELEASE_RC_CHECKPOINT.md and docs/qa/track-history-acceptance.json.",
+        "Playback, no-future/no-interpolation support, gaps, optional loop/follow, deliberate recorded picker, replacement/removal of either track, service failure/retry and obsolete-selection guards exercised."
       ],
-      "outstanding_engineering_work": "Add encounter-scoped observed samples, geographically grounded map and shared telemetry/time cursor; real interval playback; deliberate two-aircraft comparison, union clock, follow and loop.",
+      "outstanding_engineering_work": "Authenticated Preview with real collected observations, accessible/provider geographic basemap acceptance, live/physical-device acceptance; global-unit conversion follows the shared units batch.",
       "dependencies": [
-        "Shared timestamp/provenance/identity contracts",
-        "Isolated Preview D1 and non-production release gate"
+        "Preview observation schema 0011",
+        "Approved Google subjects/OAuth configuration for signed-in Preview acceptance",
+        "Free geographic basemap availability"
       ],
       "verification": [
         "Targeted executed regression fixtures",
@@ -1218,14 +1266,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -1233,21 +1282,27 @@
       "title": "Decision 32 — optional replay loop (locked 2026-10-10).",
       "requirement": "In both Contact Track History and two-aircraft Compare Tracks, playback stops at the final observed timestamp by default, retaining the final map state and timestamp-specific telemetry. Offer an explicit **Loop** toggle; when enabled, reaching the end restarts playback from the beginning of the selected replay window. Loop is off by default. Do not reset map camera or alter observed data when looping. Design lock; implementation pending.",
       "amendments": [],
-      "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "acceptance_criteria": "Default stops at final observed timestamp with final supported values; Loop off by default, opt-in restart preserves camera/data.",
+      "status": "partial",
       "files_and_code_paths": [
+        "track-core.js",
+        "track-history.js",
+        "track-history.css",
+        "src/track-history.mjs",
         "flight-enrichment.js",
-        "doaa-memory.js",
-        "src/worker.js"
+        "tests/track-playback.test.cjs",
+        "tests/track-history-api.test.mjs",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
-        "renderSurface(track-history) currently renders unavailable placeholder; /memory/history returns aggregates, not track samples",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Actual observed-sample map/charts/shared absolute clock and two-aircraft union comparison implemented; local SQLite queries and four responsive Chromium fixture workflows passed. See docs/RELEASE_RC_CHECKPOINT.md and docs/qa/track-history-acceptance.json.",
+        "Playback, no-future/no-interpolation support, gaps, optional loop/follow, deliberate recorded picker, replacement/removal of either track, service failure/retry and obsolete-selection guards exercised."
       ],
-      "outstanding_engineering_work": "Add encounter-scoped observed samples, geographically grounded map and shared telemetry/time cursor; real interval playback; deliberate two-aircraft comparison, union clock, follow and loop.",
+      "outstanding_engineering_work": "Authenticated Preview with real collected observations, accessible/provider geographic basemap acceptance, live/physical-device acceptance; global-unit conversion follows the shared units batch.",
       "dependencies": [
-        "Shared timestamp/provenance/identity contracts",
-        "Isolated Preview D1 and non-production release gate"
+        "Preview observation schema 0011",
+        "Approved Google subjects/OAuth configuration for signed-in Preview acceptance",
+        "Free geographic basemap availability"
       ],
       "verification": [
         "Targeted executed regression fixtures",
@@ -1256,14 +1311,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -3680,15 +3736,19 @@
       "requirement": "David can save an interesting aircraft encounter with a single deliberate bookmark action, without a required journal form, notes, photos or location entry. Capture the referenced aircraft or track identity, the bookmark creation time, and the relevant observation or historical context and source provenance available at capture, preserving uncertainty and the distinction between a feed observation and David personally seeing the aircraft. Bookmarks must remain navigable despite later identity corrections, merges or splits, with explicit qualification when a reference becomes ambiguous. Do not silently infer that David witnessed the aircraft merely because he bookmarked it. Keep the saved-items experience simple; richer journaling is not part of this decision. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "src/personal.mjs",
+        "migrations/0012_private_accounts.sql",
+        "tests/account-privacy.test.mjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "Private idempotent bookmark API references existing observations; account isolation and prohibition on fabricated DOAA evidence passed real SQLite regression. Full bookmark/gallery interaction remains unimplemented."
       ],
       "outstanding_engineering_work": "Implement approved Google subject authorization and full-app gate, private idempotent moment bookmarks/gallery, persistent sessions and atomic last-save-wins preferences with retry.",
       "dependencies": [
@@ -3756,15 +3816,19 @@
       "requirement": "Present David's saved aircraft moments as a visually engaging collection of cards, using attributable aircraft photographs or evidence-grounded map previews where available. Each card must remain recognizable and useful without imagery, showing the aircraft's supported identity, the saved moment's time and a concise context cue; do not fabricate images, aircraft matches or map positions to fill gaps. Distinguish a historical saved observation from the aircraft's current state, and preserve the moment-first opening behavior of Decision 96. Use responsive, accessible card layouts, sensible loading and missing-media states, and lightweight media handling consistent with zero incremental cost. Do not require folders, tags or manual curation to browse bookmarks. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "src/personal.mjs",
+        "migrations/0012_private_accounts.sql",
+        "tests/account-privacy.test.mjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "Private idempotent bookmark API references existing observations; account isolation and prohibition on fabricated DOAA evidence passed real SQLite regression. Full bookmark/gallery interaction remains unimplemented."
       ],
       "outstanding_engineering_work": "Implement approved Google subject authorization and full-app gate, private idempotent moment bookmarks/gallery, persistent sessions and atomic last-save-wins preferences with retry.",
       "dependencies": [
@@ -3794,15 +3858,19 @@
       "requirement": "Prefer a reliably identified aircraft photograph, accompanied by a concise cue for the saved moment. Clearly label representative aircraft-type images as such, never as photographs of the actual encounter. Fall back to an evidence-supported map preview when available, then a polished text-only card. Preserve source attribution, image usage rights, temporal context and uncertainty. Do not invent images, positions or tracks. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "src/personal.mjs",
+        "migrations/0012_private_accounts.sql",
+        "tests/account-privacy.test.mjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "Private idempotent bookmark API references existing observations; account isolation and prohibition on fabricated DOAA evidence passed real SQLite regression. Full bookmark/gallery interaction remains unimplemented."
       ],
       "outstanding_engineering_work": "Implement approved Google subject authorization and full-app gate, private idempotent moment bookmarks/gallery, persistent sessions and atomic last-save-wins preferences with retry.",
       "dependencies": [
@@ -3832,15 +3900,19 @@
       "requirement": "Open David's visual bookmark collection as a newest-first chronological gallery of saved moments. Offer a simple optional view switch to group bookmarks by the best-supported aircraft identity so repeated encounters can be explored together, without folders, tags or manual organization. Preserve each bookmark's own moment, original observation context and timestamp; grouping must not collapse distinct moments or imply an uncertain identity match is certain. Handle later identity corrections, splits and merges transparently, with ambiguous bookmarks clearly qualified or left ungrouped as appropriate. Retain accessible navigation and useful cards when images are unavailable. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "src/personal.mjs",
+        "migrations/0012_private_accounts.sql",
+        "tests/account-privacy.test.mjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "Private idempotent bookmark API references existing observations; account isolation and prohibition on fabricated DOAA evidence passed real SQLite regression. Full bookmark/gallery interaction remains unimplemented."
       ],
       "outstanding_engineering_work": "Implement approved Google subject authorization and full-app gate, private idempotent moment bookmarks/gallery, persistent sessions and atomic last-save-wins preferences with retry.",
       "dependencies": [
@@ -3870,15 +3942,19 @@
       "requirement": "Saving the same identifiable observation or historical moment repeatedly is idempotent: it must not create duplicate bookmarks, and the interface visibly indicates that the moment is already saved. The same aircraft may be bookmarked again for a genuinely different flight, observation or date. Determine sameness from a stable moment or observation reference where available, not aircraft identity alone or an arbitrary time-window guess; qualify uncertain associations rather than merging distinct moments. Preserve the moment-first navigation, original evidence context and identity-correction continuity established in Decisions 95–99. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "src/personal.mjs",
+        "migrations/0012_private_accounts.sql",
+        "tests/account-privacy.test.mjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "Private idempotent bookmark API references existing observations; account isolation and prohibition on fabricated DOAA evidence passed real SQLite regression. Full bookmark/gallery interaction remains unimplemented."
       ],
       "outstanding_engineering_work": "Implement approved Google subject authorization and full-app gate, private idempotent moment bookmarks/gallery, persistent sessions and atomic last-save-wins preferences with retry.",
       "dependencies": [
@@ -3908,17 +3984,22 @@
       "requirement": "Removing a bookmark is a direct one-action operation, without a confirmation dialog or required Undo affordance. Update the saved state and visual collection promptly and accurately, handling persistence failures transparently rather than claiming a removal that did not succeed. Removal affects only David's saved reference, never the underlying aircraft, observation or historical evidence. Provide accessible control labeling and avoid accidental activation through clear interaction design. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "src/auth.mjs",
+        "src/personal.mjs",
+        "migrations/0012_private_accounts.sql",
+        "tests/account-privacy.test.mjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "Full-app/asset/API gate, verified RSA OIDC token contract, stable-subject allowlist, account ownership and atomic preference snapshots passed executed tests. Provider credentials/verified subjects are unavailable; no live Google sign-in acceptance."
       ],
-      "outstanding_engineering_work": "Implement approved Google subject authorization and full-app gate, private idempotent moment bookmarks/gallery, persistent sessions and atomic last-save-wins preferences with retry.",
+      "outstanding_engineering_work": "Complete client account/preferences UI, secure David/Brent enrollment and OAuth configuration, signed-in Preview and persistent/provider-revocation-aware session acceptance.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -3931,8 +4012,8 @@
       "required_for_agreed_release": true,
       "verification_state": {
         "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
@@ -3984,17 +4065,22 @@
       "requirement": "Use Google sign-in as the user-facing authentication method for David's DOAA account and synchronized bookmarks, rather than email/password or passwordless email codes. Rely on standards-based Google OAuth/OpenID Connect through a suitable verified authentication integration; do not collect or store Google passwords. Bind bookmark ownership to a stable authenticated subject identifier, not a mutable email address, and enforce authorization server-side. Provide clear signed-out, sign-in failure and session-expiry states, with appropriate token/session security and privacy. Verify compatibility, quotas, configuration and zero-incremental-cost feasibility before implementation; no provider setup or application changes are authorized by this design decision alone. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "src/auth.mjs",
+        "src/personal.mjs",
+        "migrations/0012_private_accounts.sql",
+        "tests/account-privacy.test.mjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "Full-app/asset/API gate, verified RSA OIDC token contract, stable-subject allowlist, account ownership and atomic preference snapshots passed executed tests. Provider credentials/verified subjects are unavailable; no live Google sign-in acceptance."
       ],
-      "outstanding_engineering_work": "Implement approved Google subject authorization and full-app gate, private idempotent moment bookmarks/gallery, persistent sessions and atomic last-save-wins preferences with retry.",
+      "outstanding_engineering_work": "Complete client account/preferences UI, secure David/Brent enrollment and OAuth configuration, signed-in Preview and persistent/provider-revocation-aware session acceptance.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -4007,8 +4093,8 @@
       "required_for_agreed_release": true,
       "verification_state": {
         "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
@@ -4024,17 +4110,22 @@
         "Initial approved users are David and Brent; actual Google subject identifiers require secure configuration."
       ],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "blocked",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "src/auth.mjs",
+        "src/personal.mjs",
+        "migrations/0012_private_accounts.sql",
+        "tests/account-privacy.test.mjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "Full-app/asset/API gate, verified RSA OIDC token contract, stable-subject allowlist, account ownership and atomic preference snapshots passed executed tests. Provider credentials/verified subjects are unavailable; no live Google sign-in acceptance."
       ],
-      "outstanding_engineering_work": "Implement approved Google subject authorization and full-app gate, private idempotent moment bookmarks/gallery, persistent sessions and atomic last-save-wins preferences with retry.",
+      "outstanding_engineering_work": "Complete client account/preferences UI, secure David/Brent enrollment and OAuth configuration, signed-in Preview and persistent/provider-revocation-aware session acceptance.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -4047,8 +4138,8 @@
       "required_for_agreed_release": true,
       "verification_state": {
         "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
@@ -4062,17 +4153,22 @@
       "requirement": "Require successful Google authentication and server-side approval under Decisions 103–104 before granting access to the aviation explorer, map, aircraft details, bookmarks or any other application data and functionality. Unauthenticated visitors see a focused sign-in experience rather than a public read-only explorer; unapproved authenticated users see a clear access-denied state. Enforce this boundary at data and API endpoints as well as in the interface, without relying on client-side hiding alone. Allow only the minimal authentication callback and static assets necessary for sign-in before authorization. Preserve clear session-expiry and failure handling. No public explorer or anonymous access is implied by this decision. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "src/auth.mjs",
+        "src/personal.mjs",
+        "migrations/0012_private_accounts.sql",
+        "tests/account-privacy.test.mjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "Full-app/asset/API gate, verified RSA OIDC token contract, stable-subject allowlist, account ownership and atomic preference snapshots passed executed tests. Provider credentials/verified subjects are unavailable; no live Google sign-in acceptance."
       ],
-      "outstanding_engineering_work": "Implement approved Google subject authorization and full-app gate, private idempotent moment bookmarks/gallery, persistent sessions and atomic last-save-wins preferences with retry.",
+      "outstanding_engineering_work": "Complete client account/preferences UI, secure David/Brent enrollment and OAuth configuration, signed-in Preview and persistent/provider-revocation-aware session acceptance.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -4085,8 +4181,8 @@
       "required_for_agreed_release": true,
       "verification_state": {
         "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
@@ -4100,17 +4196,22 @@
       "requirement": "Keep approved users signed in across normal visits and devices until they explicitly sign out, rather than requiring authentication every visit or imposing a routine short session expiry. Maintain secure session storage and server-side authorization checks. An explicit sign-out must terminate the relevant session; account revocation, compromised credentials, invalidated tokens or provider-enforced expiry must still be honoured and may require reauthentication. Do not promise technically indefinite credentials or bypass identity-provider security controls. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "src/auth.mjs",
+        "src/personal.mjs",
+        "migrations/0012_private_accounts.sql",
+        "tests/account-privacy.test.mjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "Full-app/asset/API gate, verified RSA OIDC token contract, stable-subject allowlist, account ownership and atomic preference snapshots passed executed tests. Provider credentials/verified subjects are unavailable; no live Google sign-in acceptance."
       ],
-      "outstanding_engineering_work": "Implement approved Google subject authorization and full-app gate, private idempotent moment bookmarks/gallery, persistent sessions and atomic last-save-wins preferences with retry.",
+      "outstanding_engineering_work": "Complete client account/preferences UI, secure David/Brent enrollment and OAuth configuration, signed-in Preview and persistent/provider-revocation-aware session acceptance.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -4123,8 +4224,8 @@
       "required_for_agreed_release": true,
       "verification_state": {
         "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
@@ -4176,17 +4277,22 @@
       "requirement": "For each approved user, persist their own preferred map area, filters and display settings across visits, without sharing those preferences with the other account. On return, obtain fresh live aviation observations rather than presenting a previous position as current. Any restored aircraft selection must retain identity continuity and visibly distinguish last-observed context from current evidence, including feed outages and stale or unavailable observations. Do not automatically restore an entire potentially stale live workspace as if it were live. Handle first use and missing preferences with sensible defaults. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "src/auth.mjs",
+        "src/personal.mjs",
+        "migrations/0012_private_accounts.sql",
+        "tests/account-privacy.test.mjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "Full-app/asset/API gate, verified RSA OIDC token contract, stable-subject allowlist, account ownership and atomic preference snapshots passed executed tests. Provider credentials/verified subjects are unavailable; no live Google sign-in acceptance."
       ],
-      "outstanding_engineering_work": "Implement approved Google subject authorization and full-app gate, private idempotent moment bookmarks/gallery, persistent sessions and atomic last-save-wins preferences with retry.",
+      "outstanding_engineering_work": "Complete client account/preferences UI, secure David/Brent enrollment and OAuth configuration, signed-in Preview and persistent/provider-revocation-aware session acceptance.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -4199,8 +4305,8 @@
       "required_for_agreed_release": true,
       "verification_state": {
         "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
@@ -4214,17 +4320,22 @@
       "requirement": "Store each approved user's preferred map area, filters and display settings centrally under their authenticated account so the same preferences follow them between signed-in devices. Enforce user-specific ownership and authorization server-side; David's and Brent's preferences remain independent. Apply changes reliably across devices, with clear handling for synchronization failures and conflicting updates rather than silently misrepresenting saved state. Use sensible first-use defaults and preserve the fresh-live-data requirement of Decision 108; synchronized preferences must not make stale aircraft observations appear current. No device-specific override layer is required. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "src/auth.mjs",
+        "src/personal.mjs",
+        "migrations/0012_private_accounts.sql",
+        "tests/account-privacy.test.mjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "Full-app/asset/API gate, verified RSA OIDC token contract, stable-subject allowlist, account ownership and atomic preference snapshots passed executed tests. Provider credentials/verified subjects are unavailable; no live Google sign-in acceptance."
       ],
-      "outstanding_engineering_work": "Implement approved Google subject authorization and full-app gate, private idempotent moment bookmarks/gallery, persistent sessions and atomic last-save-wins preferences with retry.",
+      "outstanding_engineering_work": "Complete client account/preferences UI, secure David/Brent enrollment and OAuth configuration, signed-in Preview and persistent/provider-revocation-aware session acceptance.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -4237,8 +4348,8 @@
       "required_for_agreed_release": true,
       "verification_state": {
         "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
@@ -4252,17 +4363,22 @@
       "requirement": "Treat each user's account-synchronized preference set as one replaceable snapshot. When multiple signed-in devices save different snapshots, the most recently accepted server-side save becomes authoritative and replaces the full prior snapshot, including unrelated settings. Do not present conflict-resolution prompts or perform per-field merges. Use server-controlled ordering and atomic writes so arrival order is deterministic; propagate the accepted snapshot to other devices on refresh or synchronization. Keep each user's preferences isolated, and distinguish failed or unsaved updates from successfully persisted settings. This rule applies to preferences, not bookmarks or aviation observations. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "src/auth.mjs",
+        "src/personal.mjs",
+        "migrations/0012_private_accounts.sql",
+        "tests/account-privacy.test.mjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "Full-app/asset/API gate, verified RSA OIDC token contract, stable-subject allowlist, account ownership and atomic preference snapshots passed executed tests. Provider credentials/verified subjects are unavailable; no live Google sign-in acceptance."
       ],
-      "outstanding_engineering_work": "Implement approved Google subject authorization and full-app gate, private idempotent moment bookmarks/gallery, persistent sessions and atomic last-save-wins preferences with retry.",
+      "outstanding_engineering_work": "Complete client account/preferences UI, secure David/Brent enrollment and OAuth configuration, signed-in Preview and persistent/provider-revocation-aware session acceptance.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -4275,8 +4391,8 @@
       "required_for_agreed_release": true,
       "verification_state": {
         "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
@@ -4290,17 +4406,22 @@
       "requirement": "Apply preference changes immediately even when saving fails. Clearly indicate pending or failed synchronization and retry automatically when connectivity returns. Persist pending changes locally where feasible, with safe retry limits and a visible failure state. Under Decision 110, the latest server-accepted complete preference snapshot wins, including a delayed retry; do not imply independent edits were merged. Keep pending preferences scoped to the correct account. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "src/auth.mjs",
+        "src/personal.mjs",
+        "migrations/0012_private_accounts.sql",
+        "tests/account-privacy.test.mjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "Full-app/asset/API gate, verified RSA OIDC token contract, stable-subject allowlist, account ownership and atomic preference snapshots passed executed tests. Provider credentials/verified subjects are unavailable; no live Google sign-in acceptance."
       ],
-      "outstanding_engineering_work": "Implement approved Google subject authorization and full-app gate, private idempotent moment bookmarks/gallery, persistent sessions and atomic last-save-wins preferences with retry.",
+      "outstanding_engineering_work": "Complete client account/preferences UI, secure David/Brent enrollment and OAuth configuration, signed-in Preview and persistent/provider-revocation-aware session acceptance.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -4313,8 +4434,8 @@
       "required_for_agreed_release": true,
       "verification_state": {
         "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,

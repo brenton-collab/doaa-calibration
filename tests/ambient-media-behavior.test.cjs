@@ -1,7 +1,7 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const worker=fs.readFileSync(path.join(__dirname,'../src/worker.js'),'utf8');
-const start=worker.indexOf('async function ambientMediaApi('),end=worker.indexOf('export default{',start);
+const start=worker.indexOf('async function ambientMediaApi('),end=worker.indexOf('const application=',start);
 assert.ok(start>=0&&end>start,'media API function must exist');
 const api=new Function('json',worker.slice(start,end)+';return ambientMediaApi')((body,status=200)=>({body,status}));
 const base=[['photo_specificity','exact-airframe'],['photo_image','https://example.org/img.jpg'],['photo_license','CC BY'],['photo_credit','Artist']].map(([predicate,value_text])=>({hex:'A1B2C3',predicate,value_text}));

@@ -27,7 +27,7 @@ test('all frontend inline scripts parse',()=>{
  assert.ok(count>=2);
  new Function(look);
  new Function(ambient);
- new Function(worker.replace(/^import .*$/gm,'').replace(/export default\{/,'const defaultExport={'));
+ new Function(worker.replace(/^import .*$/gm,'').replace(/export default /,'const defaultExport='));
 });
 test('SKY normalization rejects missing coordinates and preserves unknown telemetry',()=>{
  const src=functionSource(html,'norm','function resize');

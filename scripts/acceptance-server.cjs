@@ -1,0 +1,25 @@
+// Local-only deterministic browser acceptance. Fixtures are never bundled or deployed.
+const http=require('node:http'),fs=require('node:fs'),path=require('node:path');
+const root=path.resolve(__dirname,'..'),epoch=Date.now()-600000;
+function points(hex,id,shift=0){return[0,30000,60000,90000,120000,300000,330000,360000].map((offset,i)=>({id:id*100+i,encounter_id:id,observed_at:new Date(epoch+offset+shift).toISOString(),latitude:45.25+i*.015,longitude:-75.8+i*.025,altitude_ft:i===3?null:1000+i*1000,groundspeed_kt:180+i*12,track_deg:72,squawk:i>=2?'7700':'1200',on_ground:0,registration:hex==='c00001'?'C-TEST':'C-TST2',source_provider:'OFFLINE ACCEPTANCE FIXTURE'}));}
+function track(hex='c00001',id=17){const observations=points(hex,id,hex==='c00002'?120000:0);return{ok:true,found:true,hex,encounter:{id,callsign:hex==='c00001'?'TEST234':'TEST567',first_seen_at:observations[0].observed_at,last_seen_at:observations.at(-1).observed_at,observation_count:observations.length},observations,next:null,coverage:{complete_surveillance:false}};}
+const first=track(),second=track('c00002',18),airport={icao:'CYOW',iata:'YOW',name:'Ottawa Macdonald-Cartier',lat:45.3225,lon:-75.6692};
+const flight={flight_icao:'TEST234',flight_iata:'TEST234',reg_number:'C-TEST',aircraft_icao:'E295',airline_name:'Acceptance fixture',dep_iata:'YOW',dep_icao:'CYOW',arr_iata:'YYZ',arr_icao:'CYYZ',dep_time:new Date(epoch).toISOString(),arr_time:new Date(epoch+3600000).toISOString()};
+const assets=new Set(['index.html','vector-base.js','flight-enrichment.js','ambient.js','ambient.css','ambient-media.js','look.js','track-core.js','track-history.js','track-history.css','units.js','account.js']);
+module.exports=http.createServer((req,res)=>{const u=new URL(req.url,'http://localhost'),send=(j,status=200)=>{res.writeHead(status,{'content-type':'application/json','x-doaa-fixture':'true','cache-control':'no-store'});res.end(JSON.stringify(j));};
+ if(u.pathname==='/api/track-history'){if(u.searchParams.get('fail'))return send({ok:false,error:'Fixture outage'},503);if(u.searchParams.get('candidates')){const candidate=u.searchParams.get('hex')==='c00002'?first:second;return send({ok:true,candidates:[{hex:candidate.hex,encounter_id:candidate.encounter.id,callsign:candidate.encounter.callsign,registration:candidate.observations[0].registration,...candidate.encounter,latitude:45.25,longitude:-75.8}]});}return send(u.searchParams.get('hex')==='c00002'?second:first);}
+ if(u.pathname==='/api/dossier')return send({ok:true,flight,airframe:{reg_number:'C-TEST',manufacturer:'Embraer',model:'E195-E2'},memory:{claims:[],identifiers:[],sources:[]},history:{encounter_count:1,observation_count:8,recent:[first.encounter],first_seen_at:first.encounter.first_seen_at,last_seen_at:first.encounter.last_seen_at},obv:[]});
+ if(u.pathname==='/api/flight')return send({ok:true,found:true,flight});
+ if(u.pathname==='/api/journey')return send({ok:true,chronology:[],legs:[]});
+ if(u.pathname==='/api/favorite')return send({ok:true,favorite:false});
+ if(u.pathname==='/api/ambient-media')return send({ok:true,media:[]});
+ if(u.pathname==='/api/airport-lookup')return send({ok:true,airport:u.searchParams.get('q')==='YHZ'?{icao:'CYHZ',iata:'YHZ',name:'Halifax Stanfield',lat:44.88,lon:-63.51}:airport,source:'OFFLINE FIXTURE'});
+ if(u.pathname==='/api/airport')return send({ok:true,icao:'CYOW',metar:null});
+ if(u.pathname==='/api/search')return send({ok:true,results:[]});
+ if(u.pathname==='/api/ops')return send({ok:true,usage:{},source:'OFFLINE FIXTURE'});
+ if(u.pathname==='/api/board')return send({ok:true,source:'OFFLINE FIXTURE',flights:[],nearby_aircraft_count:2,itinerary_count:0,inferred_count:0});
+ if(u.pathname.startsWith('/api/'))return send({ok:true,provider:'OFFLINE ACCEPTANCE FIXTURE',now:Date.now(),aircraft:[{hex:'c00001',flight:'TEST234',r:'C-TEST',t:'E295',lat:45.32,lon:-75.68,alt_baro:8000,gs:264,track:72,baro_rate:400,seen_pos:1}],tracks:{c00001:{firstSeen:epoch,lastSeen:Date.now(),points:first.observations.map(p=>({lat:p.latitude,lon:p.longitude,t:Date.parse(p.observed_at),alt:p.altitude_ft,gs:p.groundspeed_kt,track:p.track_deg}))}}});
+ const file=u.pathname==='/'?'index.html':u.pathname.slice(1);if(!assets.has(file)||!fs.existsSync(path.join(root,file))){res.writeHead(404);return res.end('Not found');}
+ let body=fs.readFileSync(path.join(root,file));if(file==='index.html')body=body.toString().replace('</body>','<div style="position:fixed;bottom:4px;left:4px;z-index:99999;background:#203d55;color:#fff;font:10px system-ui;padding:3px 6px;border-radius:8px;pointer-events:none">OFFLINE FIXTURE ACCEPTANCE</div></body>');
+ res.writeHead(200,{'content-type':file.endsWith('.html')?'text/html':file.endsWith('.css')?'text/css':'text/javascript','cache-control':'no-store','x-doaa-fixture':'true'});res.end(body);
+}).listen(4173,'127.0.0.1',()=>console.log('DOAA fixture acceptance http://127.0.0.1:4173'));

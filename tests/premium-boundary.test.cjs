@@ -7,7 +7,7 @@ const worker=fs.readFileSync('src/worker.js','utf8');
 const relay=fs.readFileSync('relay.js','utf8');
 function section(source,from,to){const a=source.indexOf(from),b=source.indexOf(to,a+from.length);assert(a>=0&&b>a,`missing section ${from}`);return source.slice(a,b)}
 test('Worker and relay parse as JavaScript',()=>{
- new vm.Script(worker.replace(/^import .*?;\s*/m,'').replace('export default{','const __worker={'));
+ new vm.Script(worker.replace(/^import .*?;\s*/gm,'').replace('export default ','const __worker='));
  new vm.Script(relay);
 });
 test('Inspector never invokes metered relay',()=>assert.doesNotMatch(section(worker,'async function dossierApi(','function claimAgeMs'),/\brelay\s*\(/));

@@ -2,3 +2,5 @@ dist/
 node_modules/
 .wrangler/
 .DS_Store
+.preview-package.json
+.dist-staging/
