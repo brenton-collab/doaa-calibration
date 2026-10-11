@@ -27,7 +27,7 @@
     if(liveReg===undefined)continue;
     // A current registration is authoritative for this encounter. A hex-only contact
     // may reuse the server's exact-airframe association without inventing a registration.
-    if((a.reg&&String(a.reg).toUpperCase()!==String(media.registration).toUpperCase())||(liveReg&&liveReg!==String(media.registration).toUpperCase()))continue;
+    if((a.reg&&String(a.reg).toUpperCase()!==String(media.registration).toUpperCase())||(a.reg&&!liveReg)||(liveReg&&liveReg!==String(media.registration).toUpperCase()))continue;
     if(typeof media.url!=='string'||!/^https:\/\/[^\s/]+\//i.test(media.url)||!media.license||!media.attribution)continue;
     window.dispatchEvent(new CustomEvent('doaa:airframe-media',{detail:media}));
    }
