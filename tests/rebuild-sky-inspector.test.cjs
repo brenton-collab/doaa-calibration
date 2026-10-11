@@ -102,3 +102,10 @@ test('Inspector Back retains the rendered object context',()=>{
  assert.match(source,/previous\.surface==='contact'/);
  assert.match(source,/aria-current/);
 });
+
+test('Inspector tab switches invalidate pending lookup navigation',()=>{
+ const source=fs.readFileSync(require('node:path').join(__dirname,'../flight-enrichment.js'),'utf8');
+ assert.match(source,/if\(b\.dataset\.trayDoaa===activeSurface\(d\)\)return/);
+ assert.match(source,/if\(z===activeSurface\(d\)\)return/);
+ assert.match(source,/if\(!current\(\)\|\|activeSurface\(d\)!=='flight'\)return/);
+});
