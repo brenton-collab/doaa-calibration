@@ -1,10 +1,8 @@
 // Account administration. All routes require gate() authentication before dispatch.
 // The configured original password user is the bootstrap administrator until role migration.
-import { hash } from './auth.mjs';
 const enc=new TextEncoder();
 const reply=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store'}});
 const nameOK=s=>typeof s==='string'&&/^[A-Za-z0-9][A-Za-z0-9._-]{2,63}$/.test(s);
-const validPassword=s=>typeof s==='string'&&s.length>=12&&s.length<=128;
 const randomPassword=()=>{const bytes=crypto.getRandomValues(new Uint8Array(24));return Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('');};
 const base64=b=>btoa(String.fromCharCode(...new Uint8Array(b))).replaceAll('+','-').replaceAll('/','_').replace(/=+$/,'');
 async function verifier(password){
@@ -32,10 +30,14 @@ async function readJson(request){
 }
 export async function accountAdminApi(request,env,user){
  const url=new URL(request.url),path=url.pathname;
- if(path!=='/api/admin/users'&&!path.startsWith('/api/admin/users/'))return null;
+ if(path!=='/api/admin/users'&&!path.startsWith('/api/admin/users/')&&path!=='/account/users')return null;
  if(!env.DB)return reply({ok:false,error:'Account storage unavailable'},503);
  const actor=await accountRole(env,user?.subject);
  if(actor?.role!=='admin')return reply({ok:false,error:'Administrator permission required'},403);
+ if(path==='/account/users'){
+  if(request.method!=='GET')return reply({ok:false,error:'Method not allowed'},405);
+  return env.ASSETS.fetch(new Request(new URL('/admin-users.html',request.url),request));
+ }
  if(path==='/api/admin/users'&&request.method==='GET'){
   const rows=await env.DB.prepare('SELECT username,role,created_at,changed_at,disabled_at,must_change_password FROM password_accounts ORDER BY username LIMIT 200').all();
   return reply({ok:true,users:(rows.results||[]).map(row=>({...row,role:row.username===env.DOAA_PASSWORD_USERNAME?'admin':row.role}))});
