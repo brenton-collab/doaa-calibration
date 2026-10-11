@@ -1,7 +1,7 @@
 /* Field Notes Light · SKY and Investigator. Deliberately scoped to primary workspace. */
 :root{--bg:#f4f3ee;--line:#d8dcd8;--cyan:#285f7d;--ice:#27343d;--muted:#65737b;--purple:#496b82;--amber:#986b30}
 html,body{background:var(--bg);color:var(--ice);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
-#tiles{filter:grayscale(.8) brightness(1.55) contrast(.78) saturate(.65);opacity:.78}
+#tiles{filter:none;opacity:.82}
 .top{padding:19px 22px 14px;background:linear-gradient(180deg,rgba(250,249,245,.97),rgba(250,249,245,.89) 74%,transparent);z-index:7}
 .brand{color:#607582;letter-spacing:.16em;font-size:10px}
 .title{font-size:27px;line-height:1.12;letter-spacing:-.045em;font-weight:650;color:#233540}
