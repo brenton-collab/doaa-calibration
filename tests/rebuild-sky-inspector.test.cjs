@@ -162,3 +162,13 @@ test('Flight related objects do not imply airframe assignment or link to self',(
  assert.match(source,/if\(flight&&context!=='flight'\)/);
  assert.match(source,/relatedObjects\(a,f,af,'flight'\)/);
 });
+
+test('Related-object Flight navigation identifies association as possible, not assigned',()=>{
+ const source=fs.readFileSync(require('node:path').join(__dirname,'../flight-enrichment.js'),'utf8');
+ const related=source.slice(source.indexOf('function relatedObjects('),source.indexOf('function rememberInspector('));
+ assert.match(related,/Possible flight association · not a confirmed assignment/);
+ assert.match(related,/if\(dep\)out\.push\(objectLink\('airport',dep/);
+ assert.match(related,/if\(arr\)out\.push\(objectLink\('airport',arr/);
+ assert.match(related,/context!=='flight'&&reg&&/);
+ assert.match(related,/if\(flight&&context!=='flight'\)/);
+});
