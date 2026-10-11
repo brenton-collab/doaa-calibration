@@ -111,7 +111,7 @@ test('acquisition and presentation reject false freshness',()=>{
  assert.match(html,/Number\(e\.data\.now\)>0/);
  assert.match(html,/aircraft:aircraft\.filter\(a=>!a\._pinned\)/);
  assert.match(html,/if\(seq!==refreshSeq\)return false;cellCache\.set/);
- assert.match(ambient,/const a = recent\?slideCandidate\(snapshot\):null/);
+ assert.match(ambient,/if\(!recent\(snapshot\)\)return \[\]/);
  assert.match(ambient,/if\(!recent\)trails\.clear\(\)/);
  assert.match(worker,/RELAY OBSERVATION TIME UNAVAILABLE OR TOO OLD/);
  assert.match(worker,/ADS-B observations not recent enough/);

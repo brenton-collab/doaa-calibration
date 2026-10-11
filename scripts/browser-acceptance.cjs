@@ -99,6 +99,10 @@ let base;
  ({page,context,state}=await session());
  await check('AMBIENT preloads during hold and atomically shows matching details',async()=>{
   const release=hold(state.photoHold,'c00002');await page.clock.install();await page.clock.pauseAt(new Date(Date.now()+1000));
+  await page.evaluate(()=>{
+   window.__slidePairs=[];
+   new MutationObserver(()=>{const reg=document.querySelector('.ambient-slide-reg')?.textContent,url=document.querySelector('.ambient-photo')?.style.backgroundImage;if(reg&&url)window.__slidePairs.push({reg,url})}).observe(document.querySelector('#doaa-ambient'),{attributes:true,childList:true,subtree:true});
+  });
   await page.locator('#ambient-open').click();await page.locator('[data-ambient-mode="SLIDES"]').click();
   await page.waitForFunction(()=>document.querySelector('.ambient-photo').style.backgroundImage.includes('c00001'));
   await screenshot(page,'desktop-slides');
@@ -107,11 +111,47 @@ let base;
   await page.clock.runFor(44000);assert.equal(await page.locator('.ambient-slide-reg').textContent(),'C-TEST');
   release();await page.clock.runFor(11000);await page.waitForFunction(()=>document.querySelector('.ambient-slide-reg').textContent==='C-DEMO');
   assert.ok(await page.locator('.ambient-slide-details').textContent().then(s=>s.includes('ALT UNKNOWN')&&s.includes('SPEED UNKNOWN')));
+  assert.ok(await page.evaluate(()=>window.__slidePairs.every(p=>p.url.includes(p.reg==='C-TEST'?'c00001':'c00002'))),'Image/details identity mismatch during transition');
  });
  await check('AMBIENT mode switch / resume retains verification and keyboard focus',async()=>{
   await page.locator('.ambient-switch').click();await page.locator('.ambient-switch').click();assert.equal(await page.locator('.ambient-count').textContent(),'PHOTO VERIFIED');
   assert.ok(await page.evaluate(()=>document.querySelector('#doaa-ambient').contains(document.activeElement)));
   await page.keyboard.press('Escape');assert.equal(await page.locator('#doaa-ambient').isVisible(),false);
+ });
+ await context.close();
+ ({page,context,state}=await session());
+ await check('Failed next image preserves the current photograph and details',async()=>{
+  state.photoFailed.add('c00002');await page.clock.install();await page.clock.pauseAt(new Date(Date.now()+1000));
+  await page.locator('#ambient-open').click();await page.locator('[data-ambient-mode="SLIDES"]').click();
+  await page.waitForSelector('.ambient-slide-reg');await page.waitForTimeout(100);await page.clock.runFor(50000);
+  assert.equal(await page.locator('.ambient-slide-reg').textContent(),'C-TEST');
+  assert.ok(await page.locator('.ambient-photo').evaluate(el=>el.style.backgroundImage.includes('c00001')));
+  assert.equal(await page.locator('.ambient-status').textContent(),'');
+  assert.equal(await page.locator('.ambient-count').textContent(),'PHOTO VERIFIED');
+ });
+ await context.close();
+ ({page,context,state}=await session());
+ await check('Late image is rejected after identity changes; stale observations clear current slide',async()=>{
+  const release=hold(state.photoHold,'c00002');
+  await page.locator('#ambient-open').click();await page.locator('[data-ambient-mode="SLIDES"]').click();await page.waitForSelector('.ambient-slide-reg');
+  await page.evaluate(()=>{
+   const s=window.DOAALiveSnapshot();s.aircraft=s.aircraft.map(a=>a.id==='c00002'?{...a,reg:'C-CHANGED'}:a);
+   window.__snapshot=s;window.DOAALiveSnapshot=()=>window.__snapshot;window.dispatchEvent(new Event('doaa:observations'));
+  });
+  release();await page.waitForTimeout(100);assert.equal(await page.locator('.ambient-slide-reg').textContent(),'C-TEST');
+  await page.evaluate(()=>{window.__snapshot.observedAt=Date.now()-100000;window.dispatchEvent(new Event('doaa:observations'))});
+  assert.equal(await page.locator('.ambient-photo').evaluate(el=>el.style.backgroundImage),'');
+  assert.equal(await page.locator('.ambient-count').textContent(),'');assert.ok(await page.locator('.ambient-slide-copy').textContent().then(s=>s.includes('Observations paused')));
+ });
+ await context.close();
+ ({page,context,state}=await session());
+ await check('Mode cancellation rejects a pending image and AMBIENT SKY remains explicit',async()=>{
+  const release=hold(state.photoHold,'c00002');await page.locator('#ambient-open').click();await page.locator('[data-ambient-mode="SLIDES"]').click();await page.waitForSelector('.ambient-slide-reg');
+  await page.locator('.ambient-switch').click();release();await page.waitForTimeout(100);
+  assert.equal(await page.evaluate(()=>window.DOAAAmbient.mode),'SKY');assert.equal(await page.locator('.ambient-slide').isVisible(),false);
+  await screenshot(page,'ambient-sky');
+  await page.keyboard.press('Tab');assert.ok(await page.evaluate(()=>document.querySelector('#doaa-ambient').contains(document.activeElement)));
+  await page.keyboard.press('Escape');assert.equal(await page.evaluate(()=>document.activeElement.id),'ambient-open');
  });
  await context.close();
  await check('No browser runtime errors or mutation requests',async()=>{assert.deepEqual(report.pageErrors,[]);assert.ok(report.requests.every(r=>r.method==='GET'))});

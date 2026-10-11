@@ -68,7 +68,7 @@ test('slides receive only already-reconciled exact-airframe Inspector media',()=
 
 test('slides never invent absent altitude or groundspeed and reject non-HTTPS photo URLs',()=>{
  assert.match(ambient,/ALT UNKNOWN/);
- assert.match(ambient,/GS UNKNOWN/);
+ assert.match(ambient,/SPEED UNKNOWN/);
  assert.match(ambient,/\^https:/);
  assert.doesNotMatch(ambient,/Math\.round\(Number\(a\.alt\)\|\|0\)/);
 });

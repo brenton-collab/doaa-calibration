@@ -4,6 +4,9 @@
   const root = document.createElement('section');
   root.id = 'doaa-ambient';
   root.setAttribute('aria-label', 'Ambient aviation display');
+  root.setAttribute('role', 'dialog');
+  root.setAttribute('aria-modal', 'true');
+  root.tabIndex = -1;
   root.hidden = true;
   root.innerHTML = `<canvas class="ambient-canvas" aria-hidden="true"></canvas>
     <div class="ambient-vignette"></div>
@@ -24,7 +27,9 @@
   let mode = safeStorage('doaa.ambient.mode', 'SKY') === 'SLIDES' ? 'SLIDES' : 'SKY';
   let idleEnabled = safeStorage('doaa.ambient.idle', 'off') === 'on';
   let active = false, lastInteraction = Date.now(), lastSlideId = '', pendingSlideId = '', slideChangedAt = 0;
-  let lastFrame = 0, lastSignature = '', lastObservationAt = 0, lastCandidates = [];
+  let lifecycle = 0, prepared = null, displayed = null, returnFocus = null;
+  const backgroundInert = new Map();
+  const HOLD_MS = 45000;
   const idleMs = 5 * 60 * 1000;
   const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   const data = () => window.DOAALiveSnapshot?.() || { aircraft: [], observedAt: 0, home: null, provider: 'UNAVAILABLE' };
@@ -35,28 +40,38 @@
   }
   function enter() {
     if (active) return;
+    returnFocus = document.activeElement;
     active = true;
+    lifecycle++;
+    for (const el of document.body.children) if (el !== root) {backgroundInert.set(el, el.inert);el.inert = true;}
+    window.setPrimaryView?.('SKY');
     root.hidden = false;
     document.documentElement.classList.add('ambient-active');
     choice.classList.remove('show');
-    lastFrame = 0;
     trails.clear();
+    root.focus({preventScroll:true});
     update();
     window.dispatchEvent(new Event('doaa:ambient-enter'));
   }
   function leave() {
     if (!active) return;
     active = false;
-    pendingSlideId = '';
+    cancelPreload();
+    lifecycle++;
+    for (const [el, inert] of backgroundInert) el.inert = inert;
+    backgroundInert.clear();
     root.hidden = true;
     document.documentElement.classList.remove('ambient-active');
     lastInteraction = Date.now();
+    const target = returnFocus?.isConnected && returnFocus.getClientRects().length && !returnFocus.closest('.ambient-controls') ? returnFocus : document.getElementById('ambient-open');
+    target?.focus({preventScroll:true});
   }
   function choose(next) {
     if (next !== 'SKY' && next !== 'SLIDES') return;
     mode = next;
     store('doaa.ambient.mode', mode);
-    pendingSlideId = '';
+    cancelPreload();
+    lifecycle++;
     updateButtons();
     syncSwitcher();
     enter();
@@ -78,8 +93,17 @@
   // Persistent strokes accumulate from actual observed movement, never simulated traffic.
   const trails = new Map();
   const verifiedMedia = new Map();
-  const failedPhotos = new Set();
-  window.addEventListener('doaa:airframe-media', event => {const m=event.detail||{};if(m.id&&/^https:\/\//i.test(String(m.url||''))&&m.registration&&m.license&&m.attribution)verifiedMedia.set(String(m.id).toLowerCase(),{...m,seenAt:Date.now()});});
+  const failedPhotos = new Map();
+  window.addEventListener('doaa:airframe-media', event => {
+    const m=event.detail||{};
+    if(m.id&&/^https:\/\//i.test(String(m.url||''))&&m.registration&&m.license&&m.attribution) {
+      const key=String(m.id).toLowerCase();
+      verifiedMedia.delete(key);
+      verifiedMedia.set(key,{...m,seenAt:Date.now()});
+      while(verifiedMedia.size>128)verifiedMedia.delete(verifiedMedia.keys().next().value);
+      if(active&&mode==='SLIDES')update();
+    }
+  });
   let lastDrawAt = 0;
   function drawSky(snapshot) {
     const {w,h} = dimensions();
@@ -147,60 +171,98 @@
     count.textContent='';
     lastDrawAt=t;
   }
-  function slideCandidate(snapshot) {
-    // Only exact-airframe media already reconciled by an Inspector is eligible.
-    // No image searches or new provider calls are made during composition changes.
-    const available = (snapshot.aircraft||[]).filter(usable).map(a=>{
+  function recent(snapshot) {
+    const observed=Number(snapshot.observedAt)||0;
+    return observed>0 && Date.now()>=observed && Date.now()-observed<90000;
+  }
+  const identity = a => [String(a.id).toLowerCase(),String(a.reg).toUpperCase(),a.photo.url].join('|');
+  function slideCandidates(snapshot) {
+    if(!recent(snapshot))return [];
+    for(const [url, at] of failedPhotos)if(Date.now()-at>=120000)failedPhotos.delete(url);
+    return (snapshot.aircraft||[]).filter(usable).map(a=>{
       const media=verifiedMedia.get(String(a.id).toLowerCase());
       if(!media || failedPhotos.has(media.url) || !a.reg || String(media.registration).toUpperCase()!==String(a.reg).toUpperCase())return null;
-      return {...a,photo:{url:media.url,registration:media.registration,license:media.license,attribution:media.attribution,page:media.page}};
+      return {...a,photo:media};
     }).filter(Boolean);
-    if(!available.length)return null;
-    const previous=available.find(a=>[a.id,a.photo.url].join('|')===lastSlideId);
-    const held=previous&&Date.now()-slideChangedAt<45000;
-    const next=held?previous:available[(available.indexOf(previous)+1)%available.length];
-    lastCandidates=available.map(a=>a.id);
-    return next;
+  }
+  function cancelPreload() {
+    if(prepared){prepared.image.onload=null;prepared.image.onerror=null;}
+    prepared=null;
+    pendingSlideId='';
+  }
+  const number = (value, suffix, unknown) => value!=null&&value!==''&&Number.isFinite(Number(value))?Math.round(Number(value)).toLocaleString()+suffix:unknown;
+  function slideCopy(a, snapshot) {
+    const f=a.flight||{},airframe=a.airframe||{};
+    const type=airframe.model||a.type||'Aircraft type unconfirmed';
+    const service=[a.operator,f.flight_iata||f.flight_icao||a.call].filter(Boolean).join(' · ');
+    const route=(f.dep_iata||f.dep_icao)&&(f.arr_iata||f.arr_icao)?(f.dep_iata||f.dep_icao)+' → '+(f.arr_iata||f.arr_icao):'';
+    const telemetry=[number(a.alt,' FT','ALT UNKNOWN'),number(a.gs,' KT','SPEED UNKNOWN'),number(a.trk,'° TRACK','TRACK UNKNOWN')].join(' · ');
+    const observed=Number(a.observedAt)||Number(snapshot.observedAt);
+    const time=Number.isFinite(observed)?new Date(observed).toISOString().slice(11,19)+'Z':'TIME UNKNOWN';
+    return '<div class="ambient-slide-reg">'+escapeHtml(a.reg)+'</div><div class="ambient-slide-type">'+escapeHtml(type)+'</div>'+
+      (service?'<div class="ambient-slide-service">'+escapeHtml(service)+'</div>':'')+
+      (route?'<div class="ambient-slide-route">'+escapeHtml(route)+'</div>':'')+
+      '<div class="ambient-slide-details">'+escapeHtml(telemetry)+'</div><div class="ambient-slide-observed">OBSERVED '+escapeHtml(time)+'</div>'+
+      '<div class="ambient-slide-credit">'+escapeHtml(a.photo.attribution)+' · '+escapeHtml(a.photo.license)+'</div>';
+  }
+  function display(a, snapshot) {
+    displayed={signature:identity(a),id:a.id,registration:a.reg,url:a.photo.url};
+    lastSlideId=displayed.signature;
+    slideChangedAt=Date.now();
+    // Both assignments happen in the same task after load AND decode. No mixed-airframe frame.
+    photo.style.backgroundImage='url('+JSON.stringify(String(a.photo.url))+')';
+    copy.innerHTML=slideCopy(a,snapshot);
+    count.textContent='PHOTO VERIFIED';
+    cancelPreload();
+  }
+  function preload(a) {
+    if(!a)return cancelPreload();
+    const signature=identity(a);
+    if(prepared?.signature===signature)return;
+    cancelPreload();
+    const image=new Image(),generation=lifecycle;
+    const pending=prepared={signature,image,ready:false};
+    pendingSlideId=signature;
+    image.onload=async()=>{
+      try{if(image.decode)await image.decode();}catch{fail();return;}
+      if(prepared!==pending||generation!==lifecycle||!active||mode!=='SLIDES')return;
+      // Reread current identity, media and freshness after asynchronous decoding.
+      if(!slideCandidates(data()).some(v=>identity(v)===signature)){cancelPreload();update();return;}
+      pending.ready=true;
+      update();
+    };
+    function fail(){
+      if(prepared!==pending||generation!==lifecycle||!active||mode!=='SLIDES')return;
+      failedPhotos.set(a.photo.url,Date.now());
+      while(failedPhotos.size>128)failedPhotos.delete(failedPhotos.keys().next().value);
+      cancelPreload();
+      update();
+    }
+    image.onerror=fail;
+    image.src=a.photo.url;
   }
   function drawSlides(snapshot) {
-    const stamp=Number(snapshot.observedAt)||0;
-    const recent=stamp>0&&Date.now()>=stamp&&Date.now()-stamp<90000;
-    const a = recent?slideCandidate(snapshot):null;
-    slide.hidden = false;
-    canvas.hidden = true;
+    const available=slideCandidates(snapshot);
+    slide.hidden=false;canvas.hidden=true;
     root.classList.add('ambient-slides-mode');
-    if (!a) {
-      pendingSlideId = '';
-      lastSlideId = '';
-      photo.style.backgroundImage = '';
-      copy.innerHTML = recent?'<div class="ambient-empty-title">Watching for an identified airframe</div><p>No exact-aircraft photograph has been verified in this session. Ambient Slides will not substitute an unrelated aircraft image.</p>':'<div class="ambient-empty-title">Observations paused</div><p>Waiting for recent aircraft observations before displaying verified photographs.</p>';
-      count.textContent = '';
-      return;
+    const current=displayed&&available.find(a=>identity(a)===displayed.signature);
+    if(!current){
+      displayed=null;lastSlideId='';count.textContent='';photo.style.backgroundImage='';
+      copy.innerHTML=available.length?'':recent(snapshot)?'<div class="ambient-empty-title">Watching for an identified airframe</div><p>No exact-aircraft photograph has been verified in this session. Ambient Slides will not substitute an unrelated aircraft image.</p>':'<div class="ambient-empty-title">Observations paused</div><p>Waiting for recent aircraft observations before displaying verified photographs.</p>';
+    } else {
+      // Refresh actual aviation facts without interrupting the displayed image or hold.
+      const html=slideCopy(current,snapshot);
+      if(copy.innerHTML!==html)copy.innerHTML=html;
+      count.textContent='PHOTO VERIFIED';
     }
-    const signature = [a.id,a.photo.url].join('|');
-    if (signature === lastSlideId || signature === pendingSlideId) return;
-    pendingSlideId = signature;
-    const image = new Image();
-    image.onload = () => {
-      if (pendingSlideId !== signature) return;
-      pendingSlideId = '';
-      if (!active || mode !== 'SLIDES') return;
-      const current = data();
-      const observed = Number(current.observedAt)||0;
-      if (!(observed>0 && Date.now()>=observed && Date.now()-observed<90000) || !(current.aircraft||[]).some(v=>String(v.id)===String(a.id) && String(v.reg||'').toUpperCase()===String(a.reg).toUpperCase())) {update();return;}
-      lastSlideId = signature;
-      slideChangedAt = Date.now();
-      photo.style.backgroundImage = 'url('+JSON.stringify(String(a.photo.url))+')';
-      copy.innerHTML = '<div class="ambient-slide-reg">'+escapeHtml(a.reg)+'</div><div class="ambient-slide-type">'+escapeHtml(a.type||'Aircraft type unconfirmed')+'</div><div class="ambient-slide-details">'+escapeHtml(a.call||'')+' · '+escapeHtml(a.alt!=null&&a.alt!==''&&Number.isFinite(Number(a.alt))?Math.round(Number(a.alt))+' FT':'ALT UNKNOWN')+' · '+escapeHtml(a.gs!=null&&a.gs!==''&&Number.isFinite(Number(a.gs))?Math.round(Number(a.gs))+' KT':'SPEED UNKNOWN')+'</div><div class="ambient-slide-credit">'+escapeHtml(a.photo.attribution)+' · '+escapeHtml(a.photo.license)+'</div>';
-      count.textContent = 'PHOTO VERIFIED';
-    };
-    image.onerror = () => {
-      failedPhotos.add(a.photo.url);
-      if (pendingSlideId !== signature) return;
-      pendingSlideId = '';
-      if (active && mode === 'SLIDES') update();
-    };
-    image.src = a.photo.url;
+    if(!available.length){cancelPreload();return;}
+    const next=current?available[(available.indexOf(current)+1)%available.length]:available[0];
+    if(current&&identity(next)===displayed.signature){cancelPreload();return;}
+    if(prepared?.ready&&prepared.signature===identity(next)&&(!current||Date.now()-slideChangedAt>=HOLD_MS)){
+      display(next,snapshot);
+      const following=available[(available.indexOf(next)+1)%available.length];
+      if(identity(following)!==displayed.signature)preload(following);
+    } else preload(next);
   }
   function update() {
     if (!active) return;
@@ -221,15 +283,23 @@
   }
   function heartbeat() {
     if (document.hidden) return;
-    if (!active && idleEnabled && Date.now()-lastInteraction>=idleMs) enter();
+    if (!active && idleEnabled && Date.now()-lastInteraction>=idleMs && !document.querySelector('.detail.show,.catchment.show,.quota-panel.open')) enter();
     if (active) update();
   }
   root.querySelector('.ambient-return').addEventListener('click',leave);
   switcher.addEventListener('click',()=>choose(mode==='SKY'?'SLIDES':'SKY'));
   function syncSwitcher(){switcher.textContent=mode==='SKY'?'SLIDES ↗':'SKY ↗';}
   syncSwitcher();
-  root.addEventListener('pointerdown',event=>{if (!event.target.closest('button')) leave();});
-  root.addEventListener('keydown',event=>{if(event.key==='Escape')leave();});
+  root.addEventListener('pointerdown',event=>{if (!event.target.closest('button,a')) leave();});
+  root.addEventListener('keydown',event=>{
+    if(event.key==='Escape'){event.stopPropagation();leave();}
+    if(event.key==='Tab'){
+      const controls=[...root.querySelectorAll('button,a[href]')].filter(el=>el.getClientRects().length);
+      const first=controls[0],last=controls[controls.length-1];
+      if(event.shiftKey&&(document.activeElement===first||document.activeElement===root)){event.preventDefault();last?.focus();}
+      else if(!event.shiftKey&&(document.activeElement===last||document.activeElement===root)){event.preventDefault();first?.focus();}
+    }
+  });
   choice.querySelectorAll('[data-ambient-mode]').forEach(el=>el.addEventListener('click',()=>choose(el.dataset.ambientMode)));
   choice.querySelector('[data-ambient-idle]').addEventListener('click',()=>{idleEnabled=!idleEnabled;store('doaa.ambient.idle',idleEnabled?'on':'off');lastInteraction=Date.now();updateButtons();});
   document.addEventListener('pointerdown',event=>{if (!active && !event.target.closest('.ambient-controls')) lastInteraction=Date.now();},{passive:true});
@@ -238,6 +308,7 @@
   document.addEventListener('wheel',()=>{if(!active)lastInteraction=Date.now();},{passive:true});
   document.addEventListener('touchmove',()=>{if(!active)lastInteraction=Date.now();},{passive:true});
   document.addEventListener('visibilitychange',()=>{lastInteraction=Date.now();if(!document.hidden&&active)update();});
+  window.addEventListener('doaa:observations',()=>{if(active)update();});
   window.addEventListener('resize',()=>{if(active)update();});
   window.DOAAAmbient={enter,leave,choose,openSettings:()=>choice.classList.toggle('show'),get mode(){return mode;},get active(){return active;}};
   updateButtons();

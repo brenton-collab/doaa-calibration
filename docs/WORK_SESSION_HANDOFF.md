@@ -45,3 +45,11 @@ Each entry: timestamp | commit SHA | feature/fix | tests (with environment) | re
 ## Release/rollback status
 NOT ACCEPTED; NOT MERGED; NOT DEPLOYED.
 If Work becomes unavailable, inspect commits on `work/doaa-acceptance-2026-10-10` against `7784868d5052318cba0dbfdc5501f0c60174f514`. Reuse passing commits selectively or discard this branch. The recovery reference and original integration branch remain the independent starting point.
+
+### Increment 1 — uninterrupted AMBIENT lifecycle (2026-10-11 UTC)
+- Baseline harness/ledger commit: `d1037ea519619970cc7b577140cb90a040fbb6ff`. Implementation SHA will be recorded by the following increment.
+- Next exact-airframe image now loads and decodes during the current hold; successful display starts its own 45-second minimum. Image, registration and details switch together; telemetry updates from the current snapshot without changing the image. Invalid/stale identity clears the display honestly. Failed replacements retain the eligible current image and receive a bounded two-minute retry exclusion. Media/failure caches are capped at 128 entries.
+- Async callbacks are owned by a lifecycle generation and pending image object. Switching mode/exiting cancels callbacks; resuming restores verification only for the already loaded, still-eligible image. AMBIENT has keyboard focus, background inertness, Tab containment and Escape return. Idle entry defers while Inspector/settings/usage is open.
+- Added responsive image-to-information gradient, observed-time readout, and landscape layout. No per-slide provider requests.
+- Native offline suite: **72/72 pass**. Updated two obsolete source-shape assertions only after actual browser evidence confirmed unknown speed and stale-observation rejection.
+- Actual Chromium: **9/14 checks pass**; all five AMBIENT cases pass (preload during hold, 44-second retention, atomic swap, failed image retention, late identity rejection/stale clearing, cancellation, explicit SKY, keyboard and resume). Five previously reproduced Inspector/BOARD/mobile defects remain and are the next increment. External maps and real photographs remain unverified.
