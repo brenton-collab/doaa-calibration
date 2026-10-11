@@ -75,3 +75,8 @@ Important remaining issues: track drawing is observation-history only while the 
 - Commit ef2d2ee stages and validates curated frontend assets before replacing dist; an invalid/missing source no longer destroys the previous local dist.
 - Node 22 local isolated checks of the exact updated builder logic: syntax passed, missing-source failure preserved prior dist sentinel, and complete seven-file synthetic fixture successfully replaced dist. These are **builder-specific tests using synthetic assets**, not full repository tests or browser acceptance.
 - Direct GitHub clone still fails DNS resolution in execution container. Connected GitHub API can enumerate and fetch files but does not directly mount a checkout. Full native suite, real browser and Cloudflare acceptance remain open. Production untouched.
+
+## 2026-10-10 — SLIDES truthfulness hardening
+- Commit 9454861 prevents absent altitude and groundspeed from rendering as zero in AMBIENT SLIDES, and rejects non-HTTPS incoming media URLs.
+- Commit 4c8a442 adds source-contract regression assertions for these conditions.
+- GitHub connector inspection confirmed test and source edits were committed; new assertions have not been executed in native Node, and browser acceptance remains open. No provider requests, D1 writes, merge or deploy.
