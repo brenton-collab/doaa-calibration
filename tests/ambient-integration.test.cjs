@@ -72,3 +72,12 @@ test('slides never invent absent altitude or groundspeed and reject non-HTTPS ph
  assert.match(ambient,/\^https:/);
  assert.doesNotMatch(ambient,/Math\.round\(Number\(a\.alt\)\|\|0\)/);
 });
+
+test('ambient excludes absent and invalid coordinates from aircraft and home projection',()=>{
+ assert.match(ambient,/a\.lat != null && a\.lat !== ''/);
+ assert.match(ambient,/a\.lon != null && a\.lon !== ''/);
+ assert.match(ambient,/Math\.abs\(Number\(a\.lat\)\) <= 90/);
+ assert.match(ambient,/Math\.abs\(Number\(a\.lon\)\) <= 180/);
+ assert.match(ambient,/home\.lat != null && home\.lat !== ''/);
+ assert.match(ambient,/home\.lon != null && home\.lon !== ''/);
+});
