@@ -301,3 +301,8 @@ Flight lookup identity removed from related Airframe labels. ICAO24 is the fallb
 - Contact title now uses observed callsign or ICAO24 (`b4f4577`). Contact registration and type exclude Flight lookup fallbacks (`3c8c282`, `7cb6012`).
 - Regression committed (`bb7af42`, `9da6855`); executed Inspector suite in isolated V8 with test/fs/assert adapters: 33 cases passed, 104 assertions.
 - Native Node/browser navigation remains unverified. No deployment or infrastructure changes.
+
+## Inspector navigation invalidation
+- Airport movement → Flight now increments the Inspector navigation generation before rendering (`14b82c2`), preventing older asynchronous lookups from updating a newer surface.
+- Source regression (`1b39632`) and isolated V8 Inspector suite rerun: 34 passing cases, 107 assertions.
+- Browser back-navigation and full asynchronous journey still require integration verification; no deployment or paid CI.
