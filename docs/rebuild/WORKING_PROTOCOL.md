@@ -310,3 +310,8 @@ Flight lookup identity removed from related Airframe labels. ICAO24 is the fallb
 ## Live-data verification boundary
 - Live external aviation API testing was requested. The public Render relay was not reachable through the available read-only web fetch; no live response was obtained or validated. Render connector requires explicit workspace selection before account resources can be inspected. Do not report live-data tests as passed.
 - Added back-navigation state regression (`bbc688a`); isolated V8 Inspector suite passed 35 cases, 111 assertions. Native Node/browser and live source testing remain pending.
+
+## Relay read-only inspection
+- Confirmed the sole Render workspace contains the existing free-plan `doaa-adsb-relay` service, tracking `main`, with application startup logs on October 11. No deploy or service changes.
+- Relay supports `/health` and `/traffic`, with ADSB.FI, ADSB.ONE, and ADSB.LOL fallback. HTTP probe from available execution environment failed DNS resolution; no live payload was validated. Render request logs were empty for the queried period.
+- Removed duplicate movement-workspace disposal on Inspector surface transitions (`27d7121`). Regression addition attempted but blocked; follow up when writes permit.
