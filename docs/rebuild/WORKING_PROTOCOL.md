@@ -319,3 +319,8 @@ Flight lookup identity removed from related Airframe labels. ICAO24 is the fallb
 ## Navigation regression gate
 - Added regression covering exactly one movement-workspace disposal per Inspector surface transition (`6b3271c`). Isolated V8 Inspector suite passed 36 tests and 112 assertions against committed sources. This is not browser integration verification.
 - Priority remains complete SKY → Contact → Airframe → Flight → Back journeys, asynchronous race behavior, and then release-quality UI. Live relay response remains unverified; no production changes.
+
+## Browser smoke-testing gate (October 11)
+- Local execution environment has Chromium, Playwright, and Node. Direct outbound GitHub/Render DNS is unavailable, so no browser test of the assembled app has yet run. GitHub connector can read branch files, but those files are not automatically available to the local browser environment.
+- Late dossier navigation guard committed (`4c3bc7b`) with regression (`5f37835`). Inspector source suite passed 37 cases / 113 assertions. Browser-level SKY → Contact → Airframe → Flight → Back remains open.
+- Prefer assembling a local read-only app copy and running browser smoke tests before any preview deployment. Keep the existing Render relay and `main` untouched.
