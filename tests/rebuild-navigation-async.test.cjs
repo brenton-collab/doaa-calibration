@@ -146,3 +146,26 @@ test('Contact to Airframe to Back preserves the original context', async () => {
   assert.equal(h.d.scrollTop, 19);
   assert.equal(h.d._doaaBack.length, 0);
 });
+
+test('SKY encounter selection does not disturb selection for a missing encounter', () => {
+  const html = fs.readFileSync(path.join(__dirname, '../index.html'), 'utf8');
+  const start = html.indexOf('function selectEncounter(id){');
+  const end = html.indexOf('\nfunction segDist(', start);
+  assert.ok(start >= 0 && end > start);
+  const selected = { id: 'prior', follow: false };
+  const context = {
+    detail: { dataset: {} },
+    detailclose: { setAttribute() {} },
+    encounterSnapshot() { return null; },
+    tracks: new Map(),
+    openDetail() { throw Error('should not open'); },
+    set selected(value) { selected.id = value; },
+    get selected() { return selected.id; },
+    set followSelected(value) { selected.follow = value; },
+    get followSelected() { return selected.follow; },
+  };
+  const selectEncounter = vm.runInNewContext(html.slice(start, end) + '\nselectEncounter', context);
+  selectEncounter('missing');
+  assert.equal(selected.id, 'prior');
+  assert.equal(selected.follow, false);
+});
