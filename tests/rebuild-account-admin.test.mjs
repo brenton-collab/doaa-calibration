@@ -77,4 +77,6 @@ test('administrator page is served from bundled HTML only after role check',asyn
  const result=await accountAdminApi(req('https://doaa.example/account/users'),environment,{subject:'password:owner'});
  assert.equal(result.status,200);
  assert.equal(await result.text(),'protected');
+ assert.equal(result.headers.get('cache-control'),'private, no-store');
+ assert.match(result.headers.get('content-security-policy'),/frame-ancestors 'none'/);
 });
