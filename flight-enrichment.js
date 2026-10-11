@@ -23,7 +23,7 @@ async function openObject(d,p,a,f,af,live,ago,dossier,history,obv){rememberInspe
 function grid(c){return '<div>'+c.join('')+'</div>'}
 function tabs(items){return '<div style="display:flex;gap:14px;margin-top:14px;border-top:1px solid #153244;padding-top:9px;flex-wrap:wrap">'+items.map(x=>'<button data-doaa="'+x[1]+'" style="border:0;background:transparent;color:#62ddff;font:10px ui-monospace;padding:3px 0">'+esc(x[0])+'</button>').join('')+'</div>'}
 function statusTone(f){const d=+(f?.arr_delayed??f?.dep_delayed??f?.delayed??0),s=String(f?.status||'').toUpperCase();if(/CANCEL|DIVERT/.test(s))return'#ff6b6b';if(d>4)return'#ffc061';return'#74d99f'}
-function section(label,content,open=true){return '<div style="margin-top:7px"><div style="color:#62ddff;font:9px ui-monospace;letter-spacing:.08em;margin-bottom:3px">'+esc(label)+'</div>'+content+'</div>'}
+function section(label,content,open=true){return '<section class="fn-inspector-section" aria-label="'+esc(label)+'"><h3 class="fn-inspector-section-title">'+esc(label)+'</h3>'+content+'</section>'}
 function rows(lines){return cells(lines)}
 function columns(html){return '<div>'+html+'</div>'}
 function logoUrl(f){const code=String(f?.airline_iata||'').trim().toUpperCase();return code?'https://images.kiwi.com/airlines/64/'+encodeURIComponent(code)+'.png':''}
