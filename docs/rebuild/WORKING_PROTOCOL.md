@@ -177,3 +177,10 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `74727ad` introduces a Contact-specific four-reading summary (altitude, groundspeed, ground track, position age) with expandable detailed observations; `3854487` wires it into Contact Overview and `7341e78` styles it responsively.
 - `7642584` explicitly distinguishes recent, historical, unknown-time and future-time observation status above the readings; `40d3209` styles that status; `f382851` adds source-level regression coverage.
 - These are implementation commits, not visual verification. Browser/live testing remains deferred and automated tests have not been executed. No deployment or paid infrastructure changes.
+
+## Inspector navigation containment (2026-10-11)
+- `26bf12f`: traffic refresh now redraws only Contact Overview, not a navigated Flight or Airframe dossier.
+- `abc0a81`: related Airframe navigation uses the shared Inspector renderer.
+- `e1adc5c`: asynchronous enrichment is ignored if the active Inspector surface is no longer Contact, in addition to existing generation and navigation checks.
+- Related-object control commits from preceding pass: `5bee97f`, `6b7e2c1`, `46f3815`, `542a4a8`.
+- These fixes are not browser-verified. Regression assertions for this navigation containment remain outstanding due to a blocked write. No deployment or paid resource use.
