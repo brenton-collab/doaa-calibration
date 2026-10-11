@@ -1,6 +1,6 @@
 // Rebuild contract: selection must not erase the surrounding traffic picture.
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs');
-const html=fs.readFileSync(new URL('../index.html',import.meta.url),'utf8');
+const html=fs.readFileSync(require('node:path').join(__dirname,'../index.html'),'utf8');
 test('SKY keeps unselected aircraft visible during inspection',()=>{
  assert.match(html,/ctx\.arc\(0,0,12,0,Math\.PI\*2\)/);
  assert.match(html,/ctx\.globalAlpha=rackSearchResults\?\(sm\?1:\.38\):1/);
