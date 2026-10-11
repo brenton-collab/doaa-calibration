@@ -96,8 +96,15 @@ test('Inspector live classification excludes pinned and aging aircraft',()=>{
  assert.match(src,/!x\._pinned/);
  assert.match(src,/Date\.now\(\)>=now/);
  assert.match(html,/const a=\{_pinned:true,id:id\|\|\('board:/);
+ assert.match(html,/if\(!a\._pinned\)drawTrack/);
+ assert.match(html,/if\(a\._pinned\)ctx\.globalAlpha\*=\.42/);
 });
 
+test('BOARD ignores superseded responses for the same airport',()=>{
+ assert.match(html,/let boardRequestSeq=0/);
+ assert.match(html,/requestSeq=\+\+boardRequestSeq/);
+ assert.match(html,/requestSeq!==boardRequestSeq/);
+});
 test('acquisition and presentation reject false freshness',()=>{
  assert.match(html,/Number\(e\.data\.now\)>0/);
  assert.match(html,/aircraft:aircraft\.filter\(a=>!a\._pinned\)/);
