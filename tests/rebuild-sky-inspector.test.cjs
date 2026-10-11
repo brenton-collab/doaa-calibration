@@ -154,3 +154,11 @@ test('Flight Explore suppresses inferred airframe links',()=>{
  assert.ok(source.includes("context!=='flight'&&reg"));
  assert.ok(source.includes("relatedObjects(a,f,af,'flight')"));
 });
+
+test('Flight related objects do not imply airframe assignment or link to self',()=>{
+ const source=fs.readFileSync(require('node:path').join(__dirname,'../flight-enrichment.js'),'utf8');
+ assert.match(source,/function relatedObjects\(a,f,af,context='contact'\)/);
+ assert.match(source,/context!=='flight'&&reg&&/);
+ assert.match(source,/if\(flight&&context!=='flight'\)/);
+ assert.match(source,/relatedObjects\(a,f,af,'flight'\)/);
+});
