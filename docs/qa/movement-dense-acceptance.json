@@ -1,13 +1,13 @@
 {
-  "date": "2026-10-11T17:59:36.276Z",
+  "date": "2026-10-11T18:12:45.497Z",
   "browser": "151.0.7922.34",
   "data": "Offline deterministic published schedule fixtures; never provider availability or acceptance",
   "files": {
-    "index.html": "4635d31dc26c021839dc91ab08f7bf8fed34033e3e17ea7d7530e04d29b2e9e1",
+    "index.html": "6ce70cc3de31bd967840a433a194766e817030b534a229b47976e3930eeedbc1",
     "flight-enrichment.js": "5d4cc272645b35296bc0a0d5c13f485ea6260c782c483a9fbbcf3816fc5344c9",
     "movement-core.js": "27b0b4cc8bd71f602af1090e2b1b06658c21b77865e8378b621fadb4c54f99eb",
     "movement-workspace.js": "f67b621add3b203c50157cb55478a7e814c19d4c4f130b146d4d5e0225fbb0f8",
-    "movement-workspace.css": "ac4753d41e7a3efa01f1fc86e3502f546ee2aa20c2fe736e42b7acb87f358f87"
+    "movement-workspace.css": "623076b3792b6609496852ddf79a81ae892b7a5dff20984ab0c81743a87fe033"
   },
   "viewports": [
     {
@@ -82,6 +82,5 @@
       ],
       "errors": []
     }
-  ],
-  "qualification": "Final-source four-viewport offline browser execution. All recorded source hashes matched. No live-provider, authenticated Preview or physical-device acceptance. Screenshots inspected; short landscape uses deliberate content scrolling."
+  ]
 }

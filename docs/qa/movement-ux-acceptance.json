@@ -1,15 +1,15 @@
 {
-  "date": "2026-10-11T17:59:14.622Z",
+  "date": "2026-10-11T18:12:22.329Z",
   "browser": "151.0.7922.34",
   "data": "Offline deterministic fixtures, never provider acceptance",
   "files": {
-    "index.html": "4635d31dc26c021839dc91ab08f7bf8fed34033e3e17ea7d7530e04d29b2e9e1",
+    "index.html": "6ce70cc3de31bd967840a433a194766e817030b534a229b47976e3930eeedbc1",
     "flight-enrichment.js": "5d4cc272645b35296bc0a0d5c13f485ea6260c782c483a9fbbcf3816fc5344c9",
     "flight-core.js": "51b9a3a7e4bfb4e33641293daefa179a190b80890c0c96dde7b33d6c5903571c",
     "inspector-flight.js": "fa87b3c337761c0e9419d8bbd0981350da246d7f6ca09191fccf4df1c9a7cf8d",
     "movement-core.js": "27b0b4cc8bd71f602af1090e2b1b06658c21b77865e8378b621fadb4c54f99eb",
     "movement-workspace.js": "f67b621add3b203c50157cb55478a7e814c19d4c4f130b146d4d5e0225fbb0f8",
-    "movement-workspace.css": "ac4753d41e7a3efa01f1fc86e3502f546ee2aa20c2fe736e42b7acb87f358f87",
+    "movement-workspace.css": "623076b3792b6609496852ddf79a81ae892b7a5dff20984ab0c81743a87fe033",
     "track-history.js": "5e0f7c4657ccc4a891318fee1c29f1052d867556bc4b63897f3dd23c582f97f8",
     "track-core.js": "6e5bb098e9460f9ab76418f4099dc5528b7f49e070794ce0c552ec8ec9aa37d0",
     "track-history.css": "45a23a33d4677f260ff4d849699d76a4b8fb06357fea4dd2565c08cf4634e6c7",
@@ -18,7 +18,7 @@
     "units.js": "731a236ffd85ceaded9b4e054c85be93d22f1fbe80ab192c36528834da95aaf0",
     "catchment-core.js": "bb6c14eb426485b673dc09d0413980096baebd0d6bd80718d7a203ff97b5e6ee",
     "preference-core.js": "195138db4c8398a9766444c032946a3e2c6c285762426efc0bc9635ee8440625",
-    "account.js": "687dc75312600ff80522b946362b1e88671494c468911752b04e8e9166e75d3a",
+    "account.js": "9389bc3c68cb7347dc4164083dda3195ceefaf0b8c11c5f941b8c9bda9764484",
     "bookmarks.js": "5f266e36b937e853df6b37d46ead57c8a027ad4277db30f53cd9038b547e75ff"
   },
   "viewports": [
@@ -54,6 +54,7 @@
         "evidence pills separate from row navigation; unknown confidence",
         "BOARD return preserves date/filters without reacquisition",
         "movement refresh failure retains loaded evidence and retry",
+        "AMBIENT containment, Account in preferences and quiet successful saves",
         "BOARD active catchment",
         "Return Home",
         "fresh launch and recent catchments",
@@ -103,6 +104,7 @@
         "evidence pills separate from row navigation; unknown confidence",
         "BOARD return preserves date/filters without reacquisition",
         "movement refresh failure retains loaded evidence and retry",
+        "AMBIENT containment, Account in preferences and quiet successful saves",
         "BOARD active catchment",
         "Return Home",
         "fresh launch and recent catchments",
@@ -152,6 +154,7 @@
         "evidence pills separate from row navigation; unknown confidence",
         "BOARD return preserves date/filters without reacquisition",
         "movement refresh failure retains loaded evidence and retry",
+        "AMBIENT containment, Account in preferences and quiet successful saves",
         "BOARD active catchment",
         "Return Home",
         "fresh launch and recent catchments",
@@ -201,6 +204,7 @@
         "evidence pills separate from row navigation; unknown confidence",
         "BOARD return preserves date/filters without reacquisition",
         "movement refresh failure retains loaded evidence and retry",
+        "AMBIENT containment, Account in preferences and quiet successful saves",
         "BOARD active catchment",
         "Return Home",
         "fresh launch and recent catchments",
@@ -218,6 +222,5 @@
       ],
       "errors": []
     }
-  ],
-  "qualification": "Final-source four-viewport offline browser execution. All recorded source hashes matched. No live-provider, authenticated Preview or physical-device acceptance. Screenshots inspected; short landscape uses deliberate content scrolling."
+  ]
 }

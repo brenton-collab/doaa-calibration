@@ -1,3 +1,9 @@
+## 2026-10-11 — header and preferences UX refinements
+
+Fixed AMBIENT overflowing its view-switcher surface on narrow screens. Moved Account to the bottom of catchment/preferences, after the settings and recent areas. Source Coverage is now an expandable pill. Removed routine successful-save text; pending/failure feedback and Retry save remain available. Simplified account prose without changing preference synchronization.
+
+Validation: 149 Node tests passed; full browser regression and dense movement acceptance each passed desktop, phone, landscape and tablet against the final source. Updated reports and labelled offline-fixture screenshots are in docs/qa. This is local fixture acceptance, not signed-in Preview or live-provider acceptance. No new D1 acquisition, remote database writes, migration, deployment, main merge or Actions run. PR #48 stays draft. CHAT handoff scope is unchanged.
+
 ## 2026-10-11 — UX push: shared BOARD / Airfield Movements
 
 Continued from published Inspector checkpoint 0395487. Implemented shared chronological movement model and responsive renderer; date/Today/Live navigation, direction/evidence filters, independent provenance disclosures, Flight/recorded Contact/provisional navigation, cache reuse and preserved reading state. Phone/short-landscape controls start compact. Airport-local reference zones are explicit; unknown zones remain UTC. Header overlap, off-screen Return Home, independent BOARD scroll and broken map tile failure were repaired through real browser work.
