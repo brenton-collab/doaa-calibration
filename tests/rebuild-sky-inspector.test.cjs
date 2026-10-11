@@ -118,3 +118,11 @@ test('Airport navigation renders before remote lookup completes',()=>{
  assert.ok(airport.indexOf("renderSurface('airport'")<airport.indexOf("await fetch('/api/airport-lookup"));
  assert.match(airport,/activeSurface\(d\)\.startsWith\('airport'\)/);
 });
+
+test('Airport identity lookup offers a retry without duplicating Back history',()=>{
+ const source=fs.readFileSync(require('node:path').join(__dirname,'../flight-enrichment.js'),'utf8');
+ assert.match(source,/data-airport-lookup-retry/);
+ assert.match(source,/pushHistory=true/);
+ assert.match(source,/if\(pushHistory\)rememberInspector\(d\)/);
+ assert.match(source,/status:'unavailable'/);
+});
