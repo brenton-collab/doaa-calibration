@@ -12,6 +12,7 @@ const html=read('index.html');
 const look=read('look.js');
 const ambient=read('ambient.js');
 const worker=read('src/worker.js');
+const relay=read('relay.js');
 function functionSource(text,name,next){
  const begin=text.indexOf('function '+name+'(');
  const end=text.indexOf(next,begin);
@@ -114,4 +115,11 @@ test('acquisition and presentation reject false freshness',()=>{
  assert.match(ambient,/if\(!recent\)trails\.clear\(\)/);
  assert.match(worker,/RELAY OBSERVATION TIME UNAVAILABLE OR TOO OLD/);
  assert.match(worker,/ADS-B observations not recent enough/);
+});
+
+test('relay rejects stale positions and missing coordinate evidence',()=>{
+ assert.match(relay,/seconds<=90/);
+ assert.match(relay,/raw\.filter\(recentAircraft\)/);
+ assert.match(relay,/a\?\.lat==null\|\|a\.lat===''/);
+ assert.match(relay,/!recentAircraft\(a\)/);
 });
