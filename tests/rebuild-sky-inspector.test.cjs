@@ -81,3 +81,10 @@ test('Contact evidence separates broadcast observations from enrichment and rout
  assert.ok(source.includes("section('AIRFRAME IDENTITY · ENRICHED'"));
  assert.ok(source.includes("section('POSSIBLE FLIGHT ASSOCIATION'"));
 });
+
+test('Contact telemetry identifies stale and uncertain evidence',()=>{
+ const source=fs.readFileSync(require('node:path').join(__dirname,'../inspector-flight.js'),'utf8');
+ assert.match(source,/fn-telemetry-status/);
+ assert.match(source,/LAST KNOWN POSITION/);
+ assert.match(source,/Additional observation details/);
+});
