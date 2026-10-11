@@ -226,3 +226,12 @@ test('Date-only airframe evidence is visible in chronology',()=>{
  assert.ok(src.includes('chronologyDate'));
  assert.ok(src.includes('DATE ONLY'));
 });
+
+test('Contact identity does not borrow Flight lookup identifiers',()=>{
+ const src=fs.readFileSync(require('node:path').join(__dirname,'../flight-enrichment.js'),'utf8');
+ const contact=src.slice(src.indexOf('function contact('),src.indexOf('function flight('));
+ assert.ok(contact.includes("id=a.call||a.id.toUpperCase()"));
+ assert.ok(contact.includes("reg=af?.reg_number||a.reg||'UNKNOWN'"));
+ assert.ok(!contact.includes('f?.reg_number'));
+ assert.ok(!contact.includes('f?.aircraft_icao'));
+});
