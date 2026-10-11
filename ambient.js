@@ -149,9 +149,9 @@
       return {...a,photo:{url:media.url,registration:media.registration,license:media.license,attribution:media.attribution,page:media.page}};
     }).filter(Boolean);
     if(!available.length)return null;
-    const previous=available.find(a=>a.id===lastSlideId.split('|')[0]);
-    const unseen=available.filter(a=>!lastCandidates.includes(a.id));
-    const next=unseen[0]||previous||available[0];
+    const previous=available.find(a=>[a.id,a.photo.url].join('|')===lastSlideId);
+    const held=previous&&Date.now()-slideChangedAt<45000;
+    const next=held?previous:available[(available.indexOf(previous)+1)%available.length];
     lastCandidates=available.map(a=>a.id);
     return next;
   }
@@ -168,7 +168,7 @@
       return;
     }
     const signature = [a.id,a.photo.url].join('|');
-    if (signature !== lastSlideId && (!lastSlideId || Date.now()-slideChangedAt>45000)) {
+    if (signature !== lastSlideId) {
       lastSlideId=signature;slideChangedAt=Date.now();
       photo.style.backgroundImage='url('+JSON.stringify(String(a.photo.url))+')';
       copy.innerHTML = '<div class="ambient-slide-reg">'+escapeHtml(a.reg)+'</div><div class="ambient-slide-type">'+escapeHtml(a.type||'Aircraft type unconfirmed')+'</div><div class="ambient-slide-details">'+escapeHtml(a.call||'')+' · '+escapeHtml(Math.round(Number(a.alt)||0))+' FT · '+escapeHtml(Math.round(Number(a.gs)||0))+' KT</div><div class="ambient-slide-credit">'+escapeHtml(a.photo.attribution)+' · '+escapeHtml(a.photo.license)+'</div>';
