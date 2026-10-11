@@ -105,3 +105,8 @@ Important remaining issues: track drawing is observation-history only while the 
 - 15ece00 adds a 45-second quiet hold followed by cycling among currently eligible exact-airframe images. If an aircraft becomes ineligible, the composition changes without retaining an obsolete current aircraft.
 - 83b1743 refreshes flight text on each update without forcing photo transitions. 84a9279 preserves unknown telemetry text in that refreshed copy. e6f39a2 labels recent versus last-observed evidence honestly.
 - JavaScript parse checked after the rotation change. This is feature implementation on the integration branch, not browser acceptance. No provider calls, D1 changes, CI or production deploy.
+
+## 2026-10-10 — LOOK navigation journey
+- 0d8c563 rejects missing/out-of-range LOOK coordinates and future-dated observations as fresh.
+- d911885 makes Inspector close return to LOOK when investigation originated from LOOK. 1d2a294 clears that return intent on explicit primary-view changes.
+- Implemented on integration branch; browser journey not yet executed. No production or infrastructure changes.
