@@ -29,7 +29,11 @@ with sync_playwright() as playwright:
             for selector in ("#sky", "#rack", "#detail", "#detailbody", "#primary-tabs"):
                 assert page.locator(selector).count() == 1, f"missing {selector}"
             assert page.locator('[data-primary="SKY"]').count() == 1, "SKY tab missing"
-            assert page.locator("#detail").is_visible() or page.locator("#detail").count() == 1
+            page.wait_for_function("window.DOAAReady !== undefined", timeout=10000)
+            page.evaluate("() => Promise.race([window.DOAAReady, new Promise((_, reject) => setTimeout(() => reject(new Error('DOAA initialization timeout')), 12000))])")
+            page.wait_for_timeout(500)
+            assert page.locator("#detailbody").count() == 1
+            assert page.locator('[data-primary="SKY"]').is_visible(), "SKY control hidden"
             if errors:
                 failures.append(f"{label}: page errors: {errors[:3]}")
             print(f"{label}: initial shell passed")
