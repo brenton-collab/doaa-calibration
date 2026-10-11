@@ -172,3 +172,8 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `6ef3cd9` separates broadcast Contact identity (ICAO24, callsign, position evidence) and observed telemetry from externally enriched airframe identity, with an explicit provenance note.
 - `ef6930f` labels any route as a **possible flight association**, not proof of a dated operation. `8246cf5` adds source assertions for the hierarchy.
 - The UI is not yet browser-verified and the Node test suite has not been executed. No production deployment or paid infrastructure changes.
+
+## Contact telemetry presentation (2026-10-11)
+- `74727ad` introduces a Contact-specific four-reading summary (altitude, groundspeed, ground track, position age) with expandable detailed observations; `3854487` wires it into Contact Overview and `7341e78` styles it responsively.
+- `7642584` explicitly distinguishes recent, historical, unknown-time and future-time observation status above the readings; `40d3209` styles that status; `f382851` adds source-level regression coverage.
+- These are implementation commits, not visual verification. Browser/live testing remains deferred and automated tests have not been executed. No deployment or paid infrastructure changes.
