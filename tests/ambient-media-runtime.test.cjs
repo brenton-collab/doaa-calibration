@@ -36,6 +36,7 @@ async function runScenario(kind){
   return;
  }
  if(kind==='stale')registration='C-OTHER';
+ if(kind==='missing')registration='';
  if(kind==='closed')active=false;
  resolveFetch({ok:true,json:async()=>({media:[{
   id:'a1b2c3',registration:'C-TEST',url:'https://example.test/plane.jpg',
@@ -47,4 +48,5 @@ async function runScenario(kind){
 test('SLIDES emits matching current exact-airframe media',()=>runScenario('good'));
 test('SLIDES discards media when aircraft registration changed',()=>runScenario('stale'));
 test('SLIDES discards response after exit',()=>runScenario('closed'));
+test('SLIDES discards response after registration disappears',()=>runScenario('missing'));
 test('SLIDES retries failed cache reads',()=>runScenario('failure'));
