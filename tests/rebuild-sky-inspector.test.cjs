@@ -61,3 +61,8 @@ test('Inspector fallback does not overstate freshness or overwrite newer selecti
 test('Inspector selection uses aircraft observation timestamp rather than feed clock',()=>{
  assert.ok(html.includes('const live=DOAASkyMapCore.observation(a,Date.now()).fresh'));
 });
+
+test('SKY markers and Rack share per-aircraft freshness filtering',()=>{
+ assert.ok(html.includes('a._pinned||DOAASkyMapCore.fresh(a,t)'));
+ assert.ok(html.includes('inView(a)&&DOAASkyMapCore.fresh(a,t)'));
+});
