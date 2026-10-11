@@ -1,3 +1,11 @@
+## Airport lookup and navigation checkpoint
+
+- [x] Successful and unresolved Airport lookups retain Airport context and wire the Inspector tray.
+- [x] Airport Overview renders retained airport identity when returning from other tabs.
+- [x] Four Airport section dispatches executed successfully with a representative CYOW/YOW record; full JavaScript parses.
+- [ ] Real DOM click-through, operational data integration, Node suite, and mobile acceptance remain pending.
+- Production unchanged; no paid CI.
+
 ## Airport Inspector checkpoint
 
 - [x] Airport four-tab navigation committed and executed in isolated JavaScript checks.
