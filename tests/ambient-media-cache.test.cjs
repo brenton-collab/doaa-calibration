@@ -19,3 +19,10 @@ test('media adapter only runs for active SLIDES and throttles cache reads',()=>{
  assert.match(client,/window\.DOAAAmbient\?\.active/);
  assert.match(client,/doaa:airframe-media/);
 });
+
+test('media adapter discards obsolete aircraft and retries failed lookups',()=>{
+ assert.match(client,/const latest=window\.DOAALiveSnapshot\?\.\(\)/);
+ assert.match(client,/current\.get\(String\(media\.id\)\.toLowerCase\(\)\)/);
+ assert.match(client,/if\(!response\.ok\)\{lastQuery='';return;\}/);
+ assert.match(client,/catch\{lastQuery='';\}/);
+});
