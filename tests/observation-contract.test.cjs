@@ -104,6 +104,7 @@ test('BOARD ignores superseded responses for the same airport',()=>{
  assert.match(html,/let boardRequestSeq=0/);
  assert.match(html,/requestSeq=\+\+boardRequestSeq/);
  assert.match(html,/requestSeq!==boardRequestSeq/);
+ assert.match(html,/HOME\.icao===requestedHome&&requestSeq===boardRequestSeq/);
 });
 test('acquisition and presentation reject false freshness',()=>{
  assert.match(html,/Number\(e\.data\.now\)>0/);
