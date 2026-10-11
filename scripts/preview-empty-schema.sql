@@ -1,4 +1,4 @@
--- Fresh, empty Preview database only. Generated from locally applied migrations 0001–0015.
+-- Fresh, empty Preview database only. Generated from locally applied migrations 0001–0016.
 -- CREATE only; no existing aviation data is rewritten or removed.
 CREATE TABLE auth_attempts (state_hash TEXT PRIMARY KEY,nonce TEXT NOT NULL,verifier TEXT NOT NULL,expires_at TEXT NOT NULL);
 
@@ -204,3 +204,8 @@ CREATE TABLE IF NOT EXISTS password_accounts (
  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
  changed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Additive account administration fields from migration 0016.
+ALTER TABLE password_accounts ADD COLUMN role TEXT NOT NULL DEFAULT 'user' CHECK(role IN ('admin','user'));
+ALTER TABLE password_accounts ADD COLUMN disabled_at TEXT;
+ALTER TABLE password_accounts ADD COLUMN must_change_password INTEGER NOT NULL DEFAULT 0 CHECK(must_change_password IN (0,1));
