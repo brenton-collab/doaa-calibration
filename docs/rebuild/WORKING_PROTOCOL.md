@@ -212,3 +212,9 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `d1e5c67` adds an explicit association statement ahead of Flight route and operation details; callsign or route evidence alone is not represented as a confirmed dated assignment.
 - `52798df` ensures observed-callsign navigation treats assignment as established only when the flight evidence explicitly sets that flag true.
 - `a9c1d0b` adds source-level regression assertions. Tests have not been executed; browser testing remains deferred and deployment unchanged.
+
+## Flight airframe and carrier source boundaries (2026-10-11)
+- `8de5092`: Flight Airframe fields now use only the flight lookup source, not a fallback chain that mixes enriched airframe and observed Contact identity.
+- `95d47b4`: Flight carrier enrichment explicitly does not prove the observed aircraft's operator.
+- `bfe5b51`: Airframe section is labeled as flight-source evidence; `6a6363a` adds source-level regression assertions.
+- Tests unexecuted and browser verification deferred. No deployment or infrastructure changes.
