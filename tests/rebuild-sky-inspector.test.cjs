@@ -172,3 +172,12 @@ test('Related-object Flight navigation identifies association as possible, not a
  assert.match(related,/context!=='flight'&&reg&&/);
  assert.match(related,/if\(flight&&context!=='flight'\)/);
 });
+
+test('Aircraft dossier does not promote flight-source registration or type to airframe identity',()=>{
+ const source=fs.readFileSync(require('node:path').join(__dirname,'../flight-enrichment.js'),'utf8');
+ const aircraft=source.slice(source.indexOf('function aircraft('),source.indexOf('function sightingLink('));
+ assert.ok(aircraft.includes('y.reg_number||a.reg'));
+ assert.ok(aircraft.includes('y.icao||a.type'));
+ assert.ok(!aircraft.includes('f?.reg_number'));
+ assert.ok(!aircraft.includes('f?.aircraft_icao'));
+});
