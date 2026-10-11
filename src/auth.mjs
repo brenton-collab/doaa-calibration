@@ -34,6 +34,21 @@ export async function authorize(request,env){
 export async function authentication(request,env){
  const u=new URL(request.url);
  const local=await passwordAuth(request,env);if(local)return local;
+ if(u.pathname==='/auth/renew'){
+  if(request.method!=='POST')return json({ok:false,error:'Method not allowed'},405);
+  if(!sameOrigin(request))return json({ok:false,error:'Same-origin request required'},403);
+  const token=cookies(request).__Host_doaa_session;
+  if(!token||!/^[\\w-]{43}$/.test(token)||!env.DB)return json({ok:false,error:'Sign-in required'},401);
+  const tokenHash=await hash(token);
+  const session=await env.DB.prepare('SELECT subject,expires_at FROM auth_sessions WHERE token_hash=?').bind(tokenHash).first();
+  if(!session||Date.parse(session.expires_at)<=Date.now())return json({ok:false,error:'Sign-in required'},401);
+  const user=await authorize(request,env);
+  if(!user)return json({ok:false,error:'Sign-in required'},401);
+  if(Date.parse(session.expires_at)-Date.now()>90*24*3600*1000)return new Response(null,{status:204,headers:{'cache-control':'no-store'}});
+  const age=180*24*3600,expires=new Date(Date.now()+age*1000).toISOString();
+  await env.DB.prepare('UPDATE auth_sessions SET expires_at=? WHERE token_hash=? AND expires_at>?').bind(expires,tokenHash,new Date().toISOString()).run();
+  return new Response(null,{status:204,headers:{'set-cookie':cookie('__Host_doaa_session',token,age),'cache-control':'no-store'}});
+ }
  if(u.pathname==='/auth/change-password'&&request.method==='POST'){
   if(!sameOrigin(request))return json({ok:false,error:'Same-origin request required'},403);
   const user=await authorize(request,env);
