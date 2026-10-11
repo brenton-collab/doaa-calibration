@@ -126,3 +126,10 @@ test('Airport identity lookup offers a retry without duplicating Back history',(
  assert.match(source,/if\(pushHistory\)rememberInspector\(d\)/);
  assert.match(source,/status:'unavailable'/);
 });
+
+test('Unresolved flight evidence has a functional retry path',()=>{
+ const source=fs.readFileSync(require('node:path').join(__dirname,'../flight-enrichment.js'),'utf8');
+ assert.match(source,/data-flight-lookup-retry/);
+ assert.match(source,/if\(same&&pushHistory\)/);
+ assert.match(source,/status:'unavailable'/);
+});
