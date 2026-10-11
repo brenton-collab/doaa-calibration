@@ -1,4 +1,4 @@
--- Fresh, empty Preview database only. Generated from locally applied migrations 0001–0013.
+-- Fresh, empty Preview database only. Generated from locally applied migrations 0001–0015.
 -- CREATE only; no existing aviation data is rewritten or removed.
 CREATE TABLE auth_attempts (state_hash TEXT PRIMARY KEY,nonce TEXT NOT NULL,verifier TEXT NOT NULL,expires_at TEXT NOT NULL);
 
@@ -188,3 +188,19 @@ CREATE TABLE IF NOT EXISTS airport_reference_rows (
  PRIMARY KEY(snapshot_id,airport)
 );
 CREATE INDEX IF NOT EXISTS idx_airport_reference_ready ON airport_reference_snapshots(ready,retrieved_at DESC);
+
+-- Password authentication schema from migrations 0014 and 0015.
+-- Password sign-in rate limit; no account credentials are stored in D1.
+CREATE TABLE IF NOT EXISTS password_login_limits (
+  bucket TEXT PRIMARY KEY,
+  attempts INTEGER NOT NULL DEFAULT 0,
+  window_started TEXT NOT NULL
+);
+
+-- Password credentials are salted PBKDF2 verifiers, never plaintext passwords.
+CREATE TABLE IF NOT EXISTS password_accounts (
+ username TEXT PRIMARY KEY,
+ verifier TEXT NOT NULL,
+ created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ changed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
