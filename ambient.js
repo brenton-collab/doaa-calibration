@@ -158,15 +158,17 @@
     return next;
   }
   function drawSlides(snapshot) {
-    const a = slideCandidate(snapshot);
+    const stamp=Number(snapshot.observedAt)||0;
+    const recent=stamp>0&&Date.now()>=stamp&&Date.now()-stamp<90000;
+    const a = recent?slideCandidate(snapshot):null;
     slide.hidden = false;
     canvas.hidden = true;
     root.classList.add('ambient-slides-mode');
     if (!a) {
       lastSlideId='';
       photo.style.backgroundImage = '';
-      copy.innerHTML = '<div class="ambient-empty-title">Watching for an identified airframe</div><p>No exact-aircraft photograph has been verified in this session. Ambient Slides will not substitute an unrelated aircraft image.</p>';
-      count.textContent = 'AWAITING VERIFIED MEDIA';
+      copy.innerHTML = recent?'<div class="ambient-empty-title">Watching for an identified airframe</div><p>No exact-aircraft photograph has been verified in this session. Ambient Slides will not substitute an unrelated aircraft image.</p>':'<div class="ambient-empty-title">Observations paused</div><p>Waiting for recent aircraft observations before displaying verified photographs.</p>';
+      count.textContent = recent?'AWAITING VERIFIED MEDIA':'AWAITING OBSERVATIONS';
       return;
     }
     const signature = [a.id,a.photo.url].join('|');
