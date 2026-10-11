@@ -14,7 +14,7 @@ async function check(name,fn){try{await fn();report.checks.push({name,passed:tru
 async function session(viewport={width:1440,height:1000}){
  const context=await browser.newContext({viewport,reducedMotion:'reduce'}),page=await context.newPage();
  page.setDefaultTimeout(6000);
- const state={records:structuredClone(fixture.contacts),board:fixture.board(),trafficFailed:false,boardFailed:false,photoHold:new Map(),photoRequests:new Set(),photoFailed:new Set(),dossierHold:new Map()};
+ const state={records:structuredClone(fixture.contacts),board:fixture.board(),trafficFailed:false,boardFailed:false,provider:'LOCAL FIXTURE',photoHold:new Map(),photoRequests:new Set(),photoFailed:new Set(),dossierHold:new Map(),searchHold:new Map(),searchRequests:new Set()};
  page.on('pageerror',e=>report.pageErrors.push(String(e)));
  await page.route('**/*',async route=>{
   const u=new URL(route.request().url());
@@ -31,7 +31,7 @@ async function session(viewport={width:1440,height:1000}){
   assert.equal(route.request().method(),'GET','Acceptance must not exercise a real mutation');
   let body={ok:true,found:false},status=200;
   const a=state.records.find(a=>a.hex===(u.searchParams.get('hex')||'').toLowerCase())||fixture.contacts[0];
-  if(u.pathname==='/api/traffic'){body=fixture.traffic(await page.evaluate(()=>Date.now()),state.records);if(state.trafficFailed){status=503;body={ok:false,error:'Simulated outage'}}}
+  if(u.pathname==='/api/traffic'){body={...fixture.traffic(await page.evaluate(()=>Date.now()),state.records),provider:state.provider};if(state.trafficFailed){status=503;body={ok:false,error:'Simulated outage'}}}
   else if(u.pathname==='/api/board'){body=state.board;if(state.boardFailed){status=503;body={ok:false,error:'Simulated BOARD outage'}}}
   else if(u.pathname==='/api/dossier'){if(state.dossierHold.has(a.hex))await state.dossierHold.get(a.hex).promise;body=fixture.dossier(a)}
   else if(u.pathname==='/api/flight')body={ok:true,found:true,flight:fixture.flight(a)};
@@ -39,7 +39,11 @@ async function session(viewport={width:1440,height:1000}){
   else if(u.pathname==='/api/journey')body={ok:true,chronology:[]};
   else if(u.pathname==='/api/ops')body={ok:true,health:{},state:{},meter:{requests:0}};
   else if(u.pathname==='/api/airport')body={ok:true,metar:{rawOb:'CYOW 102000Z 21008KT 15SM FEW040 12/08 A3004',wdir:210,wspd:8,visib:15,fltCat:'VFR'}};
-  else if(u.pathname==='/api/search')body={ok:true,results:[{kind:'airframe',scope:'local',icao24:'c00003',canonical_key:'c00003',registration:'C-PAST',encounter_count:2,last_seen_at:'2026-10-01T12:00:00Z',icao_type:'C172'}]};
+  else if(u.pathname==='/api/search'){
+   const q=u.searchParams.get('q');state.searchRequests.add(q);
+   if(state.searchHold.has(q))await state.searchHold.get(q).promise;
+   body={ok:true,results:[{kind:'airframe',scope:'local',icao24:'c00003',canonical_key:'c00003',registration:'C-PAST',encounter_count:2,last_seen_at:'2026-10-01T12:00:00Z',icao_type:'C172'}]};
+  }
   return route.fulfill({status,contentType:'application/json',body:JSON.stringify(body)});
  });
  await page.goto(base,{waitUntil:'load'});
@@ -47,6 +51,11 @@ async function session(viewport={width:1440,height:1000}){
  return {page,context,state};
 }
 function hold(map,id){let release;const promise=new Promise(r=>release=r);map.set(id,{promise,release});return ()=>{map.delete(id);release()}}
+async function freezeClock(page){
+ const time=await page.evaluate(()=>Date.now());await page.clock.install({time});await page.clock.pauseAt(time+1000);
+ // Acquire fixtures in the installed browser clock's domain before testing elapsed time.
+ await page.evaluate(()=>{cellCache.clear();scout=null;return refresh(true)});
+}
 async function screenshot(page,name){await page.screenshot({path:path.join(output,name+'.png')})}
 let base;
 (async()=>{
@@ -86,6 +95,65 @@ let base;
   assert.ok(await page.locator('#detailbody').textContent().then(s=>s.includes('TEST202')&&!s.includes('TEST101')));
  });
  await context.close();
+ ({page,context,state}=await session());
+ await check('Late enrichment preserves the chosen Inspector tab, scroll and focus',async()=>{
+  const release=hold(state.dossierHold,'c00001');
+  await page.locator('#rack .row').first().click();await page.locator('[data-tray-doaa="aircraft"]').click();
+  await page.locator('[data-fact-explain]').first().focus();
+  const before=await page.locator('#detailbody').evaluate(d=>{d.scrollTop=80;return {scroll:d.scrollTop,explanation:document.activeElement.dataset.factExplain}});
+  release();await page.waitForFunction(()=>document.querySelector('#detailbody').getAttribute('aria-busy')==='false');
+  assert.equal(await page.locator('#detailbody').getAttribute('data-active-surface'),'aircraft');
+  assert.equal(await page.locator('#detailbody').evaluate(d=>d.scrollTop),before.scroll);
+  assert.equal(await page.evaluate(()=>document.activeElement.dataset.factExplain),before.explanation);
+ });
+ await context.close();
+ ({page,context,state}=await session());
+ await check('Clearing search cannot be undone by its delayed response',async()=>{
+  const release=hold(state.searchHold,'old');await page.locator('#racksearch').click();await page.locator('#rackquery').fill('old');
+  await page.waitForFunction(()=>document.querySelector('#rackquery').value==='old');
+  for(let i=0;i<20&&!state.searchRequests.has('old');i++)await page.waitForTimeout(50);
+  assert.ok(state.searchRequests.has('old'));
+  await page.locator('#rackquery').fill('');await page.waitForTimeout(250);release();await page.waitForTimeout(200);
+  assert.ok(await page.locator('#rack').textContent().then(s=>s.includes('TEST101')&&!s.includes('C-PAST')));
+ });
+ await context.close();
+ ({page,context,state}=await session());
+ await check('Individual position age expires despite another recent contact',async()=>{
+  state.records[0].seen_pos=85;await freezeClock(page);
+  await page.locator('#rack .row').first().click();await page.waitForFunction(()=>document.querySelector('#detailbody').getAttribute('aria-busy')==='false');
+  await page.clock.runFor(6000);await page.evaluate(()=>compose(viewportCells()));
+  assert.ok(await page.evaluate(()=>!window.DOAALiveSnapshot().aircraft.some(a=>a.id==='c00001')),'Response timestamp concealed the individual position age');
+  assert.ok(await page.locator('#detailbody').textContent().then(s=>s.includes('LAST OBSERVED')&&!s.includes('LIVE')));
+  await page.locator('#detailclose').click();await page.locator('[data-primary="LOOK"]').click();
+  assert.equal(await page.locator('[data-look-id="c00001"]').count(),0);
+ });
+ await context.close();
+ ({page,context,state}=await session());
+ await check('Traffic outage removes live telemetry and LOOK cues; recovery resumes',async()=>{
+  await freezeClock(page);
+  await page.locator('#rack .row').first().click();await page.waitForFunction(()=>document.querySelector('#detailbody').getAttribute('aria-busy')==='false');
+  state.trafficFailed=true;await page.clock.runFor(100000);await page.evaluate(()=>refresh(true));
+  assert.equal(await page.evaluate(()=>window.DOAALiveSnapshot().aircraft.length),0);
+  assert.ok(await page.locator('#detailbody').textContent().then(s=>s.includes('LAST OBSERVED')&&!s.includes('LIVE')));
+  await page.locator('#detailclose').click();await page.locator('[data-primary="LOOK"]').click();
+  assert.equal(await page.locator('.look-item').count(),0);assert.ok(await page.locator('#board').textContent().then(s=>s.includes('aging or unavailable')));
+  state.trafficFailed=false;await page.evaluate(()=>refresh(true));await page.waitForSelector('.look-item');
+ });
+ await context.close();
+ ({page,context,state}=await session());
+ await check('Provider attribution remains text in the SKY status',async()=>{
+  state.provider='<img src=x onerror="window.__statusInjected=1">';await page.evaluate(()=>{cellCache.clear();scout=null;return refresh(true)});
+  assert.equal(await page.locator('#status img').count(),0);assert.equal(await page.evaluate(()=>window.__statusInjected),undefined);
+ });
+ await context.close();
+ ({page,context,state}=await session());
+ await check('BOARD empty, failure and recovery states remain distinct',async()=>{
+  state.board={...fixture.board(),flights:[]};await page.locator('[data-primary="BOARD"]').click();
+  await page.waitForFunction(()=>document.querySelector('#board').textContent.includes('No airborne'));
+  state.boardFailed=true;await page.locator('[data-primary="BOARD"]').click();await page.waitForFunction(()=>document.querySelector('#board').textContent.includes('UNAVAILABLE'));
+  state.boardFailed=false;state.board=fixture.board();await page.locator('[data-primary="BOARD"]').click();await page.waitForSelector('.boardrow');
+ });
+ await context.close();
  for(const [name,viewport] of [['mobile',{width:390,height:844}],['tablet',{width:820,height:1180}],['landscape',{width:844,height:390}]]){
   ({page,context,state}=await session(viewport));
   await check(name+' Inspector shell, close and navigation remain visible',async()=>{
@@ -93,12 +161,19 @@ let base;
    const boxes=await page.evaluate(()=>{const r=x=>{const b=document.querySelector(x).getBoundingClientRect();return {x:b.x,y:b.y,w:b.width,h:b.height,bottom:b.bottom}};return {detail:r('#detail'),close:r('#detailclose'),tray:r('#detailtray'),map:r('.map-choice')}});
    assert.ok(boxes.tray.bottom<=viewport.height&&boxes.close.y>=0);
    assert.ok(!(boxes.detail.x<boxes.map.x+boxes.map.w&&boxes.detail.x+boxes.detail.w>boxes.map.x&&boxes.detail.y<boxes.map.bottom&&boxes.detail.bottom>boxes.map.y),'Map controls overlap Inspector');
+   if(name!=='tablet'){
+    await page.locator('#detail-expand').click();assert.equal(await page.locator('#detail-expand').getAttribute('aria-expanded'),'true');
+    await screenshot(page,name+'-inspector-expanded');
+    assert.ok(await page.locator('#detailclose').evaluate(el=>{const r=el.getBoundingClientRect();return document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)===el}),'Expanded close is obstructed');
+    await page.keyboard.press('Escape');assert.equal(await page.locator('#detail').isVisible(),false);
+    assert.equal(await page.evaluate(()=>document.activeElement.dataset.id),'c00001');
+   }
   });
   await context.close();
  }
  ({page,context,state}=await session());
  await check('AMBIENT preloads during hold and atomically shows matching details',async()=>{
-  const release=hold(state.photoHold,'c00002');await page.clock.install();await page.clock.pauseAt(new Date(Date.now()+1000));
+  const release=hold(state.photoHold,'c00002');await freezeClock(page);
   await page.evaluate(()=>{
    window.__slidePairs=[];
    new MutationObserver(()=>{const reg=document.querySelector('.ambient-slide-reg')?.textContent,url=document.querySelector('.ambient-photo')?.style.backgroundImage;if(reg&&url)window.__slidePairs.push({reg,url})}).observe(document.querySelector('#doaa-ambient'),{attributes:true,childList:true,subtree:true});
@@ -121,7 +196,7 @@ let base;
  await context.close();
  ({page,context,state}=await session());
  await check('Failed next image preserves the current photograph and details',async()=>{
-  state.photoFailed.add('c00002');await page.clock.install();await page.clock.pauseAt(new Date(Date.now()+1000));
+  state.photoFailed.add('c00002');await freezeClock(page);
   await page.locator('#ambient-open').click();await page.locator('[data-ambient-mode="SLIDES"]').click();
   await page.waitForSelector('.ambient-slide-reg');await page.waitForTimeout(100);await page.clock.runFor(50000);
   assert.equal(await page.locator('.ambient-slide-reg').textContent(),'C-TEST');

@@ -80,15 +80,31 @@ test('LOOK restores keyboard focus by aircraft ID after rank changes',()=>{
 });
 
 test('multi-cell merge never treats old aircraft as recent',()=>{
- const src=functionSource(html,'mergeResponses','function compose');
- const norm=x=>({id:x.hex,lat:x.lat,lon:x.lon});
+ const src=functionSource(html,'isCurrentObservation','function compose');
+ const norm=new Function('const HOME={lat:45.3,lon:-75.7};const hav=()=>1,bearing=()=>1;'+functionSource(html,'norm','function resize')+';return norm')();
  const lastAircraft=new Map();
  const merge=new Function('norm','lastAircraft','GHOST_LIFE',src+';return mergeResponses')(norm,lastAircraft,300000);
- const fresh={now:Date.now(),aircraft:[{hex:'fresh',lat:45,lon:-75}],tracks:{}};
- const old={now:Date.now()-200000,aircraft:[{hex:'old',lat:45,lon:-75}],tracks:{}};
+ const fresh={now:Date.now(),aircraft:[{hex:'fresh',lat:45,lon:-75,seen_pos:0}],tracks:{}};
+ const old={now:Date.now()-200000,aircraft:[{hex:'old',lat:45,lon:-75,seen_pos:0}],tracks:{}};
  const result=merge([old,fresh]);
  assert.deepEqual(result.aircraft.map(x=>x.id),['fresh']);
  assert.equal(lastAircraft.has('old'),false);
+});
+
+test('individual position age and newest duplicate determine current evidence',()=>{
+ const norm=new Function('const HOME={lat:45.3,lon:-75.7};const hav=()=>1,bearing=()=>1;'+functionSource(html,'norm','function resize')+';return norm')();
+ const stamp=Date.now(),raw={hex:'abc123',lat:45,lon:-75,seen_pos:85};
+ assert.equal(norm(raw,stamp).observedAt,stamp-85000);
+ assert.equal(norm({...raw,seen_pos:null},stamp).observedAt,null);
+ const lastAircraft=new Map(),src=functionSource(html,'isCurrentObservation','function compose');
+ const merge=new Function('norm','lastAircraft','GHOST_LIFE',src+';return mergeResponses')(norm,lastAircraft,300000);
+ const older={now:stamp,aircraft:[{...raw,seen_pos:30,alt_baro:1000}],tracks:{}};
+ const newest={now:stamp,aircraft:[{...raw,seen_pos:2,alt_baro:2000}],tracks:{}};
+ assert.equal(merge([newest,older]).aircraft[0].alt,2000);
+ assert.equal(merge([older,newest]).aircraft[0].alt,2000);
+ assert.equal(lastAircraft.get('abc123').observedAt,stamp-2000);
+ assert.equal(merge([{now:stamp-10000,aircraft:[raw],tracks:{}}]).aircraft.length,0);
+ assert.equal(merge([{now:stamp,aircraft:[{...raw,seen_pos:null}],tracks:{}}]).aircraft.length,0);
 });
 
 test('Inspector live classification excludes pinned and aging aircraft',()=>{
@@ -140,8 +156,8 @@ test('relay requires known per-aircraft position age',()=>{
 });
 
 test('SKY rack and count exclude historical and aging aircraft',()=>{
- assert.match(html,/const vis=aircraft\.filter\(a=>!a\._pinned&&!a\.ground&&inView\(a\)&&now>0/);
- assert.match(html,/a\._pinned\|\|\(now>0&&Date\.now\(\)>=now/);
+ assert.match(html,/const vis=aircraft\.filter\(a=>!a\._pinned&&!a\.ground&&inView\(a\)&&isCurrentObservation\(a\)/);
+ assert.match(html,/a\._pinned\|\|isCurrentObservation\(a\)/);
 });
 test('AMBIENT slides preserve unknown telemetry',()=>{
  assert.match(ambient,/ALT UNKNOWN/);
