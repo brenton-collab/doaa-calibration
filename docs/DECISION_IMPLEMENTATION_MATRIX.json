@@ -27,11 +27,17 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "tests/inspector-contexts.test.cjs"
+        "tests/inspector-contexts.test.cjs",
+        "movement-core.js",
+        "movement-workspace.js",
+        "movement-workspace.css",
+        "scripts/movement-browser-acceptance.cjs",
+        "tests/movement-core.test.cjs"
       ],
       "evidence": [
         "Inspector shell, cells, renderSurface, openObject, contextual tab dispatch",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 UX push: shared movement model/renderer across BOARD and Airfield Movements; time-first chronology, date controls, direction/evidence filters, independent evidence disclosures, grounded Flight/Contact/provisional navigation and preserved browsing state. Responsive shell clears measured header; broken map tile guard added. Node and browser results are recorded in the release checkpoint and docs/qa. MOVEMENTS_UX_CONTRACT.md explicitly retains archive, schedule-source, full matching and continuous window/live-update gaps; no full completion claim."
       ],
       "outstanding_engineering_work": "Complete grounded contextual content, independent datum controls, history/back, source-level missing states and responsive interaction.",
       "dependencies": [
@@ -66,11 +72,17 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "tests/inspector-contexts.test.cjs"
+        "tests/inspector-contexts.test.cjs",
+        "movement-core.js",
+        "movement-workspace.js",
+        "movement-workspace.css",
+        "scripts/movement-browser-acceptance.cjs",
+        "tests/movement-core.test.cjs"
       ],
       "evidence": [
         "Inspector shell, cells, renderSurface, openObject, contextual tab dispatch",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 UX push: shared movement model/renderer across BOARD and Airfield Movements; time-first chronology, date controls, direction/evidence filters, independent evidence disclosures, grounded Flight/Contact/provisional navigation and preserved browsing state. Responsive shell clears measured header; broken map tile guard added. Node and browser results are recorded in the release checkpoint and docs/qa. MOVEMENTS_UX_CONTRACT.md explicitly retains archive, schedule-source, full matching and continuous window/live-update gaps; no full completion claim."
       ],
       "outstanding_engineering_work": "Complete grounded contextual content, independent datum controls, history/back, source-level missing states and responsive interaction.",
       "dependencies": [
@@ -105,11 +117,17 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "tests/inspector-contexts.test.cjs"
+        "tests/inspector-contexts.test.cjs",
+        "movement-core.js",
+        "movement-workspace.js",
+        "movement-workspace.css",
+        "scripts/movement-browser-acceptance.cjs",
+        "tests/movement-core.test.cjs"
       ],
       "evidence": [
         "Inspector shell, cells, renderSurface, openObject, contextual tab dispatch",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 UX push: shared movement model/renderer across BOARD and Airfield Movements; time-first chronology, date controls, direction/evidence filters, independent evidence disclosures, grounded Flight/Contact/provisional navigation and preserved browsing state. Responsive shell clears measured header; broken map tile guard added. Node and browser results are recorded in the release checkpoint and docs/qa. MOVEMENTS_UX_CONTRACT.md explicitly retains archive, schedule-source, full matching and continuous window/live-update gaps; no full completion claim."
       ],
       "outstanding_engineering_work": "Complete grounded contextual content, independent datum controls, history/back, source-level missing states and responsive interaction.",
       "dependencies": [
@@ -812,13 +830,19 @@
         "src/airfield.mjs",
         "migrations/0013_airfield_reference.sql",
         "scripts/prepare-airfield-import.mjs",
-        "tests/airfield-source.test.mjs"
+        "tests/airfield-source.test.mjs",
+        "movement-core.js",
+        "movement-workspace.js",
+        "movement-workspace.css",
+        "scripts/movement-browser-acceptance.cjs",
+        "tests/movement-core.test.cjs"
       ],
       "evidence": [
         "2026-10-11 Airfield continuation (partial): Prepared public reference snapshot uses separate D1 tables and cannot manufacture movement, runway assignment or observation evidence. 129 Node tests pass; source preparation and full import verified locally only. Exact browser fixtures/hashes: docs/qa/airfield-reference-acceptance.json. No deployed/reference-import/live-account acceptance.",
         "2026-10-11 Airport continuation (partial): Airport Movements uses the same /api/board adapter, distinguishes reported associations from track inference, and opens Flight with preserved Back context. Local tests and browser fixture evidence: docs/qa/airport-inspector-acceptance.json. No live-provider or signed-in Preview acceptance.",
         "hydrateBoard / boardApi / airportMovementEvidence / airport lookup",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 UX push: shared movement model/renderer across BOARD and Airfield Movements; time-first chronology, date controls, direction/evidence filters, independent evidence disclosures, grounded Flight/Contact/provisional navigation and preserved browsing state. Responsive shell clears measured header; broken map tile guard added. Node and browser results are recorded in the release checkpoint and docs/qa. MOVEMENTS_UX_CONTRACT.md explicitly retains archive, schedule-source, full matching and continuous window/live-update gaps; no full completion claim."
       ],
       "outstanding_engineering_work": "Remaining full contract: isolated Preview schema/source import and authenticated provider/runtime acceptance; current authority notices and conditions; full runway-end approach/lighting/declared-distance and history dossiers; evidence-linked runway activity and broader shared movement history. Do not equate reference flags with live operational state.",
       "dependencies": [
@@ -853,11 +877,17 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "src/board-schedule.mjs"
+        "src/board-schedule.mjs",
+        "movement-core.js",
+        "movement-workspace.js",
+        "movement-workspace.css",
+        "scripts/movement-browser-acceptance.cjs",
+        "tests/movement-core.test.cjs"
       ],
       "evidence": [
         "hydrateBoard / boardApi / airportMovementEvidence / airport lookup",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 UX push: shared movement model/renderer across BOARD and Airfield Movements; time-first chronology, date controls, direction/evidence filters, independent evidence disclosures, grounded Flight/Contact/provisional navigation and preserved browsing state. Responsive shell clears measured header; broken map tile guard added. Node and browser results are recorded in the release checkpoint and docs/qa. MOVEMENTS_UX_CONTRACT.md explicitly retains archive, schedule-source, full matching and continuous window/live-update gaps; no full completion claim."
       ],
       "outstanding_engineering_work": "Unify canonical movement records and timelines; separate Home/Explore; add date/evidence/runway navigation and sourced Airport conditions/geometry.",
       "dependencies": [
@@ -892,11 +922,17 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "src/board-schedule.mjs"
+        "src/board-schedule.mjs",
+        "movement-core.js",
+        "movement-workspace.js",
+        "movement-workspace.css",
+        "scripts/movement-browser-acceptance.cjs",
+        "tests/movement-core.test.cjs"
       ],
       "evidence": [
         "hydrateBoard / boardApi / airportMovementEvidence / airport lookup",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 UX push: shared movement model/renderer across BOARD and Airfield Movements; time-first chronology, date controls, direction/evidence filters, independent evidence disclosures, grounded Flight/Contact/provisional navigation and preserved browsing state. Responsive shell clears measured header; broken map tile guard added. Node and browser results are recorded in the release checkpoint and docs/qa. MOVEMENTS_UX_CONTRACT.md explicitly retains archive, schedule-source, full matching and continuous window/live-update gaps; no full completion claim."
       ],
       "outstanding_engineering_work": "Unify canonical movement records and timelines; separate Home/Explore; add date/evidence/runway navigation and sourced Airport conditions/geometry.",
       "dependencies": [
@@ -936,12 +972,18 @@
         "src/board-schedule.mjs",
         "catchment-core.js",
         "tests/units-catchment.test.cjs",
-        "scripts/browser-acceptance.cjs"
+        "scripts/browser-acceptance.cjs",
+        "movement-core.js",
+        "movement-workspace.js",
+        "movement-workspace.css",
+        "scripts/movement-browser-acceptance.cjs",
+        "tests/movement-core.test.cjs"
       ],
       "evidence": [
         "hydrateBoard / boardApi / airportMovementEvidence / airport lookup",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
-        "2026-10-11 continuation: Saved Home/radius and session exploration are separate; SKY and BOARD share active context; setting Home preserves exploration, Return Home restores default radius, fresh launches restore Home, recent exploration persists. Latest complete Node suite: 114 pass. Final Chromium fixture acceptance passed desktop, phone portrait, short landscape and tablet; independent explanation/favourite/drill/back, replay unit changes/cursor preservation, Home/Explore/BOARD propagation, account failed-save/retry/reload and recent catchments. Hash-qualified report: docs/qa/units-catchment-account-acceptance.json. See RELEASE_RC_CHECKPOINT.md."
+        "2026-10-11 continuation: Saved Home/radius and session exploration are separate; SKY and BOARD share active context; setting Home preserves exploration, Return Home restores default radius, fresh launches restore Home, recent exploration persists. Latest complete Node suite: 114 pass. Final Chromium fixture acceptance passed desktop, phone portrait, short landscape and tablet; independent explanation/favourite/drill/back, replay unit changes/cursor preservation, Home/Explore/BOARD propagation, account failed-save/retry/reload and recent catchments. Hash-qualified report: docs/qa/units-catchment-account-acceptance.json. See RELEASE_RC_CHECKPOINT.md.",
+        "2026-10-11 UX push: shared movement model/renderer across BOARD and Airfield Movements; time-first chronology, date controls, direction/evidence filters, independent evidence disclosures, grounded Flight/Contact/provisional navigation and preserved browsing state. Responsive shell clears measured header; broken map tile guard added. Node and browser results are recorded in the release checkpoint and docs/qa. MOVEMENTS_UX_CONTRACT.md explicitly retains archive, schedule-source, full matching and continuous window/live-update gaps; no full completion claim."
       ],
       "outstanding_engineering_work": "Signed-in Preview acceptance and remote-account preference refresh acceptance; preserve MET/NAV resume as those layers are implemented.",
       "dependencies": [
@@ -979,12 +1021,18 @@
         "src/board-schedule.mjs",
         "catchment-core.js",
         "tests/units-catchment.test.cjs",
-        "scripts/browser-acceptance.cjs"
+        "scripts/browser-acceptance.cjs",
+        "movement-core.js",
+        "movement-workspace.js",
+        "movement-workspace.css",
+        "scripts/movement-browser-acceptance.cjs",
+        "tests/movement-core.test.cjs"
       ],
       "evidence": [
         "hydrateBoard / boardApi / airportMovementEvidence / airport lookup",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
-        "2026-10-11 continuation: Saved Home/radius and session exploration are separate; SKY and BOARD share active context; setting Home preserves exploration, Return Home restores default radius, fresh launches restore Home, recent exploration persists. Latest complete Node suite: 114 pass. Final Chromium fixture acceptance passed desktop, phone portrait, short landscape and tablet; independent explanation/favourite/drill/back, replay unit changes/cursor preservation, Home/Explore/BOARD propagation, account failed-save/retry/reload and recent catchments. Hash-qualified report: docs/qa/units-catchment-account-acceptance.json. See RELEASE_RC_CHECKPOINT.md."
+        "2026-10-11 continuation: Saved Home/radius and session exploration are separate; SKY and BOARD share active context; setting Home preserves exploration, Return Home restores default radius, fresh launches restore Home, recent exploration persists. Latest complete Node suite: 114 pass. Final Chromium fixture acceptance passed desktop, phone portrait, short landscape and tablet; independent explanation/favourite/drill/back, replay unit changes/cursor preservation, Home/Explore/BOARD propagation, account failed-save/retry/reload and recent catchments. Hash-qualified report: docs/qa/units-catchment-account-acceptance.json. See RELEASE_RC_CHECKPOINT.md.",
+        "2026-10-11 UX push: shared movement model/renderer across BOARD and Airfield Movements; time-first chronology, date controls, direction/evidence filters, independent evidence disclosures, grounded Flight/Contact/provisional navigation and preserved browsing state. Responsive shell clears measured header; broken map tile guard added. Node and browser results are recorded in the release checkpoint and docs/qa. MOVEMENTS_UX_CONTRACT.md explicitly retains archive, schedule-source, full matching and continuous window/live-update gaps; no full completion claim."
       ],
       "outstanding_engineering_work": "Signed-in Preview acceptance and remote-account preference refresh acceptance; preserve MET/NAV resume as those layers are implemented.",
       "dependencies": [

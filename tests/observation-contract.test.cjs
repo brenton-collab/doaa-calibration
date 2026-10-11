@@ -96,16 +96,16 @@ test('Inspector live classification excludes pinned and aging aircraft',()=>{
  assert.match(src,/Date\.now\(\)-now<90000/);
  assert.match(src,/!x\._pinned/);
  assert.match(src,/Date\.now\(\)>=now/);
- assert.match(html,/const a=\{_pinned:true,id:id\|\|\('board:/);
+ assert.doesNotMatch(html,/id:id\|\|\('board:/);
  assert.match(html,/if\(!a\._pinned\)drawTrack/);
  assert.match(html,/if\(a\._pinned\)ctx\.globalAlpha\*=\.42/);
 });
 
-test('BOARD ignores superseded responses for the same airport',()=>{
- assert.match(html,/let boardRequestSeq=0/);
- assert.match(html,/requestSeq=\+\+boardRequestSeq/);
- assert.match(html,/requestSeq!==boardRequestSeq/);
- assert.match(html,/ACTIVE\.icao===requestedHome&&requestSeq===boardRequestSeq/);
+test('shared movement workspace aborts disposed requests and never overwrites another surface',()=>{
+ const movements=fs.readFileSync(path.join(__dirname,'../movement-workspace.js'),'utf8');
+ assert.match(movements,/controller\?\.abort\(\)/);
+ assert.match(movements,/if\(!valid\(\)\)return/);
+ assert.match(html,/DOAAMovements.mount\(board/);
 });
 test('acquisition and presentation reject false freshness',()=>{
  assert.match(html,/Number\(e\.data\.now\)>0/);

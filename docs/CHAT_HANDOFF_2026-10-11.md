@@ -1,10 +1,14 @@
+## Later UX continuation — 2026-10-11
+
+Brent authorized a further WORK push specifically on rewarding UX. The shared BOARD/Airfield Movements foundation is now implemented, so earlier statements deferring all BOARD work are superseded. See MOVEMENTS_UX_CONTRACT.md and the newest release checkpoint for exact tested scope. CHAT should focus on source/configuration/requirements review; further runtime, responsive implementation and verification remain good WORK tasks. The code is not deployed. This later checkpoint does not change the production or D1 safety boundaries.
+
 # DOAA WORK to CHAT handoff — 2026-10-11
 
 Brent asked to conserve WORK credit for implementation, execution and browser verification, and return work that does not benefit from those capabilities to CHAT. This is a bounded checkpoint, not completion of the 184 decisions.
 
 ## Ownership and recovery
 
-Repository: brenton-collab/doaa-calibration. Only writable branch: `work/product-recovery-mobile-sky`; draft PR #48. Parent before this batch: `3d4193a50750f2396661de2fd52c80db176175f7`. The commit containing this document is the Inspector checkpoint. Read the canonical FIELD_NOTES_DECISIONS_2026-10-08.md, DOAA_SPEC.md, RELEASE_EXECUTION_SAFETY_PLAN.md and decision matrix before changing product scope. Preserve all existing changes; do not reset to an older branch or assume main has this implementation.
+Repository: brenton-collab/doaa-calibration. Only writable branch: `work/product-recovery-mobile-sky`; draft PR #48. Parent before the initial Inspector batch: `3d4193a50750f2396661de2fd52c80db176175f7`. The commit containing this document is the Inspector checkpoint. Read the canonical FIELD_NOTES_DECISIONS_2026-10-08.md, DOAA_SPEC.md, RELEASE_EXECUTION_SAFETY_PLAN.md and decision matrix before changing product scope. Preserve all existing changes; do not reset to an older branch or assume main has this implementation.
 
 ## WORK implementation preserved in this checkpoint
 
@@ -20,14 +24,14 @@ Repository: brenton-collab/doaa-calibration. Only writable branch: `work/product
 
 ## CHAT work that can proceed without WORK
 
-1. Review the canonical requirements and evidence register; reconcile remaining product priorities without inventing completion. Draft a coherent BOARD/Airport Movements contract: shared timeline, date navigation, arrival/departure filters, and explicit Published/Recorded/Inferred evidence. Observed encounter windows are not completed flights.
+1. Review the canonical requirements and evidence register; reconcile remaining product priorities without inventing completion. Extend the implemented shared BOARD/Airport Movements contract (MOVEMENTS_UX_CONTRACT.md): shared timeline, date navigation, arrival/departure filters, and explicit Published/Recorded/Inferred evidence. Observed encounter windows are not completed flights.
 2. Resolve the sign-in choice with available authorized configuration. Google code exists; Preview lacks OAuth secrets/client configuration and Brent/David's approved stable Google subject IDs. No new Google accounts are required. Brent accepts database-backed username/password as a fallback; it is not implemented. Do not put secrets, passwords or authorization codes in the public repository or chat.
 3. Review lawful free schedule and airframe-history sources, their limits and attribution. No zero-cost published schedule feed has been verified. AirLabs remains disabled; do not assume a quota reset or activate a paid provider.
 4. Refine acceptance scenarios and reconcile documentation. Return actual code/runtime/browser/deployment work to WORK where available. CHAT with suitable tools may implement under the same boundaries, but cannot treat a written proposal as verified execution.
 
 ## Remaining engineering and release gates
 
-Full BOARD chronology, comprehensive operation history, BIO eras, technical reference content and licensed media, MET/NAV/time exploration, source conflict/identity revision invariants, full trail reconciliation and real provider/device acceptance remain open. The matrix is authoritative; no row is made complete merely by this batch. Finish private authenticated Preview acceptance before release. Username/password fallback requires implementation and security verification if selected.
+Full sourced historical/future BOARD chronology, comprehensive operation history, BIO eras, technical reference content and licensed media, MET/NAV/time exploration, source conflict/identity revision invariants, full trail reconciliation and real provider/device acceptance remain open. The matrix is authoritative; no row is made complete merely by this batch. Finish private authenticated Preview acceptance before release. Username/password fallback requires implementation and security verification if selected.
 
 ## D1 and publication constraints
 
