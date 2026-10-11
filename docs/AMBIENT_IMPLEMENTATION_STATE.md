@@ -95,3 +95,8 @@ Important remaining issues: track drawing is observation-history only while the 
 - d7b60ec validates present, finite, in-range aircraft/home coordinates; null no longer projects to 0 degrees. e95dce1 adds regression source contracts. Seven isolated predicate cases executed against the fetched implementation and passed; ambient.js parsed.
 - 6e56c9b extends the committed asynchronous media runtime tests for disappearing registration.
 - Full repository-native tests, integrated browser flows and deployment remain pending. No CI, D1 mutations, provider calls or production changes.
+
+## 2026-10-10 — release test gate expansion
+- eb7b515 changes the production workflow from a hand-selected test subset to all tests/*.test.cjs, tests/*.test.mjs, and airlabs-budget.test.cjs.
+- f445135 commits executable asset-builder tests for missing sources, unknown local HTML references, and successful allowlisted packaging. All three equivalent tests were run under Node 22 in an isolated local fixture and passed.
+- Complete checkout tests and browser acceptance remain pending. No CI was triggered and no production deployment occurred.
