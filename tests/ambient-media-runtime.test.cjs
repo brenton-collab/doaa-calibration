@@ -39,7 +39,7 @@ async function runScenario(kind){
  if(kind==='missing')registration='';
  if(kind==='closed')active=false;
  resolveFetch({ok:true,json:async()=>({media:[{
-  id:'a1b2c3',registration:'C-TEST',url:'https://example.test/plane.jpg',
+  id:'a1b2c3',registration:'C-TEST',url:kind==='insecure'?'http://example.test/plane.jpg':'https://example.test/plane.jpg',
   license:'CC BY',attribution:'Photographer'
  }]})});
  for(let i=0;i<8;i++)await Promise.resolve();
@@ -50,3 +50,5 @@ test('SLIDES discards media when aircraft registration changed',()=>runScenario(
 test('SLIDES discards response after exit',()=>runScenario('closed'));
 test('SLIDES discards response after registration disappears',()=>runScenario('missing'));
 test('SLIDES retries failed cache reads',()=>runScenario('failure'));
+
+test('SLIDES rejects insecure cached photo URLs',()=>runScenario('insecure'));
