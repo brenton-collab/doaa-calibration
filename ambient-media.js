@@ -35,6 +35,10 @@
  async function poll(){
   if(document.hidden||window.DOAAAmbient?.mode!=='SLIDES'||!window.DOAAAmbient?.active)return;
   const snapshot=window.DOAALiveSnapshot?.();
+  // Do not discover against an expired ADS-B snapshot. Legacy snapshots without
+  // a timestamp retain the cache-only path, but cannot trigger provider work.
+  const observed=Number(snapshot?.observedAt)||0;
+  const recent=observed>0&&Date.now()>=observed&&Date.now()-observed<90000;
   const aircraft=(snapshot?.aircraft||[]).filter(a=>/^[a-f0-9]{6}$/i.test(String(a.id||'')) ).slice(0,12);
   const ids=aircraft.map(a=>String(a.id).toUpperCase()).sort();
   const signature=aircraft.map(a=>String(a.id).toUpperCase()+':'+String(a.reg||'').toUpperCase()).sort().join(',');
@@ -62,7 +66,7 @@
     verified.add(String(media.id).toLowerCase());
     window.dispatchEvent(new CustomEvent('doaa:airframe-media',{detail:media}));
    }
-   scheduleDiscovery(aircraft,verified);
+   if(recent)scheduleDiscovery(aircraft,verified);
   }catch{lastQuery='';}finally{inflight=false}
  }
  window.addEventListener('doaa:ambient-enter',poll);
