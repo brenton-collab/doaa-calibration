@@ -94,3 +94,11 @@ test('Inspector related objects require airframe identity and navigable controls
  assert.ok(source.includes('class="fn-object-link"'));
  assert.ok(source.includes("/^[0-9a-f]{6}$/i.test(a.id||'')"));
 });
+
+test('Inspector Back retains the rendered object context',()=>{
+ const source=fs.readFileSync(require('node:path').join(__dirname,'../flight-enrichment.js'),'utf8');
+ assert.match(source,/d\._doaaRenderedState\|\|d\._doaaSwipeState/);
+ assert.match(source,/d\._doaaSubject=previous\.state\.a\.id/);
+ assert.match(source,/previous\.surface==='contact'/);
+ assert.match(source,/aria-current/);
+});
