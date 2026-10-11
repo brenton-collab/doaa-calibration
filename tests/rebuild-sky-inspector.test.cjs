@@ -210,3 +210,13 @@ test('Dated Aircraft claims do not imply resolved current identity',()=>{
  const helper=fs.readFileSync(require('node:path').join(__dirname,'../inspector-flight.js'),'utf8');
  assert.ok(helper.includes('Overlapping periods, missing end dates and differing claims'));
 });
+
+test('Related Airframe link excludes flight lookup identity',()=>{
+ const source=fs.readFileSync(require('node:path').join(__dirname,'../flight-enrichment.js'),'utf8');
+ const related=source.slice(source.indexOf('function relatedObjects('),source.indexOf('function rememberInspector('));
+ assert.ok(related.includes('reg=af?.reg_number||a.reg'));
+ assert.ok(related.includes('[af?.manufacturer,af?.model]'));
+ assert.ok(!related.includes('f?.reg_number'));
+ assert.ok(!related.includes('f?.manufacturer'));
+ assert.ok(!related.includes('f?.model'));
+});
