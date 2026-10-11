@@ -154,3 +154,9 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `f402fd4`: static regression assertions for stale data and selection safety.
 - Discovered `import.meta.url` in a `.cjs` regression test (invalid CommonJS syntax). Corrected both HTML and CSS fixture paths using `__dirname` in `e165b34` and `d41e681`. Tests have **not** been executed; syntax inspection only.
 - User explicitly deferred live testing; no production deployment, infrastructure modification or paid CI runs.
+
+## Shared freshness wired across SKY, Rack and Inspector (2026-10-11)
+- `9a4bfd4`: Rack now uses `DOAASkyMapCore.fresh`/`observation` for nonrecent aircraft; `adf04eb` updates source assertions. `f5f6f69` adds direct `sky-map-core` observation tests for recent, pinned, expired, missing and future timestamps.
+- `93978ab`: initial Inspector selection uses the per-aircraft observation evidence, not the newest global feed timestamp. `7746ae3` adds a source regression check.
+- `4a02df1`/`7df0896`: enriched Inspector refresh no longer hardcodes `live:true, ago:0`; it uses canonical observation freshness and aircraft observation age in state and rendered surfaces. This prevents an older aircraft from being declared live simply because another aircraft updated the feed.
+- These are source commits, not executed tests. User deferred live testing. No deployment, production D1 or infrastructure changes.
