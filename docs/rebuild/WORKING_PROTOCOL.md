@@ -117,3 +117,9 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `08c3db9`: removed dead SKY selection dimming state; selection still has a halo and other contacts remain visible.
 - Performed **10 direct source-level integration checks** through the GitHub connector: stylesheet linked, included in asset and Worker allowlists, SKY halo, undimmed context, Inspector freshness labels, renewal changed-row guard and mock, renewal race test, and evidence styling. All 10 checks passed. These are not Node tests or visual browser tests.
 - Full Node suite, browser viewport review, live auth and Cloudflare D1 validation remain outstanding. No production or preview deployment, database writes or paid CI.
+
+## Rack keyboard interaction completed (2026-10-11)
+- `803921e` made Rack rows focusable; follow-up GitHub updates were transiently blocked, leaving an incomplete interaction briefly.
+- Retry succeeded: `d8a726d` activates existing row click path on Enter/Space; `cb679d0` captures focused row identity before rerender; `af298af` restores focus to the matching row; `9723fc7` adds regression assertions; `d781d88` adds visible focus styling.
+- Seven direct source integration checks passed, including focusability, activation, focus restoration, CSS and test coverage. Node tests and browser interaction tests still not executed. If the focused row disappears from refreshed data, focus restoration is not possible; investigate keyboard fallback in viewport QA.
+- No deployment, database changes or CI expenditure.
