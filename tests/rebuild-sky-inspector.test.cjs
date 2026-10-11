@@ -88,3 +88,9 @@ test('Contact telemetry identifies stale and uncertain evidence',()=>{
  assert.match(source,/LAST KNOWN POSITION/);
  assert.match(source,/Additional observation details/);
 });
+
+test('Inspector related objects require airframe identity and navigable controls',()=>{
+ const source=fs.readFileSync(require('node:path').join(__dirname,'../flight-enrichment.js'),'utf8');
+ assert.ok(source.includes('class="fn-object-link"'));
+ assert.ok(source.includes("/^[0-9a-f]{6}$/i.test(a.id||'')"));
+});
