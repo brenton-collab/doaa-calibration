@@ -148,3 +148,9 @@ test('Flight airframe and carrier identity remain source-qualified',()=>{
  assert.match(source,/AIRFRAME · FLIGHT SOURCE/);
  assert.match(source,/do not independently establish the operator/);
 });
+
+test('Flight Explore suppresses inferred airframe links',()=>{
+ const source=fs.readFileSync(require('node:path').join(__dirname,'../flight-enrichment.js'),'utf8');
+ assert.ok(source.includes("context!=='flight'&&reg"));
+ assert.ok(source.includes("relatedObjects(a,f,af,'flight')"));
+});
