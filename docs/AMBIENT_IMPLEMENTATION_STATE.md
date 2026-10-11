@@ -80,3 +80,8 @@ Important remaining issues: track drawing is observation-history only while the 
 - Commit 9454861 prevents absent altitude and groundspeed from rendering as zero in AMBIENT SLIDES, and rejects non-HTTPS incoming media URLs.
 - Commit 4c8a442 adds source-contract regression assertions for these conditions.
 - GitHub connector inspection confirmed test and source edits were committed; new assertions have not been executed in native Node, and browser acceptance remains open. No provider requests, D1 writes, merge or deploy.
+
+## Media adapter checkpoint
+- dd165e9: revalidates latest aircraft registration after cache response and permits retries after failed reads.
+- e0c05f3: adds regression contracts. Native tests and browser acceptance not yet executed.
+- No CI, production deployment, D1 writes, or premium provider calls in this tranche.
