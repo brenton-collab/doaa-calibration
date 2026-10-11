@@ -63,3 +63,10 @@ Important remaining issues: track drawing is observation-history only while the 
 - Source-level compatibility harness executed 20 assertions successfully (17 prior plus three release-assets checks). Separate isolated API simulations accepted a verified exact-airframe photo and rejected conflicting image claims, representative specificity and missing attribution. This is not a native Node test run or browser smoke test.
 - Main and integration branch are diverged (two main commits beyond branch base at inspection). Do not merge without reconciling. No production deployment or external-provider quota consumed.
 - Next: native CI/browser acceptance, correct discovered runtime failures, then reconcile and merge/deploy with explicit verification.
+
+## 2026-10-10 — integration continuation
+- Inspected canonical checkpoint, frontend modules, Worker and Wrangler configuration via connected GitHub.
+- Fixed LOOK treating null/empty distance or altitude as numeric zero in both cue classification and displayed values. Committed as dde72d4b187f833e3d63cc70a45d02d55bf12992 on integration branch.
+- Execution environment has Node 22/npm 10, but cannot resolve github.com for cloning the private repository. Connected GitHub fetch can read individual files; complete native suite and browser acceptance were **not** run in this tranche.
+- Production remains untouched; no provider calls, D1 writes, merges or deployments.
+- Next release gate: transport complete branch into executable workspace, run packaging and native tests, inspect browser flows, then reconcile branch divergence before deployment.
