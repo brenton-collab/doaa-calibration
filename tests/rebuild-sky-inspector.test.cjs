@@ -217,7 +217,7 @@ test('Related Airframe link excludes flight lookup identity',()=>{
  assert.ok(related.includes("reg=af?.reg_number||a.reg||('ICAO24 '"));
  assert.ok(related.includes('[af?.manufacturer,af?.model]'));
  assert.ok(!related.includes('f?.reg_number'));
- assert.ok(!related.includes('f?.manufacturer'));
+ assert.ok(!related.includes('||f?.manufacturer'));
  assert.ok(!related.includes('||f?.model'));
 });
 
