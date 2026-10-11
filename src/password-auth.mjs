@@ -15,13 +15,13 @@ async function verify(password,secret){
  const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:from64(salt),iterations:Number(iterations),hash:'SHA-256'},key,256);
  const actual=new Uint8Array(bits),want=from64(expected);let diff=actual.length^want.length;for(let i=0;i<Math.max(actual.length,want.length);i++)diff|=(actual[i]||0)^(want[i]||0);return diff===0;
 }
-export {formPage as passwordLoginPage};
+export {formPage as passwordLoginPage, verify as verifyPassword};
 export async function passwordAuth(request,env){
  const u=new URL(request.url);
  if(u.pathname!=='/auth/password')return null;
  if(request.method!=='POST')return new Response('Method not allowed',{status:405,headers:{allow:'POST'}});
  if(request.headers.get('origin')!==u.origin)return formPage('Please retry sign-in from this page.',403);
- if(!env.DB||!env.DOAA_PASSWORD_VERIFIER||!env.DOAA_PASSWORD_USERNAME)return formPage('Password sign-in is not configured.',503);
+ if(!env.DB)return formPage('Password sign-in is not configured.',503);
  const size=Number(request.headers.get('content-length')||0);if(size>2048)return formPage('Invalid sign-in request.',400);
  let raw;try{raw=await request.text();if(raw.length>2048)throw Error('too large');}catch{return formPage('Invalid sign-in request.',400);}
  const params=new URLSearchParams(raw),username=params.get('username')||'',password=params.get('password')||'';
@@ -32,8 +32,9 @@ export async function passwordAuth(request,env){
  const now=Date.now(),windowStart=new Date(now-15*60000).toISOString();
  const row=await env.DB.prepare('SELECT attempts,window_started FROM password_login_limits WHERE bucket=?').bind(bucket).first();
  if(row&&Date.parse(row.window_started)>Date.parse(windowStart)&&row.attempts>=8)return formPage('Too many attempts. Try again later.',429);
- const validUser=username===env.DOAA_PASSWORD_USERNAME;
- const validPassword=await verify(password,env.DOAA_PASSWORD_VERIFIER);
+ const account=await env.DB.prepare('SELECT verifier FROM password_accounts WHERE username=?').bind(username).first();
+ const validUser=!!account;
+ const validPassword=await verify(password,account?.verifier||'');
  if(!validUser||!validPassword){
   await env.DB.prepare("INSERT INTO password_login_limits(bucket,attempts,window_started) VALUES(?,1,?) ON CONFLICT(bucket) DO UPDATE SET attempts=CASE WHEN window_started<? THEN 1 ELSE attempts+1 END,window_started=CASE WHEN window_started<? THEN excluded.window_started ELSE window_started END").bind(bucket,new Date(now).toISOString(),windowStart,windowStart).run();
   return formPage('Invalid credentials.',401);
