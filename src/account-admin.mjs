@@ -36,7 +36,9 @@ export async function accountAdminApi(request,env,user){
  if(actor?.role!=='admin')return reply({ok:false,error:'Administrator permission required'},403);
  if(path==='/account/users'){
   if(request.method!=='GET')return reply({ok:false,error:'Method not allowed'},405);
-  return env.ASSETS.fetch(new Request(new URL('/admin-users.html',request.url),request));
+  const asset=await env.ASSETS.fetch(new Request(new URL('/admin-users.html',request.url),request));
+  const headers=new Headers(asset.headers);headers.set('cache-control','private, no-store');headers.set('x-content-type-options','nosniff');headers.set('content-security-policy',"default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
+  return new Response(asset.body,{status:asset.status,headers});
  }
  if(path==='/api/admin/users'&&request.method==='GET'){
   const rows=await env.DB.prepare('SELECT username,role,created_at,changed_at,disabled_at,must_change_password FROM password_accounts ORDER BY username LIMIT 200').all();
