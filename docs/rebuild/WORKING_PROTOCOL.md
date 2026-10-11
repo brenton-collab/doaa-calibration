@@ -327,3 +327,5 @@ Flight lookup identity removed from related Airframe labels. ICAO24 is the fallb
 
 ## Async navigation runtime gate
 - Added `tests/rebuild-navigation-async.test.cjs` (`db77363`): executes the extracted production `openObject` function with deferred Flight and airport lookups, covering successful/failed Flight responses and stale responses after navigation or subject change. Isolated V8 execution passed 4 cases / 12 assertions. Native Node and complete browser smoke remain unverified.
+
+- Added executable Contact → Flight → Back journey regression (`f0e2889`): restores Contact subject, HTML and scroll, and suppresses the delayed Flight response. Isolated async suite now passes 5 cases / 20 assertions. SKY entry and Airframe journey, plus real browser execution, remain unverified.
