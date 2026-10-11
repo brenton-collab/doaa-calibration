@@ -32,8 +32,8 @@ export async function passwordAuth(request,env){
  const now=Date.now(),windowStart=new Date(now-15*60000).toISOString();
  const row=await env.DB.prepare('SELECT attempts,window_started FROM password_login_limits WHERE bucket=?').bind(bucket).first();
  if(row&&Date.parse(row.window_started)>Date.parse(windowStart)&&row.attempts>=8)return formPage('Too many attempts. Try again later.',429);
- const account=await env.DB.prepare('SELECT verifier FROM password_accounts WHERE username=?').bind(username).first();
- const validUser=!!account;
+ const account=await env.DB.prepare('SELECT verifier,must_change_password,disabled_at FROM password_accounts WHERE username=?').bind(username).first();
+ const validUser=!!account&&!account.disabled_at;
  const validPassword=await verify(password,account?.verifier||'');
  if(!validUser||!validPassword){
   await env.DB.prepare("INSERT INTO password_login_limits(bucket,attempts,window_started) VALUES(?,1,?) ON CONFLICT(bucket) DO UPDATE SET attempts=CASE WHEN window_started<? THEN 1 ELSE attempts+1 END,window_started=CASE WHEN window_started<? THEN excluded.window_started ELSE window_started END").bind(bucket,new Date(now).toISOString(),windowStart,windowStart).run();
@@ -43,5 +43,5 @@ export async function passwordAuth(request,env){
  const token=secureRandom(),created=new Date(now).toISOString(),age=7*24*3600,expires=new Date(now+age*1000).toISOString();
  const subject='password:'+username;
  await env.DB.prepare('INSERT INTO auth_sessions(token_hash,subject,created_at,expires_at) VALUES(?,?,?,?)').bind(await digest(token),subject,created,expires).run();
- return new Response(null,{status:303,headers:{location:'/', 'set-cookie':cookie(token,age),'cache-control':'no-store'}});
+ return new Response(null,{status:303,headers:{location:account.must_change_password?'/auth/change-password':'/', 'set-cookie':cookie(token,age),'cache-control':'no-store'}});
 }
