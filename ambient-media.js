@@ -29,7 +29,7 @@
     const query=new URLSearchParams({hex:String(a.id),registration:String(a.reg)});
     if(a.type)query.set('type',String(a.type));
     const response=await fetch('/api/investigate?'+query,{cache:'no-store',signal:controller.signal});
-    if(response.ok){lastQuery='';await poll()}
+    if(response.ok){lastQuery='';setTimeout(poll,0)}
    }catch{}finally{clearTimeout(timeout);discoveryBusy=false}
   },delay);
  }
