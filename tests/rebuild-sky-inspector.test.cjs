@@ -252,3 +252,9 @@ test('Back navigation restores subject and invalidates stale responses',()=>{
  assert.ok(back.includes('d.dataset.activeSurface=previous.surface'));
  assert.ok(back.includes('d.scrollTop=previous.scroll'));
 });
+
+test('Movement workspace is disposed once per Inspector surface change',()=>{
+ const source=fs.readFileSync(require('node:path').join(__dirname,'../flight-enrichment.js'),'utf8');
+ const section=source.slice(source.indexOf('function renderSurface('),source.indexOf("if(z==='airport')",source.indexOf('function renderSurface(')));
+ assert.equal(section.split('_doaaMovementsDispose?.()').length-1,1);
+});
