@@ -66,7 +66,7 @@ function field(dossier,predicates,fallback){
  if(values.length>1||supported.some(q=>q.status==='conflicting'))return{state:'conflicting',value:'CONFLICTING',claims:supported};
  if(values.length===1)return{state:'supported',value:values[0],claims:supported};
  if(fallback!=null&&fallback!=='')return{state:'reported',value:String(fallback),claims:[]};
- if(claims.length)return{state:'inferred',value:String(claims[0].value_text)+' · INFERRED',claims};
+ if(claims.length){const inferredValues=[...new Set(claims.map(q=>String(q.value_text)))];if(inferredValues.length>1)return{state:'conflicting',value:'CONFLICTING',claims};return{state:'inferred',value:inferredValues[0]+' · INFERRED',claims};}
  return{state:'unknown',value:'UNKNOWN',claims:[]};
 }
 return{number,time,punctuality,timing,position,observation,route,layout,field};
