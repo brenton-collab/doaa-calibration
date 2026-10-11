@@ -28,7 +28,7 @@ export async function authorize(request,env){
  const token=cookies(request).__Host_doaa_session;if(!token||!/^[\w-]{43}$/.test(token)||!env.DB)return null;
  const session=await env.DB.prepare('SELECT subject,expires_at FROM auth_sessions WHERE token_hash=?').bind(await hash(token)).first();
  if(!session||Date.parse(session.expires_at)<=Date.now())return null;
- if(session.subject.startsWith('password:')){const name=session.subject.slice(9);const account=await env.DB.prepare('SELECT username FROM password_accounts WHERE username=?').bind(name).first();return account?{subject:session.subject}:null;}
+ if(session.subject.startsWith('password:')){const name=session.subject.slice(9);const account=await env.DB.prepare('SELECT username,disabled_at,must_change_password FROM password_accounts WHERE username=?').bind(name).first();return account&&!account.disabled_at?{subject:session.subject,must_change_password:!!account.must_change_password}:null;}
  return approved(env,session.subject)?{subject:session.subject}:null;
 }
 export async function authentication(request,env){
@@ -46,7 +46,7 @@ export async function authentication(request,env){
   const salt=crypto.getRandomValues(new Uint8Array(16)),key=await crypto.subtle.importKey('raw',encoder.encode(next),'PBKDF2',false,['deriveBits']);
   const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt,iterations:100000,hash:'SHA-256'},key,256);
   const verifier='100000.'+encode(salt)+'.'+encode(bits);
-  await env.DB.prepare('UPDATE password_accounts SET verifier=?,changed_at=CURRENT_TIMESTAMP WHERE username=?').bind(verifier,name).run();
+  await env.DB.prepare('UPDATE password_accounts SET verifier=?,changed_at=CURRENT_TIMESTAMP,must_change_password=0 WHERE username=?').bind(verifier,name).run();
   await env.DB.prepare('DELETE FROM auth_sessions WHERE subject=?').bind(user.subject).run();
   return new Response(null,{status:303,headers:{location:'/', 'set-cookie':cookie('__Host_doaa_session','',0),'cache-control':'no-store'}});
  }
@@ -93,6 +93,7 @@ export async function gate(request,env){
  const path=new URL(request.url).pathname,isApi=path.startsWith('/api/')||path.startsWith('/memory/');
  let user;try{const handled=await authentication(request,env);if(handled)return{response:handled};user=await authorize(request,env);}catch(error){console.error('DOAA_AUTH_GATE',error?.stack||String(error));return{response:isApi?json({ok:false,error:'Authentication temporarily unavailable'},503):passwordLoginPage('Sign-in is temporarily unavailable.',503)};}
  if(!user)return{response:isApi?json({ok:false,error:'Sign-in required'},401):passwordLoginPage()};
+ if(user.must_change_password)return{response:isApi?json({ok:false,error:'Password change required'},403):new Response(null,{status:303,headers:{location:'/auth/change-password','cache-control':'no-store'}})};
  if(!['GET','HEAD','OPTIONS'].includes(request.method)&&!sameOrigin(request))return{response:json({ok:false,error:'Same-origin request required'},403)};
  return{user};
 }
