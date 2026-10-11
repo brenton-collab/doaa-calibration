@@ -28,7 +28,7 @@
   const idleMs = 5 * 60 * 1000;
   const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   const data = () => window.DOAALiveSnapshot?.() || { aircraft: [], observedAt: 0, home: null, provider: 'UNAVAILABLE' };
-  const usable = a => Number.isFinite(Number(a.lat)) && Number.isFinite(Number(a.lon)) && a.id;
+  const usable = a => a && a.id && a.lat != null && a.lat !== '' && a.lon != null && a.lon !== '' && Number.isFinite(Number(a.lat)) && Number.isFinite(Number(a.lon)) && Math.abs(Number(a.lat)) <= 90 && Math.abs(Number(a.lon)) <= 180;
   function updateButtons() {
     choice.querySelectorAll('[data-ambient-mode]').forEach(el => el.setAttribute('aria-pressed', String(el.dataset.ambientMode === mode)));
     choice.querySelector('[data-ambient-idle]').setAttribute('aria-pressed', String(idleEnabled));
@@ -82,7 +82,7 @@
   function drawSky(snapshot) {
     const {w,h} = dimensions();
     const home = snapshot.home;
-    const validHome = home && Number.isFinite(Number(home.lat)) && Number.isFinite(Number(home.lon));
+    const validHome = home && home.lat != null && home.lat !== '' && home.lon != null && home.lon !== '' && Number.isFinite(Number(home.lat)) && Number.isFinite(Number(home.lon)) && Math.abs(Number(home.lat)) <= 90 && Math.abs(Number(home.lon)) <= 180;
     const aircraft = (snapshot.aircraft || []).filter(usable);
     const cx = w * .5, cy = h * .5;
     const scale = Math.min(w,h) * .46 / 80;
