@@ -49,6 +49,37 @@ test('LOOK only offers actionable cues with recent evidence',()=>{
  assert.match(board.innerHTML,/Emergency transponder code/);
 });
 
+
+test('LOOK restores keyboard focus by aircraft ID after rank changes',()=>{
+ const window={};
+ new Function('window',look)(window);
+ let focusCount=0,active=null,buttons=[];
+ const document=global.document;
+ const fakeDocument={get activeElement(){return active}};
+ global.document=fakeDocument;
+ const board={
+  innerHTML:'',
+  contains:el=>buttons.includes(el),
+  querySelectorAll:()=>buttons
+ };
+ const render=(aircraft)=>{
+  buttons=aircraft.map(a=>({
+   dataset:{lookId:a.id,lookIndex:String(aircraft.indexOf(a))},
+   addEventListener(){},
+   focus(){focusCount++;active=this}
+  }));
+  window.DOAALook.render(board,{observedAt:Date.now(),aircraft},()=>{});
+ };
+ try{
+  const a={id:'abc123',lat:45,lon:-75,squawk:'7700'};
+  const b={id:'def456',lat:45,lon:-75,squawk:'7600'};
+  render([a,b]);active=buttons[1];
+  render([b,a]);
+  assert.equal(active.dataset.lookId,'def456');
+  assert.equal(focusCount,1);
+ }finally{if(document===undefined)delete global.document;else global.document=document}
+});
+
 test('multi-cell merge never treats old aircraft as recent',()=>{
  const src=functionSource(html,'mergeResponses','function compose');
  const norm=x=>({id:x.hex,lat:x.lat,lon:x.lon});
