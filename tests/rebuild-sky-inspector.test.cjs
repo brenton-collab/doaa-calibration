@@ -189,3 +189,14 @@ test('Aircraft identity labels distinguish reference and Contact feed from fligh
  assert.match(aircraft,/Flight lookup identity is excluded/);
  assert.doesNotMatch(aircraft,/f\?\.reg_number|f\?\.aircraft_icao/);
 });
+
+test('Aircraft fallback provenance is specific to registration and ICAO type',()=>{
+ const source=fs.readFileSync(require('node:path').join(__dirname,'../flight-enrichment.js'),'utf8');
+ const helper=fs.readFileSync(require('node:path').join(__dirname,'../inspector-flight.js'),'utf8');
+ const aircraft=source.slice(source.indexOf('function aircraft('),source.indexOf('function sightingLink('));
+ assert.match(aircraft,/y\.reg_number\?'AIRFRAME REFERENCE':'CONTACT FEED'/);
+ assert.match(aircraft,/y\.icao\?'AIRFRAME REFERENCE':'CONTACT FEED'/);
+ assert.match(helper,/fallbackSource='AIRFRAME REFERENCE'/);
+ assert.match(helper,/field\.state==='reported'\?fallbackSource/);
+ assert.doesNotMatch(aircraft,/f\?\.reg_number|f\?\.aircraft_icao/);
+});
