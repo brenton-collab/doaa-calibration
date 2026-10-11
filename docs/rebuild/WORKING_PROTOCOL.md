@@ -291,3 +291,8 @@ Flight lookup identity removed from related Airframe labels. ICAO24 is the fallb
 - Executed 32 Inspector regression cases against committed HTML/CSS/JS using isolated V8 with Node test/fs/assert adapters: 32 passed, 100 assertions.
 - Five assertion corrections removed stale literal expectations and substring false positives (`56a6203`, `da2f9e0`, `072fb19`, `2d5af3b`, `96d8c4e`). Application source was not changed by these fixes.
 - This is not the native Node runner or a browser interaction test. No deployment or paid CI.
+
+## Biography rendering checks
+- Executed eight rendering assertions against committed Inspector helpers using isolated V8; all passed. This is not a browser DOM test.
+- Date-only end boundary now retains DATE ONLY precision (`b22fc7e`), with source regression (`def8e94`).
+- Reran identity suite with adapters: 13 passing cases, 22 assertions. No deployment or paid CI.
