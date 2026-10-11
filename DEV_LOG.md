@@ -1,3 +1,9 @@
+## 2026-10-11 — Inspector execution checkpoint
+
+- [x] Executed nine isolated JavaScript checks against the current branch source: nine passed. Checks covered syntax, contextual navigation, render routing, Journey provenance, and telemetry freshness gates.
+- [ ] The committed Node tests, browser interactions, and device acceptance remain unexecuted.
+- [ ] Release remains gated; production unchanged. No paid CI used.
+
 ## Inspector checkpoint — 2026-10-11
 
 - [x] Fifth Inspector regression test committed (`fe295db`).
