@@ -65,3 +65,16 @@ test('reset revokes user sessions and requires password change',async()=>{
  assert.equal(r.status,200);assert.equal(db.sessions.has('password:reader'),false);
  assert.equal(db.accounts.get('reader').must_change_password,1);
 });
+
+test('admin page is not served to a member',async()=>{
+ const db=fakeDb();db.accounts.set('reader',{username:'reader',role:'user',disabled_at:null,must_change_password:0});
+ const request=req('https://doaa.example/account/users');
+ const denied=await accountAdminApi(request,env(db),{subject:'password:reader'});
+ assert.equal(denied.status,403);
+});
+test('administrator page is served from bundled HTML only after role check',async()=>{
+ const db=fakeDb();const environment={...env(db),ASSETS:{fetch:async request=>new Response('protected',{status:200,headers:{'content-type':'text/html'}})}};
+ const result=await accountAdminApi(req('https://doaa.example/account/users'),environment,{subject:'password:owner'});
+ assert.equal(result.status,200);
+ assert.equal(await result.text(),'protected');
+});
