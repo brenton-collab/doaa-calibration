@@ -172,7 +172,7 @@
       lastSlideId=signature;slideChangedAt=Date.now();
       photo.style.backgroundImage='url('+JSON.stringify(String(a.photo.url))+')';
 
-      count.textContent='CURRENT OBSERVATION · PHOTO VERIFIED';
+      count.textContent='PHOTO VERIFIED';
     }
       copy.innerHTML = '<div class="ambient-slide-reg">'+escapeHtml(a.reg)+'</div><div class="ambient-slide-type">'+escapeHtml(a.type||'Aircraft type unconfirmed')+'</div><div class="ambient-slide-details">'+escapeHtml(a.call||'')+' · '+escapeHtml(Math.round(Number(a.alt)||0))+' FT · '+escapeHtml(Math.round(Number(a.gs)||0))+' KT</div><div class="ambient-slide-credit">'+escapeHtml(a.photo.attribution)+' · '+escapeHtml(a.photo.license)+'</div>';
   }
@@ -188,7 +188,10 @@
     if (mode==='SKY') {
       slide.hidden=true;canvas.hidden=false;
       drawSky(snapshot);
-    } else drawSlides(snapshot);
+    } else {
+      drawSlides(snapshot);
+      if(lastSlideId)count.textContent=(fresh?'RECENT OBSERVATION':'LAST OBSERVED')+' · PHOTO VERIFIED';
+    }
   }
   function heartbeat() {
     if (!active && idleEnabled && !document.hidden && Date.now()-lastInteraction>=idleMs) enter();
