@@ -20,13 +20,13 @@ function functionSource(text,name,next){
 }
 test('all frontend inline scripts parse',()=>{
  let count=0;
- for(const match of html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/g)){
+ for(const match of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)){
   if(match[1].trim()){new Function(match[1]);count++}
  }
  assert.ok(count>=2);
  new Function(look);
  new Function(ambient);
- new Function(worker.replace(/^import .*$/gm,'').replace(/export default\\{/,'const defaultExport={'));
+ new Function(worker.replace(/^import .*$/gm,'').replace(/export default\{/,'const defaultExport={'));
 });
 test('SKY normalization rejects missing coordinates and preserves unknown telemetry',()=>{
  const src=functionSource(html,'norm','function resize');
@@ -49,11 +49,11 @@ test('LOOK only offers actionable cues with recent evidence',()=>{
  assert.match(board.innerHTML,/Emergency transponder code/);
 });
 test('acquisition and presentation reject false freshness',()=>{
- assert.match(html,/Number\\(e\\.data\\.now\\)>0/);
- assert.match(html,/aircraft:aircraft\\.filter\\(a=>!a\\._pinned\\)/);
- assert.match(html,/if\\(seq!==refreshSeq\\)return false;cellCache\\.set/);
- assert.match(ambient,/const a = recent\\?slideCandidate\\(snapshot\\):null/);
- assert.match(ambient,/if\\(!recent\\)trails\\.clear\\(\\)/);
+ assert.match(html,/Number\(e\.data\.now\)>0/);
+ assert.match(html,/aircraft:aircraft\.filter\(a=>!a\._pinned\)/);
+ assert.match(html,/if\(seq!==refreshSeq\)return false;cellCache\.set/);
+ assert.match(ambient,/const a = recent\?slideCandidate\(snapshot\):null/);
+ assert.match(ambient,/if\(!recent\)trails\.clear\(\)/);
  assert.match(worker,/RELAY OBSERVATION TIME UNAVAILABLE OR TOO OLD/);
  assert.match(worker,/ADS-B observations not recent enough/);
 });
