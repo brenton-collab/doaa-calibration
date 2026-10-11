@@ -140,3 +140,9 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `46c0a0e`: when opened from a keyboard-focused Rack row, Inspector focuses its close control. `7172178`: Escape from within Inspector dismisses it through the existing cleanup path.
 - `96b9ee0`, `65aac70`: regression assertions for return focus, keyboard entry, and Escape dismissal. Source checks confirmed the return-focus capture/lookup/fallback code; full Node and real browser checks still outstanding.
 - No deployment, infrastructure or paid CI changes.
+
+## Rack evidence and search-state implementation (2026-10-11)
+- User explicitly deferred live/browser testing and requested next implementation instead. This is a **deferred verification gate**, not a passed test.
+- `fd72d0e`/`ff23841`: Rack empty state now distinguishes acquisition, unavailable source, and genuinely empty observed view. A usable scout-only response is recognized via `now`, not cell count. `ec049aa` adds static regression assertions.
+- `3697b86`/`8944bcb`: asynchronous Rack searches use request sequence tokens, ignore superseded responses, and reject non-2xx HTTP. `2932f94`: failed search shows an explicit alert and clears stale search highlighting. `472b772`: closing search cancels the debounce and invalidates in-flight requests. `66843a8` adds source checks.
+- No browser/live test or full Node suite executed. No deployment or infrastructure changes. Next implementation should focus on source-aware position freshness and Inspector/BOARD coherence, preserving evidence semantics.
