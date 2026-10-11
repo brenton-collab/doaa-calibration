@@ -235,3 +235,11 @@ test('Contact identity does not borrow Flight lookup identifiers',()=>{
  assert.ok(!contact.includes('||f?.reg_number'));
  assert.ok(!contact.includes('f?.aircraft_icao'));
 });
+
+test('Airport movement navigation invalidates pending lookup responses',()=>{
+ const src=fs.readFileSync(require('node:path').join(__dirname,'../flight-enrichment.js'),'utf8');
+ const movement=src.slice(src.indexOf("d.querySelectorAll('[data-airport-movement]')"),src.indexOf("d.querySelectorAll('[data-flight-lookup-retry]')"));
+ assert.ok(movement.includes('rememberInspector(d);d._doaaNavigation=(d._doaaNavigation||0)+1;'));
+ assert.ok(src.includes('d._doaaNavigation===navigation&&d._doaaSubject===subject'));
+ assert.ok(src.includes('d._doaaNavigation=(d._doaaNavigation||0)+1;window.DOAATrackHistory?.dispose(d)'));
+});
