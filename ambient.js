@@ -148,11 +148,11 @@
     lastDrawAt=t;
   }
   function slideCandidate(snapshot) {
-    // Only exact-airframe media already reconciled by an Inspector is eligible.
-    // No image searches or new provider calls are made during composition changes.
+    // Only server-reconciled exact-airframe media is eligible, including hex-only live contacts.
+    // Rendering never initiates an image search or an external provider call.
     const available = (snapshot.aircraft||[]).filter(usable).map(a=>{
       const media=verifiedMedia.get(String(a.id).toLowerCase());
-      if(!media || failedPhotos.has(media.url) || !a.reg || String(media.registration).toUpperCase()!==String(a.reg).toUpperCase())return null;
+      if(!media || failedPhotos.has(media.url) || !media.registration || (a.reg && String(media.registration).toUpperCase()!==String(a.reg).toUpperCase()))return null;
       return {...a,photo:{url:media.url,registration:media.registration,license:media.license,attribution:media.attribution,page:media.page}};
     }).filter(Boolean);
     if(!available.length)return null;
@@ -173,7 +173,7 @@
       pendingSlideId = '';
       lastSlideId = '';
       photo.style.backgroundImage = '';
-      copy.innerHTML = recent?'<div class="ambient-empty-title">Watching for an identified airframe</div><p>No exact-aircraft photograph has been verified in this session. Ambient Slides will not substitute an unrelated aircraft image.</p>':'<div class="ambient-empty-title">Observations paused</div><p>Waiting for recent aircraft observations before displaying verified photographs.</p>';
+      copy.innerHTML = recent?'<div class="ambient-empty-title">Watching for a verified aircraft photograph</div><p>No exact-aircraft photograph has been verified in this session. Ambient Slides will not substitute an unrelated aircraft image.</p>':'<div class="ambient-empty-title">Observations paused</div><p>Waiting for recent aircraft observations before displaying verified photographs.</p>';
       count.textContent = '';
       return;
     }
