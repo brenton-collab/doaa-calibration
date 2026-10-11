@@ -6,11 +6,11 @@
  // One external investigation per five minutes, at most six per page session.
  // Existing server investigator owns source reconciliation and provenance.
  const DISCOVERY_GAP=300000,DISCOVERY_LIMIT=6;
- const attempted=new Set();
+ const attempted=new Set(),verifiedMedia=new Map();
  let discoveryCount=0,lastDiscovery=0,discoveryTimer=null,discoveryBusy=false;
  function scheduleDiscovery(aircraft,verified){
   if(discoveryTimer||discoveryBusy||discoveryCount>=DISCOVERY_LIMIT)return;
-  const candidates=aircraft.filter(a=>/^[A-Z0-9-]{3,12}$/i.test(String(a.reg||''))&&!verified.has(String(a.id).toLowerCase())&&!attempted.has(String(a.id).toLowerCase()+':'+String(a.reg).toUpperCase()));
+  const candidates=aircraft.filter(a=>/^[A-Z0-9-]{3,12}$/i.test(String(a.reg||''))&&!verified.has(String(a.id).toLowerCase())&&!verifiedMedia.has(String(a.id).toLowerCase()+':'+String(a.reg).toUpperCase())&&!attempted.has(String(a.id).toLowerCase()+':'+String(a.reg).toUpperCase()));
   if(!candidates.length)return;
   const delay=Math.max(30000,DISCOVERY_GAP-(Date.now()-lastDiscovery));
   discoveryTimer=setTimeout(async()=>{
@@ -66,6 +66,7 @@
     if((a.reg&&String(a.reg).toUpperCase()!==String(media.registration).toUpperCase())||(a.reg&&!liveReg)||(liveReg&&liveReg!==String(media.registration).toUpperCase()))continue;
     if(typeof media.url!=='string'||!/^https:\/\/[^\s/]+\//i.test(media.url)||!media.license||!media.attribution)continue;
     verified.add(String(media.id).toLowerCase());
+    verifiedMedia.set(String(media.id).toLowerCase()+':'+String(media.registration).toUpperCase(),media);
     window.dispatchEvent(new CustomEvent('doaa:airframe-media',{detail:media}));
    }
    if(recent)scheduleDiscovery(aircraft,verified);
