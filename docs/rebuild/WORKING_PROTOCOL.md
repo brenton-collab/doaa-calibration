@@ -255,3 +255,9 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `37a32e4`: source-level regression assertions for the fallback-source boundary.
 - Code committed; Node tests not executed and browser verification deferred. No deployment, D1 changes, paid CI or infrastructure modifications.
 - Next: review conflicting historical claims and effective-date semantics before changing core resolution; do not silently resolve temporal conflicts without explicit evidence.
+
+## Chronology boundary (2026-10-11)
+- `bee60c6`: dates do not establish current identity.
+- `b285961`: biography displays effective_to where present.
+- `bcf88ee`: added source assertion for end-date rendering.
+- Core resolver does not reconcile claim periods. Conflicting values remain visible. Tests not executed; no deployment or infrastructure changes.
