@@ -50,3 +50,9 @@ test('Rack search protects newer queries',()=>{
  assert.ok(html.includes('if(seq!==rackSearchSeq)return'));
  assert.ok(html.includes('Search unavailable. Try again.'));
 });
+
+test('Inspector fallback does not overstate freshness or overwrite newer selection',()=>{
+ assert.ok(html.includes('The last reported telemetry is shown above'));
+ assert.ok(html.includes("if(selected===id&&detail.classList.contains('show'))detailbody.innerHTML=inspectorTelemetry(a,live)"));
+ assert.ok(html.includes("a._pinned?'LAST KNOWN POSITION · NOT LIVE'"));
+});
