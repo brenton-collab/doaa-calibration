@@ -1,3 +1,9 @@
+## 2026-10-11 — Inspector rendering exercise
+
+- [x] Executed 12 isolated Inspector render-dispatch cases against branch source with representative and missing flight/airframe fields: all 12 returned without errors.
+- [ ] Browser DOM, navigation events, live network and visual acceptance remain unverified.
+- [ ] Complete feature content and Node suite still pending; production unchanged.
+
 ## 2026-10-11 — Inspector execution checkpoint
 
 - [x] Executed nine isolated JavaScript checks against the current branch source: nine passed. Checks covered syntax, contextual navigation, render routing, Journey provenance, and telemetry freshness gates.
