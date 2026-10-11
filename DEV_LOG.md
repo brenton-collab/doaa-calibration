@@ -1,3 +1,15 @@
+
+## 2026-10-11 — Product recovery branch (PR #48, not released)
+
+- Branch: `work/product-recovery-mobile-sky`; production unchanged.
+- SKY: provider quota warning reduced to a compact, accessible status control; mobile navigation spacing adjusted.
+- Inspector: compact mobile bottom sheet with explicit expand/collapse and independent content scrolling. Navigation now uses contact/airframe context and Sightings terminology. Browser acceptance still pending; complete locked object-tab model is not implemented.
+- SLIDES: cache loader and actual renderer now permit verified exact-airframe photographs for live ICAO24 contacts without a registration, while rejecting conflicting/stale registrations. Added identity regression tests.
+- SLIDES discovery: cache-first, viewport-scoped fallback to the existing `/api/investigate` endpoint for registration-bearing contacts lacking verified cached media. Initial cap: one investigation per five minutes, six per page session, 12-second timeout; delayed at least 30 seconds after a cache lookup. The existing server investigator performs provider access and D1 claim reconciliation. Results are never displayed directly; only subsequent licensed, attributed, exact-airframe D1 media qualifies. No new provider or paid service introduced.
+- Added tests `ambient-media-hex-only.test.cjs`, `ambient-slide-identity.test.cjs`, and `ambient-media-discovery.test.cjs`.
+- **Unverified:** test suite has not run against this branch; no Android/browser interaction checks; no preview or production deployment. The independent discovery path is bounded but does not yet offer model/type representative fallback, shared durable rate accounting, or provider-wide quota enforcement.
+- Next: execute tests and real mobile acceptance, fix defects, then implement lawful representative fallback and Inspector contextual content before a controlled release.
+
 # DOAA development log and restart handoff
 
 Updated: 2026-10-08. Evidence-qualified checkpoint; not a live runtime acceptance test.
