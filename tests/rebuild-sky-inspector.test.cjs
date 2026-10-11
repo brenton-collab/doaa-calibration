@@ -32,3 +32,8 @@ test('Inspector returns keyboard focus to its Rack origin even after rerender',(
  assert.match(html,/el\.dataset\.id===inspectorReturnFocus/);
  assert.match(html,/\(row\|\|racksearch\)\.focus\(\{preventScroll:true\}\)/);
 });
+
+test('Keyboard-opened Inspector receives focus and Escape closes it',()=>{
+ assert.match(html,/if\(inspectorReturnFocus\)detailclose\.focus\(\{preventScroll:true\}\)/);
+ assert.match(html,/detail\.addEventListener\('keydown',e=>\{if\(e\.key==='Escape'\)/);
+});
