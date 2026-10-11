@@ -94,3 +94,9 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `cd19879`: committed `tests/rebuild-account-migration.test.mjs` using Node 22 built-in `node:sqlite`. It applies migration 0015, inserts an existing account, applies 0016, and asserts the original identity/verifier survive and invalid role is rejected.
 - **Executed locally:** `node --test` against a manually reconstructed isolated copy of migrations 0015 and 0016 and the same test code: **1 passed, 0 failed**. The local copy was transcribed from the GitHub connector content because GitHub DNS remains unavailable in the container. This is a narrow executable validation, **not** proof that the full repo tests or Cloudflare D1 migration succeed. The Node SQLite API reports an experimental warning.
 - Still required: execute all Node tests from actual checkout, verify full preview schema against isolated D1, test auth and admin end-to-end with two users, validate session renewal in real browser, and fix failures. No production or preview deployment and no paid CI.
+
+## Renewal race regression follow-up (2026-10-11)
+- `f839cad`: renewal checks D1 update metadata (`meta.changes===1`) before issuing a refreshed cookie. This is intended to reject a revoked session that disappears between the read and update.
+- `009f741`: repaired mocked D1 `run()` result to include `{meta:{changes:1}}`.
+- `2485f9e`: added regression test where update reports zero changed rows, asserting 401 and no `Set-Cookie`.
+- These are committed but **not executed**. Verify real D1 `meta.changes` semantics and run tests before deploying. No preview or production changes.
