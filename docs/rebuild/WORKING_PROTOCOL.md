@@ -160,3 +160,9 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `93978ab`: initial Inspector selection uses the per-aircraft observation evidence, not the newest global feed timestamp. `7746ae3` adds a source regression check.
 - `4a02df1`/`7df0896`: enriched Inspector refresh no longer hardcodes `live:true, ago:0`; it uses canonical observation freshness and aircraft observation age in state and rendered surfaces. This prevents an older aircraft from being declared live simply because another aircraft updated the feed.
 - These are source commits, not executed tests. User deferred live testing. No deployment, production D1 or infrastructure changes.
+
+## Per-aircraft SKY marker and Rack filtering (2026-10-11)
+- `27822ad`: current SKY aircraft markers now require `DOAASkyMapCore.fresh(a,t)`; selected pinned last-known positions retain their existing visually subdued representation.
+- `cd11bdb`: visible airborne count and the Rack's input list now use the same per-aircraft predicate. A fresh overall feed no longer makes a stale individual aircraft count as current.
+- `f02f7b6`: source regression assertions for both filters.
+- Progress estimate shared with product owner: approximately 20–25% of full rebuild by scope, explicitly provisional. UX contracts are established; this is still inherited-app hardening, not completion of the new architecture. Browser/live testing remains deferred by request; automated tests not executed. No deployment or production data writes.
