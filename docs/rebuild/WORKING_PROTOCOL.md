@@ -218,3 +218,8 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `95d47b4`: Flight carrier enrichment explicitly does not prove the observed aircraft's operator.
 - `bfe5b51`: Airframe section is labeled as flight-source evidence; `6a6363a` adds source-level regression assertions.
 - Tests unexecuted and browser verification deferred. No deployment or infrastructure changes.
+
+## Flight related-object provenance (2026-10-11)
+- `d5912a3` makes related-object generation context-aware and suppresses inferred Airframe links in Flight context.
+- `e170acc` applies that context to Flight Explore. Contact and aircraft navigation remain unchanged.
+- `8f022d3` adds source-level regression assertions. Tests not executed; browser verification deferred; deployment unchanged.
