@@ -23,6 +23,16 @@ with sync_playwright() as playwright:
         errors = []
         page.on("pageerror", lambda error: errors.append(str(error)))
         try:
+            # The UI requires same-origin Worker APIs. A static-only preview is not a valid test target.
+            health = page.request.get(base + "/api/health", timeout=15000)
+            assert health.ok, f"same-origin /api/health unavailable (HTTP {health.status})"
+            try:
+                health_data = health.json()
+            except ValueError as error:
+                raise AssertionError("/api/health returned non-JSON content") from error
+            assert health_data.get("ok") is True and health_data.get("service") == "DOAA", (
+                "same-origin /api/health did not identify the DOAA backend"
+            )
             response = page.goto(base + "/", wait_until="domcontentloaded", timeout=20000)
             assert response and response.status < 400, "index did not load"
             assert page.title().startswith("DOAA"), "unexpected page title"
