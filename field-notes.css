@@ -76,3 +76,7 @@ html,body{background:var(--bg);color:var(--ice);font-family:Inter,ui-sans-serif,
 .detail-body .inspector-fallback dd{margin:5px 0 0;color:#2b4350;font-size:14px;overflow-wrap:anywhere}
 @media(max-width:360px){.detail-body .inspector-facts,.detail-body .inspector-fallback dl{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.detail-body .inspector-loading[data-state="loading"]:before{animation:none;border-top-color:#285e81}}
+
+/* Rack rows are navigable controls, including for keyboard users. */
+.rail .row[role="button"]:focus-visible{outline:3px solid #3377a5;outline-offset:-3px;background:#edf3f3;border-radius:7px}
+.rail .row[role="button"]{min-height:70px}
