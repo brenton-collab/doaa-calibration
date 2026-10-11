@@ -110,3 +110,9 @@ Important remaining issues: track drawing is observation-history only while the 
 - 0d8c563 rejects missing/out-of-range LOOK coordinates and future-dated observations as fresh.
 - d911885 makes Inspector close return to LOOK when investigation originated from LOOK. 1d2a294 clears that return intent on explicit primary-view changes.
 - Implemented on integration branch; browser journey not yet executed. No production or infrastructure changes.
+
+## 2026-10-10 — BOARD backend/frontend contract
+- 8fb5b63: BOARD API rejects blank latitude/longitude rather than silently coercing them to zero before free ADS-B relay acquisition.
+- e3c5dea: BOARD-to-Inspector preserves absent altitude, groundspeed, heading and vertical rate as unknown instead of manufacturing zeros, and checks coordinate bounds.
+- 6a0e276: closing an Inspector opened from BOARD returns to BOARD; other navigation remains unchanged.
+- Both inline HTML scripts parsed successfully after the changes; API and navigation contract source checks passed. Full browser and backend integration not yet verified. No production deploy, premium requests, D1 writes or CI.
