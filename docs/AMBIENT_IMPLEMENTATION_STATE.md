@@ -70,3 +70,8 @@ Important remaining issues: track drawing is observation-history only while the 
 - Execution environment has Node 22/npm 10, but cannot resolve github.com for cloning the private repository. Connected GitHub fetch can read individual files; complete native suite and browser acceptance were **not** run in this tranche.
 - Production remains untouched; no provider calls, D1 writes, merges or deployments.
 - Next release gate: transport complete branch into executable workspace, run packaging and native tests, inspect browser flows, then reconcile branch divergence before deployment.
+
+## 2026-10-10 — packaging validation continuation
+- Commit ef2d2ee stages and validates curated frontend assets before replacing dist; an invalid/missing source no longer destroys the previous local dist.
+- Node 22 local isolated checks of the exact updated builder logic: syntax passed, missing-source failure preserved prior dist sentinel, and complete seven-file synthetic fixture successfully replaced dist. These are **builder-specific tests using synthetic assets**, not full repository tests or browser acceptance.
+- Direct GitHub clone still fails DNS resolution in execution container. Connected GitHub API can enumerate and fetch files but does not directly mount a checkout. Full native suite, real browser and Cloudflare acceptance remain open. Production untouched.
