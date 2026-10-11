@@ -1,3 +1,11 @@
+## 2026-10-11 — Inspector regression checklist (PR #48)
+
+- [x] Added `tests/inspector-contexts.test.cjs` (commit e8dbce4): four Node tests for locked object tab sets, render routing, observed-vs-unknown progress/timing, and shared evidence-qualified Journey.
+- [x] Connector-side static inspection confirms all six new render branches exist, two shared Journey calls, and correct contextual tab declarations.
+- [ ] **Execute** `node --test tests/inspector-contexts.test.cjs` and the existing regression suite in a runnable repository checkout. No claim that these tests passed: repository source was inspected through GitHub, not executed by Node.
+- [ ] Browser/device acceptance and non-production deployment remain pending. Production unchanged; no paid CI, migration, or provider call.
+- Next: obtain a runnable repository artifact without billable CI, run tests, fix failures, and continue full Inspector content.
+
 ## 2026-10-11 — Inspector implementation checklist (PR #48; not released)
 
 - [x] Read DEV_LOG.md, DOAA_SPEC.md, and all Field Notes decisions. Decision 176 supersedes the earlier Flight two-tab lock; Decision 177 governs Airport. Decision 179/180 defines release scope.
