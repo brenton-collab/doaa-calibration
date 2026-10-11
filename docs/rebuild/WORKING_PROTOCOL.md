@@ -324,3 +324,6 @@ Flight lookup identity removed from related Airframe labels. ICAO24 is the fallb
 - Local execution environment has Chromium, Playwright, and Node. Direct outbound GitHub/Render DNS is unavailable, so no browser test of the assembled app has yet run. GitHub connector can read branch files, but those files are not automatically available to the local browser environment.
 - Late dossier navigation guard committed (`4c3bc7b`) with regression (`5f37835`). Inspector source suite passed 37 cases / 113 assertions. Browser-level SKY → Contact → Airframe → Flight → Back remains open.
 - Prefer assembling a local read-only app copy and running browser smoke tests before any preview deployment. Keep the existing Render relay and `main` untouched.
+
+## Async navigation runtime gate
+- Added `tests/rebuild-navigation-async.test.cjs` (`db77363`): executes the extracted production `openObject` function with deferred Flight and airport lookups, covering successful/failed Flight responses and stale responses after navigation or subject change. Isolated V8 execution passed 4 cases / 12 assertions. Native Node and complete browser smoke remain unverified.
