@@ -276,3 +276,8 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 
 ## Related Airframe link
 Flight lookup identity removed from related Airframe labels. ICAO24 is the fallback label when registration is unknown. Source regression added. Tests remain unexecuted.
+
+## Date-only identity claims
+- Valid date-only effective dates are included in Aircraft chronology (`1e0170f`).
+- The display marks them DATE ONLY rather than assigning a source time (`124c77d`).
+- Source regression added (`c4a0c91`). Node tests not yet run.
