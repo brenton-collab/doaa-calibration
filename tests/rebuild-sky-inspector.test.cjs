@@ -181,3 +181,11 @@ test('Aircraft dossier does not promote flight-source registration or type to ai
  assert.ok(!aircraft.includes('f?.reg_number'));
  assert.ok(!aircraft.includes('f?.aircraft_icao'));
 });
+
+test('Aircraft identity labels distinguish reference and Contact feed from flight lookup',()=>{
+ const source=fs.readFileSync(require('node:path').join(__dirname,'../flight-enrichment.js'),'utf8');
+ const aircraft=source.slice(source.indexOf('function aircraft('),source.indexOf('function sightingLink('));
+ assert.match(aircraft,/Airframe reference and Contact-feed identifiers are source-reported/);
+ assert.match(aircraft,/Flight lookup identity is excluded/);
+ assert.doesNotMatch(aircraft,/f\?\.reg_number|f\?\.aircraft_icao/);
+});
