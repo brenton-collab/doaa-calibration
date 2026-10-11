@@ -44,3 +44,9 @@ test('Rack distinguishes acquisition, feed loss and an observed empty view',()=>
  assert.match(html,/No airborne aircraft observed in this view/);
  assert.match(html,/role="status"/);
 });
+
+test('Rack search protects newer queries',()=>{
+ assert.ok(html.includes('const seq=++rackSearchSeq'));
+ assert.ok(html.includes('if(seq!==rackSearchSeq)return'));
+ assert.ok(html.includes('Search unavailable. Try again.'));
+});
