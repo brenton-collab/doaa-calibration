@@ -39,5 +39,14 @@ Verify migrations 0014–0015 and password account bootstrap code; establish a c
 - Commit `ac30b45`: extended static regression to require password tables in both migrations and generated preview schema. **Not yet executed in Node.**
 - GitHub branch remains isolated. Production, preview and relay unchanged. Next focus: executable tests, then durable revocable login and protected administrator account management.
 
+## Engineering increment — account foundation, 2026-10-11
+- Commit `49d9a35`: additive `migrations/0016_account_administration.sql` adds `role`, `disabled_at`, and `must_change_password` to existing `password_accounts`. Does not alter existing subjects or personal records.
+- Commit `ae836ee`: `src/account-admin.mjs` administrator-only API module with list/create/disable/enable/reset-password routes; temporary credential returned once on successful create/reset. Uses the configured bootstrap username as initial admin. **Not integrated with Worker yet; not live-functional.**
+- Commits `407987a`, `0f29931`: password login rejects disabled accounts and redirects first-use users to password change; auth gate enforces disabled status and required password change. **These source changes require migration 0016; do not deploy in isolation.**
+- Commit `df04af0`: isolated preview schema now includes migration 0016.
+- Attempted `src/worker.js` integration by inserting `accountAdminApi` import and dispatcher call, but repository tool blocked the large-file write. **Worker remains unmodified for admin dispatch.** Do not describe admin API as reachable. Investigate a safe smaller-patch mechanism or modular Worker extraction without triggering costly CI.
+- **No Node execution, isolated DB migration, live login, or adversarial two-user tests yet.** No production/preview/relay changes. Existing seven-day session still violates persistent-session contract; UI for admin not built.
+- **Next action:** resolve safe Worker integration; run tests on local/isolated executable repository; validate 0016 schema, authorization, account isolation and forced-change flow; then add a Field Notes Account interface and secure renewable sessions. Do not deploy incomplete account changes.
+
 ## Thread handoff checklist
 Before ending any substantive work session, record: exact branch and commit; files changed; tested flows and commands/results; deployment/DB status; unresolved bugs and risks; the single next executable step; any user action genuinely required. If an action fails, record what was tried and the smallest next investigation. Do not imply asynchronous background work.
