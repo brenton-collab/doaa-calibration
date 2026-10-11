@@ -80,3 +80,7 @@ html,body{background:var(--bg);color:var(--ice);font-family:Inter,ui-sans-serif,
 /* Rack rows are navigable controls, including for keyboard users. */
 .rail .row[role="button"]:focus-visible{outline:3px solid #3377a5;outline-offset:-3px;background:#edf3f3;border-radius:7px}
 .rail .row[role="button"]{min-height:70px}
+
+/* Inspector affordances: respect safe areas and maintain clear keyboard navigation. */
+.detail.show .detail-tray button:focus-visible,.detail.show .detail-close:focus-visible{outline:3px solid #3377a5;outline-offset:2px;border-radius:6px}
+@media(max-width:700px) and (orientation:portrait){.detail.show .detail-tray{scroll-padding-inline:16px}.detail.show .detail-body{padding-bottom:18px}}
