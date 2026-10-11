@@ -196,3 +196,8 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `1ff7cb5`: flight lookup completion also checks that the Flight surface is still active.
 - `0dc36dc`: source-level regression assertions for section switching and flight response containment.
 - Automated tests and browser/live transitions have not been executed; no deployment or infrastructure changes.
+
+## Airport identity lookup feedback (2026-10-11)
+- `947791c` records loading, ready and unavailable identity lookup states. `1fb7d99` and `2e3b3d3` render an inline airport identity status and a retry control without hiding the known airport code.
+- `d54d611` wires retry to repeat the airport lookup without pushing duplicate Back history. `46cb794` adds source-level regression assertions.
+- Tests are not executed and browser/live testing is deferred. No deployment or paid infrastructure changes.
