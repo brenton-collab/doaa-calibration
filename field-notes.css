@@ -1,0 +1,47 @@
+/* Field Notes Light · SKY and Investigator. Deliberately scoped to primary workspace. */
+:root{--bg:#f4f3ee;--line:#d8dcd8;--cyan:#285f7d;--ice:#27343d;--muted:#65737b;--purple:#496b82;--amber:#986b30}
+html,body{background:var(--bg);color:var(--ice);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+#tiles{filter:grayscale(.8) brightness(1.55) contrast(.78) saturate(.65);opacity:.78}
+.top{padding:19px 22px 14px;background:linear-gradient(180deg,rgba(250,249,245,.97),rgba(250,249,245,.89) 74%,transparent);z-index:7}
+.brand{color:#607582;letter-spacing:.16em;font-size:10px}
+.title{font-size:27px;line-height:1.12;letter-spacing:-.045em;font-weight:650;color:#233540}
+.status{color:#657680;font-size:11px;line-height:1.65}
+.live{color:#24627c}.view{color:#526e83}.partial{color:#946b36}
+.primary-tabs{background:#e9ece9;border-color:#d4dbd9;border-radius:12px;gap:2px}
+.primary-tabs button{color:#516674;border-radius:9px;letter-spacing:.045em}
+.primary-tabs button[aria-pressed="true"]{background:#fff;color:#203f55;box-shadow:0 1px 6px #253c4920}
+.rail{background:rgba(251,250,247,.97);border-color:#d4dcd9;box-shadow:0 -4px 22px #253c4910;color:#283943}
+.rail h2{color:#71818a;letter-spacing:.13em}
+.pull:after{background:#b8c4c7}
+.row{border-top-color:#e0e5e2}
+.row.sel{border-left-color:#397496;background:#eef3f4}
+.call{color:#263b4a}.meta{color:#677984}
+.detail.show{background:#faf9f5;color:#253843;border:1px solid #d3dcd9;border-radius:17px;box-shadow:0 18px 50px #182e3c25;backdrop-filter:none;padding:18px 18px 0}
+.detail-body{scrollbar-color:#c6d2d3 transparent}
+.detail-tray{background:#f5f5f0;border-top-color:#dce3df;margin:12px -18px 0;padding:9px 18px max(10px,env(safe-area-inset-bottom))}
+.detail-tray button{color:#527187;min-height:34px;font-family:inherit;font-size:12px}
+.detail-tray button.active{color:#183e5b}
+.detail-close{background:#edf1ee;color:#405c6c;border-radius:50%;width:40px;height:40px;right:12px;top:12px}
+.detail-expand{background:#edf1ee;color:#355c72;border-color:#c8d5d4}
+.dcall{font-size:18px;letter-spacing:-.025em;color:#263d4b}
+.dmeta{color:#71828a}
+.recenter{background:#fbfaf7;color:#365d76;border:1px solid #c6d5d9;border-radius:9px;box-shadow:0 3px 10px #2037451a}
+.attrib{color:#697f8b}
+.board{background:#f4f3ee;color:#263c49}
+:where(button,a,input,select,[role="button"]):focus-visible{outline:3px solid #3377a5!important;outline-offset:3px}
+@media(min-width:701px) and (min-height:561px){
+ .detail.show{top:156px;left:20px;width:min(425px,calc(100vw - 42px));max-width:min(40vw,425px);max-height:calc(100dvh - 177px)}
+}
+@media(max-width:700px) and (orientation:portrait){
+ .top{padding:14px 15px 10px}
+ .title{font-size:24px}
+ .primary-tabs button{padding:9px 10px;min-height:44px;font-size:10px}
+ .detail.show{background:#faf9f5;border-color:#d4dedb;border-radius:22px 22px 0 0;padding:12px 16px 0;box-shadow:0 -8px 32px #18354326}
+ .detail.show .detail-tray{margin:0 -16px;padding:8px 16px max(10px,env(safe-area-inset-bottom))}
+ .detail.show .detail-close{right:12px;top:10px}
+}
+@media(orientation:landscape) and (max-height:560px){
+ .top{padding:8px 12px}
+ .detail.show{border-radius:13px}
+}
+@media(prefers-reduced-motion:reduce){.rail,.detail.show,.recenter{transition:none!important}}
