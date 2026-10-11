@@ -228,3 +228,10 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - Flight Explore uses a dedicated context that excludes an airframe link based only on nearby Contact/flight enrichment. The link remains available in Contact contexts with a valid ICAO24.
 - `147539c` removes Flight self-navigation; `db02ab8` adds source-level regression assertions.
 - Automated tests remain unexecuted; browser testing is deferred and deployment unchanged.
+
+## Related-object navigation provenance checkpoint (2026-10-11)
+- Confirmed from branch source: Flight Explore passes `flight` context, suppressing both inferred Airframe links and self-referential Flight links. Contact and Aircraft retain ICAO24-gated Airframe navigation; this identifies the observed transponder's airframe dossier, not a dated flight assignment.
+- `d5ed11c` replaces the route-shaped subtitle on Contact/Aircraft → Flight navigation with `Possible flight association · not a confirmed assignment`. Airport links remain sourced from flight departure/arrival codes; they indicate route-source endpoints, not independently observed aircraft movements.
+- `03ecae2` adds source-level regression assertions for the qualified Flight label, airport links, and Flight-context guards.
+- Source reviewed but automated Node tests **not executed**; no browser/live testing, deployment, D1 modification, or paid CI. Remaining verification: exercise actual Contact → Flight → Airport → Back and Aircraft navigation when browser testing resumes; confirm source semantics for airport endpoint display.
+- Next implementation: review Aircraft dossier's flight-source fallback fields and explicit identity claims for any remaining provenance leakage, then extend focused regressions.
