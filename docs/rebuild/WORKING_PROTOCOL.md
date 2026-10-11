@@ -266,3 +266,10 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `707a214`: dated biography now warns that source effective dates are ordered but not reconciled into current identity.
 - `1c3790f`: source assertion for that warning.
 - No change to claim conflict resolution. Tests not executed; no browser verification or deployment.
+
+## Identity resolver scenario coverage (2026-10-11)
+- `fc67af0`: new executable Node tests cover supported, sequential, overlapping, superseded, undated, conflicting, fallback, inferred and unknown identity cases.
+- `8e29120`: core resolver no longer selects the first inferred claim when multiple inferred values disagree; it returns CONFLICTING. Identical inferred values remain inferred.
+- `5c29080`: regression tests for differing and duplicate inferred values.
+- Deliberate limit: effective dates do not automatically resolve competing supported claims into current identity.
+- Tests committed but not executed. Browser verification and deployment deferred; no paid CI, D1 or infrastructure changes.
