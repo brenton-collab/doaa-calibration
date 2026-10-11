@@ -57,3 +57,7 @@ test('Inspector fallback does not overstate freshness or overwrite newer selecti
  assert.ok(html.includes('DOAASkyMapCore.observation(a,Date.now()).label'));
  assert.ok(html.includes('!DOAASkyMapCore.fresh(a,Date.now())'))
 });
+
+test('Inspector selection uses aircraft observation timestamp rather than feed clock',()=>{
+ assert.ok(html.includes('const live=DOAASkyMapCore.observation(a,Date.now()).fresh'));
+});
