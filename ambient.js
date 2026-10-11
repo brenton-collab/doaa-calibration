@@ -77,6 +77,7 @@
   // Persistent strokes accumulate from actual observed movement, never simulated traffic.
   const trails = new Map();
   const verifiedMedia = new Map();
+  const failedPhotos = new Set();
   window.addEventListener('doaa:airframe-media', event => {const m=event.detail||{};if(m.id&&/^https:\/\//i.test(String(m.url||''))&&m.registration&&m.license&&m.attribution)verifiedMedia.set(String(m.id).toLowerCase(),{...m,seenAt:Date.now()});});
   let lastDrawAt = 0;
   function drawSky(snapshot) {
@@ -150,7 +151,7 @@
     // No image searches or new provider calls are made during composition changes.
     const available = (snapshot.aircraft||[]).filter(usable).map(a=>{
       const media=verifiedMedia.get(String(a.id).toLowerCase());
-      if(!media || !a.reg || String(media.registration).toUpperCase()!==String(a.reg).toUpperCase())return null;
+      if(!media || failedPhotos.has(media.url) || !a.reg || String(media.registration).toUpperCase()!==String(a.reg).toUpperCase())return null;
       return {...a,photo:{url:media.url,registration:media.registration,license:media.license,attribution:media.attribution,page:media.page}};
     }).filter(Boolean);
     if(!available.length)return null;
@@ -177,7 +178,11 @@
     const signature = [a.id,a.photo.url].join('|');
     if (signature !== lastSlideId) {
       lastSlideId=signature;slideChangedAt=Date.now();
-      photo.style.backgroundImage='url('+JSON.stringify(String(a.photo.url))+')';
+      photo.style.backgroundImage='';
+      const image = new Image();
+      image.onload=()=>{if(active&&mode==='SLIDES'&&lastSlideId===signature)photo.style.backgroundImage='url('+JSON.stringify(String(a.photo.url))+')';};
+      image.onerror=()=>{failedPhotos.add(a.photo.url);if(lastSlideId===signature){lastSlideId='';photo.style.backgroundImage='';if(active&&mode==='SLIDES')update();}};
+      image.src=a.photo.url;
 
       count.textContent='PHOTO VERIFIED';
     }
