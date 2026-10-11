@@ -84,3 +84,19 @@ html,body{background:var(--bg);color:var(--ice);font-family:Inter,ui-sans-serif,
 /* Inspector affordances: respect safe areas and maintain clear keyboard navigation. */
 .detail.show .detail-tray button:focus-visible,.detail.show .detail-close:focus-visible{outline:3px solid #3377a5;outline-offset:2px;border-radius:6px}
 @media(max-width:700px) and (orientation:portrait){.detail.show .detail-tray{scroll-padding-inline:16px}.detail.show .detail-body{padding-bottom:18px}}
+
+/* Field Notes Inspector: reusable editorial anatomy across contact, flight, airframe and airport. */
+.detail-body .fn-inspector-surface{min-width:0;padding:0 0 8px}
+.detail-body .fn-inspector-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:4px 0 7px;border-bottom:1px solid #dce4e1}
+.detail-body .fn-inspector-heading{display:flex;align-items:center;gap:9px;min-width:0}
+.detail-body .fn-inspector-heading .dcall{font-size:clamp(18px,2vw,23px);line-height:1.15;letter-spacing:-.035em;color:#203947;overflow-wrap:anywhere;margin:0}
+.detail-body .fn-inspector-logo{width:30px;height:30px;object-fit:contain;background:#fff;border:1px solid #e0e7e5;border-radius:7px;padding:3px;flex:none}
+.detail-body .fn-inspector-kicker{font:650 10px/1.4 ui-sans-serif,system-ui,sans-serif;letter-spacing:.085em;text-transform:uppercase;color:#56758a;text-align:right;flex-shrink:0;padding-top:4px}
+.detail-body .fn-inspector-subtitle{margin:9px 0 12px;font-size:13px;line-height:1.5;color:#566d7b}
+.detail-body .fn-inspector-section{padding:13px 0 4px;border-bottom:1px solid #e2e8e4;min-width:0}
+.detail-body .fn-inspector-section:last-child{border-bottom:0}
+.detail-body .fn-inspector-section-title{margin:0 0 9px;font:700 10px/1.4 ui-sans-serif,system-ui,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:#56768a}
+.detail-body .fn-inspector-hero{position:relative;margin:0 0 15px;overflow:hidden;border-radius:12px;background:#e8edeb}
+.detail-body .fn-inspector-hero img{display:block;width:100%;height:clamp(120px,24vh,210px);object-fit:cover}
+.detail-body .fn-inspector-hero figcaption{position:absolute;bottom:0;left:0;right:0;padding:20px 12px 8px;background:linear-gradient(transparent,rgba(20,31,39,.82));font:500 10px/1.3 ui-sans-serif,system-ui,sans-serif;color:#fff}
+@media(max-width:420px){.detail-body .fn-inspector-header{flex-wrap:wrap;gap:4px}.detail-body .fn-inspector-kicker{text-align:left;padding:0}}
