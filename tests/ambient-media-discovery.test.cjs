@@ -26,6 +26,22 @@ test('SLIDES discovery is delayed, bounded, and uses the existing investigator',
  assert.equal(events.length,0,'investigation response is not directly displayed without verification');
 });
 
+test('SLIDES cancels queued investigation if ADS-B observation becomes stale',async()=>{
+ const handlers=new Map(),timers=[],calls=[];
+ let observedAt=Date.now();
+ const aircraft=[{id:'a1b2c3',reg:'C-TEST'}];
+ const win={DOAAAmbient:{mode:'SLIDES',active:true},DOAALiveSnapshot:()=>({aircraft,observedAt}),addEventListener:(name,fn)=>handlers.set(name,fn),dispatchEvent:()=>{}};
+ vm.runInNewContext(source,{window:win,document:{hidden:false},Date,AbortController,URLSearchParams,encodeURIComponent,
+  CustomEvent:class{},setInterval:()=>1,setTimeout:(fn,ms)=>{timers.push({fn,ms});return timers.length},clearTimeout:()=>{},
+  fetch:async url=>{calls.push(String(url));return{ok:true,json:async()=>({media:[]})}}});
+ await handlers.get('doaa:ambient-enter')();
+ const scheduled=timers.find(t=>t.ms>=30000);
+ assert.ok(scheduled);
+ observedAt=Date.now()-120000;
+ await scheduled.fn();
+ assert.equal(calls.filter(x=>x.startsWith('/api/investigate')).length,0);
+});
+
 test('SLIDES never investigates aircraft without a registration',async()=>{
  const handlers=new Map(),timers=[],calls=[];
  const win={DOAAAmbient:{mode:'SLIDES',active:true},DOAALiveSnapshot:()=>({aircraft:[{id:'a1b2c3',reg:''}]}),addEventListener:(name,fn)=>handlers.set(name,fn),dispatchEvent:()=>{}};
