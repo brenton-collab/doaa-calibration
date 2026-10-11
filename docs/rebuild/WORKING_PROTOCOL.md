@@ -248,3 +248,10 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `eae4082`: added static assertions for this boundary.
 - Inspected flight-core field resolution: divergent supported claims or explicit conflicting status yield CONFLICTING; a sole supported claim wins over fallback; fallback wins over inferred claims. This is source inspection, not executed verification.
 - Outstanding: per-field fallback provenance and temporal reconciliation. Tests and browser checks not run. No deployment or infrastructure changes.
+
+## Aircraft field-level fallback provenance (2026-10-11)
+- `50f8351` and `31ac55d`: airframeField accepts a fallback source and exposes it in the field explanation only when the core resolver selects a reported fallback. Dossier claims retain their claim-level evidence explanation.
+- `8f6873c`, `fd72490`, `daaa835`: Aircraft registration and ICAO type pass AIRFRAME REFERENCE or CONTACT FEED based on which fallback is present; Flight lookup values remain excluded.
+- `37a32e4`: source-level regression assertions for the fallback-source boundary.
+- Code committed; Node tests not executed and browser verification deferred. No deployment, D1 changes, paid CI or infrastructure modifications.
+- Next: review conflicting historical claims and effective-date semantics before changing core resolution; do not silently resolve temporal conflicts without explicit evidence.
