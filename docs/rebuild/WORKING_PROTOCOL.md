@@ -315,3 +315,7 @@ Flight lookup identity removed from related Airframe labels. ICAO24 is the fallb
 - Confirmed the sole Render workspace contains the existing free-plan `doaa-adsb-relay` service, tracking `main`, with application startup logs on October 11. No deploy or service changes.
 - Relay supports `/health` and `/traffic`, with ADSB.FI, ADSB.ONE, and ADSB.LOL fallback. HTTP probe from available execution environment failed DNS resolution; no live payload was validated. Render request logs were empty for the queried period.
 - Removed duplicate movement-workspace disposal on Inspector surface transitions (`27d7121`). Regression addition attempted but blocked; follow up when writes permit.
+
+## Navigation regression gate
+- Added regression covering exactly one movement-workspace disposal per Inspector surface transition (`6b3271c`). Isolated V8 Inspector suite passed 36 tests and 112 assertions against committed sources. This is not browser integration verification.
+- Priority remains complete SKY → Contact → Airframe → Flight → Back journeys, asynchronous race behavior, and then release-quality UI. Live relay response remains unverified; no production changes.
