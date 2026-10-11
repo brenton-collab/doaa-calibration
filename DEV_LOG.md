@@ -1,3 +1,12 @@
+## 2026-10-11 — full product execution audit (PR #48)
+
+- Branch `work/product-recovery-mobile-sky`, baseline `3e6aa0ff98aaf02ac570c19a63625673bf4ad42a`; only this branch is writable. Production and main remain unchanged.
+- Read canonical Field Notes, SPEC, log, release safety plan, workflows and actual source. Added the full 184-entry matrix (JSON plus complete Markdown contract); retained six unnumbered BOARD refinements and recorded explicit numbering/supersession ambiguities.
+- Executed `node --test tests/*.test.cjs tests/*.test.mjs src/*.test.mjs airlabs-budget.test.cjs`: **85 passed, 0 failed**. These baseline tests include source contracts/mocks, not real browser acceptance.
+- Connected Cloudflare GET confirms Production DB `434f90d3-397b-48d3-8249-4c48cf1e8936`; deployed Preview only binds `PRODUCTION_API`, not a D1. Separate Preview DB `939eda3b-4894-497b-9f67-209771761b3f` exists. Configuration's claimed Preview isolation does not hold in deployed runtime. No migrations or infrastructure writes yet.
+- Verified gaps: Track History is a placeholder; Home and Explore are conflated; no approved Google authentication/account gate, private moment bookmark model or account preferences; MET/NAV/universal units incomplete. Current release is **not ready**.
+- Next executable work: implement safe observed-track read API + synchronized map/charts/interval playback and deliberate two-track comparison; repair obsolete async Inspector updates; configure genuine isolated Preview and verify migration chain there.
+
 ## Airport movement lifecycle verification
 
 - [x] Added request sequencing and a distinct loading label.
