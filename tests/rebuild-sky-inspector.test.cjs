@@ -37,3 +37,10 @@ test('Keyboard-opened Inspector receives focus and Escape closes it',()=>{
  assert.match(html,/if\(inspectorReturnFocus\)detailclose\.focus\(\{preventScroll:true\}\)/);
  assert.match(html,/detail\.addEventListener\('keydown',e=>\{if\(e\.key==='Escape'\)/);
 });
+
+test('Rack distinguishes acquisition, feed loss and an observed empty view',()=>{
+ assert.match(html,/acquiring\?'Checking the current view for aircraft/);
+ assert.match(html,/now<=0\?'Aircraft feed unavailable/);
+ assert.match(html,/No airborne aircraft observed in this view/);
+ assert.match(html,/role="status"/);
+});
