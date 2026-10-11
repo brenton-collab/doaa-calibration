@@ -140,3 +140,11 @@ test('Flight dossier distinguishes callsign association from confirmed assignmen
  assert.match(source,/A dated aircraft-to-flight assignment has not been established/);
  assert.match(source,/current_assignment_established:f\?\.current_assignment_established===true/);
 });
+
+test('Flight airframe and carrier identity remain source-qualified',()=>{
+ const source=fs.readFileSync(require('node:path').join(__dirname,'../flight-enrichment.js'),'utf8');
+ assert.match(source,/FLIGHT SOURCE REGISTRATION/);
+ assert.match(source,/FLIGHT SOURCE AIRCRAFT TYPE/);
+ assert.match(source,/AIRFRAME · FLIGHT SOURCE/);
+ assert.match(source,/do not independently establish the operator/);
+});
