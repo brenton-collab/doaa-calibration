@@ -214,6 +214,9 @@
   choice.querySelector('[data-ambient-idle]').addEventListener('click',()=>{idleEnabled=!idleEnabled;store('doaa.ambient.idle',idleEnabled?'on':'off');lastInteraction=Date.now();updateButtons();});
   document.addEventListener('pointerdown',event=>{if (!active && !event.target.closest('.ambient-controls')) lastInteraction=Date.now();},{passive:true});
   document.addEventListener('keydown',event=>{if (!active)lastInteraction=Date.now();if(active&&event.key==='Escape')leave();});
+  document.addEventListener('scroll',()=>{if(!active)lastInteraction=Date.now();},{passive:true,capture:true});
+  document.addEventListener('wheel',()=>{if(!active)lastInteraction=Date.now();},{passive:true});
+  document.addEventListener('touchmove',()=>{if(!active)lastInteraction=Date.now();},{passive:true});
   document.addEventListener('visibilitychange',()=>{lastInteraction=Date.now();});
   window.addEventListener('resize',()=>{if(active)update();});
   window.DOAAAmbient={enter,leave,choose,openSettings:()=>choice.classList.toggle('show'),get mode(){return mode;},get active(){return active;}};
