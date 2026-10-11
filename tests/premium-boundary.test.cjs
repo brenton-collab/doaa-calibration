@@ -23,5 +23,5 @@ test('Inspector validates hex and exposes conflicting identities',()=>{
  assert.match(d,/\^\[0-9A-F\]\{6\}\$/);
  assert.match(d,/identity_conflicts:conflicts/);
  assert.match(d,/conflicts\.icao_type\?null/);
- assert.match(d,/key:'adsbdb-aircraft'/);
+ assert.match(d,/source_name:'ADSBdb aircraft identity'/);
 });

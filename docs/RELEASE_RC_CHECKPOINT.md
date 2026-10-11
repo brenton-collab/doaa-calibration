@@ -1,3 +1,13 @@
+## 2026-10-11 — Flight/Airframe Inspector verified checkpoint and CHAT handoff
+
+Implemented shared source-qualified Flight timing/progress, immediate Contact telemetry, Airframe unknown/conflict handling and BIO milestone separation, recorded Sighting to encounter-specific Track History, context-preserving navigation, and bounded account-scoped dossier/favourite caches. Rack summaries no longer acquire dossiers; the Worker dossier read performs no automatic research/claim/media writes and makes at most one bounded free lookup. These runtime protections are not deployed.
+
+Verification: 141 Node tests passed. Final Chromium offline fixture acceptance passed desktop, phone, landscape and tablet at 2026-10-11T17:33:34.671Z; all report source hashes match final source. Timing/Progress screenshots were visually inspected for all four sizes. Short landscape uses content scrolling and scrollable tab navigation. Isolation, asset/package construction and diff checks passed. See docs/qa/flight-airframe-acceptance.json and docs/FLIGHT_INSPECTOR_CONTRACT.md. No signed-in Preview/live-provider/physical-device acceptance is implied.
+
+Brent requested conservation of WORK credit. This session stops at the verified checkpoint and hands requirements/source/configuration review to CHAT through docs/CHAT_HANDOFF_2026-10-11.md. BOARD/Airport Movements implementation is deferred to the next engineering session. Matrix remains 0 complete, 134 partial, 49 missing and 1 blocked; full release is not complete. Google private configuration and lawful schedule sources remain unresolved; username/password fallback is accepted but unimplemented.
+
+No remote D1 writes, migrations/imports, deployment, main merge, paid activation or Actions run. Earlier Preview schema query was 90 rows read/zero written; current read-budget tests were local SQLite. Existing Preview binding is its own DB, but this branch is not deployed. Publish only work/product-recovery-mobile-sky and retain draft PR #48.
+
 ## 2026-10-11 — D1 quota guard and sign-in clarification
 
 - Google sign-in code is already implemented and locally tested; Preview lacks OAuth configuration and the two approved stable account identifiers. No new Google accounts are required. User accepts database-backed username/password sign-in if Google setup proves too complicated; fallback is not yet implemented.

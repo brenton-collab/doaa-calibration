@@ -24,17 +24,14 @@ test('all contextual tabs have render paths and do not silently fall back to Con
  for(const surface of ['flight','aircraft','bio','media','history'])assert.match(render,new RegExp("z==='"+surface+"'"));
  assert.match(nav,/Track History/);
 });
-test('Flight progress is gated by observation provenance and timing preserves unknowns',()=>{
+test('Flight timing and progress share the explicit evidence interpreter',()=>{
  const render=extract('renderSurface','swipeInspector');
- assert.match(render,/live\?'RECENT':'NOT CURRENTLY OBSERVED'/);
- assert.match(render,/live&&a\.alt!=null/);
- assert.match(render,/live&&a\.gs!=null/);
- assert.match(render,/hm\(t\.arr_estimated\)\|\|'UNKNOWN'/);
- assert.match(render,/hm\(t\.arr_actual\)\|\|'UNKNOWN'/);
+ assert.match(render,/DOAAInspectorFlight.timing\(f\|\|\{\},rows,section\)/);
+ assert.match(render,/DOAAInspectorFlight.progress\(f\|\|\{\},a,live,history,rows,section\)/);
 });
 test('Flight and Contact Journey use the same evidence-qualified chronology',()=>{
  const render=extract('renderSurface','swipeInspector');
- assert.equal((render.match(/journeySection\(a,f,history,dossier\?\.journey\)/g)||[]).length,2);
+ assert.equal((render.match(/journeySection\(a,f,history,dossier\?\.journey\)/g)||[]).length,3);
  const journey=extract('journeySection','doaaHistory');
  assert.match(journey,/adjacency_established===true/);
  assert.match(journey,/current_assignment_established===true/);

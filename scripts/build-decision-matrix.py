@@ -50,7 +50,7 @@ contradictions=[
 'Decision 103/105 supersedes all anonymous application/favourites behavior. Decision 104 clarification requires two initially approved Google subjects, not guessed emails.',
 'Current assignment explicitly makes Decisions 25–32 release requirements despite Decision 179 deferring advanced general Replay. OPS and PATTERNS remain explicitly outside the release gate.',
 'Older SPEC dark theme, five permanent Inspector tabs, airborne-only BOARD, fixed historical status and preview-isolation assertions are superseded by latest locks and observed runtime facts.',
-'Preview audit: deployed doaa-calibration-preview is a PRODUCTION_API proxy with no D1; its nominal preview database exists but is not bound. Must replace with isolated application Preview before integration.'
+'Historical baseline Preview audit found a PRODUCTION_API proxy with no D1. Latest 2026-10-11 binding inspection verified its own isolated Preview DB (939eda3b-4894-497b-9f67-209771761b3f). Current branch Inspector code is not deployed or authenticated-Preview accepted; Google configuration remains missing.'
 ]
 out={'schema_version':1,'audited_at':'2026-10-11','baseline_commit':'3e6aa0ff98aaf02ac570c19a63625673bf4ad42a','branch':'work/product-recovery-mobile-sky','release_ready':False,'contradiction_register':contradictions,'decisions':entries}
 existing.write_text(json.dumps(out,indent=2,ensure_ascii=False)+'\n')

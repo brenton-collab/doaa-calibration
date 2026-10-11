@@ -13,7 +13,7 @@
     "Decision 103/105 supersedes all anonymous application/favourites behavior. Decision 104 clarification requires two initially approved Google subjects, not guessed emails.",
     "Current assignment explicitly makes Decisions 25–32 release requirements despite Decision 179 deferring advanced general Replay. OPS and PATTERNS remain explicitly outside the release gate.",
     "Older SPEC dark theme, five permanent Inspector tabs, airborne-only BOARD, fixed historical status and preview-isolation assertions are superseded by latest locks and observed runtime facts.",
-    "Preview audit: deployed doaa-calibration-preview is a PRODUCTION_API proxy with no D1; its nominal preview database exists but is not bound. Must replace with isolated application Preview before integration."
+    "Historical baseline Preview audit found a PRODUCTION_API proxy with no D1. Latest 2026-10-11 binding inspection verified its own isolated Preview DB (939eda3b-4894-497b-9f67-209771761b3f). Current branch Inspector code is not deployed or authenticated-Preview accepted; Google configuration remains missing."
   ],
   "decisions": [
     {
@@ -145,12 +145,17 @@
         "flight-enrichment.js",
         "src/worker.js",
         "tests/inspector-contexts.test.cjs",
-        "scripts/browser-acceptance.cjs"
+        "scripts/browser-acceptance.cjs",
+        "flight-core.js",
+        "inspector-flight.js",
+        "tests/flight-core.test.cjs",
+        "tests/inspector-read-budget.test.mjs"
       ],
       "evidence": [
         "Inspector shell, cells, renderSurface, openObject, contextual tab dispatch",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
-        "2026-10-11 continuation: Separated datum value, independent explanation and accessible favourite buttons; no nested buttons, contextual bounded back stack, async cross-object request guards and unknown vertical-rate label. Real airframe/airport/flight facts navigate explicitly. Latest complete Node suite: 114 pass. Final Chromium fixture acceptance passed desktop, phone portrait, short landscape and tablet; independent explanation/favourite/drill/back, replay unit changes/cursor preservation, Home/Explore/BOARD propagation, account failed-save/retry/reload and recent catchments. Hash-qualified report: docs/qa/units-catchment-account-acceptance.json. See RELEASE_RC_CHECKPOINT.md."
+        "2026-10-11 continuation: Separated datum value, independent explanation and accessible favourite buttons; no nested buttons, contextual bounded back stack, async cross-object request guards and unknown vertical-rate label. Real airframe/airport/flight facts navigate explicitly. Latest complete Node suite: 114 pass. Final Chromium fixture acceptance passed desktop, phone portrait, short landscape and tablet; independent explanation/favourite/drill/back, replay unit changes/cursor preservation, Home/Explore/BOARD propagation, account failed-save/retry/reload and recent catchments. Hash-qualified report: docs/qa/units-catchment-account-acceptance.json. See RELEASE_RC_CHECKPOINT.md.",
+        "2026-10-11 Inspector checkpoint: shared Flight timing/progress, fresh/source-qualified telemetry, conflict-aware Airframe/BIO, recorded Sightings navigation and bounded read-only dossier path implemented; 141 Node tests passed. Browser/provider completion remains separately qualified in release checkpoint and docs/qa. See FLIGHT_INSPECTOR_CONTRACT.md and CHAT_HANDOFF_2026-10-11.md. Full operative requirements remain partial."
       ],
       "outstanding_engineering_work": "Finish Inspector datum/source content and all cross-surface navigation; verify failure/identity revisions and actual signed-in Preview. Interaction grammar remains partial beyond the tested existing surfaces.",
       "dependencies": [
@@ -186,12 +191,17 @@
         "flight-enrichment.js",
         "src/worker.js",
         "tests/inspector-contexts.test.cjs",
-        "scripts/browser-acceptance.cjs"
+        "scripts/browser-acceptance.cjs",
+        "flight-core.js",
+        "inspector-flight.js",
+        "tests/flight-core.test.cjs",
+        "tests/inspector-read-budget.test.mjs"
       ],
       "evidence": [
         "Inspector shell, cells, renderSurface, openObject, contextual tab dispatch",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
-        "2026-10-11 continuation: Separated datum value, independent explanation and accessible favourite buttons; no nested buttons, contextual bounded back stack, async cross-object request guards and unknown vertical-rate label. Real airframe/airport/flight facts navigate explicitly. Latest complete Node suite: 114 pass. Final Chromium fixture acceptance passed desktop, phone portrait, short landscape and tablet; independent explanation/favourite/drill/back, replay unit changes/cursor preservation, Home/Explore/BOARD propagation, account failed-save/retry/reload and recent catchments. Hash-qualified report: docs/qa/units-catchment-account-acceptance.json. See RELEASE_RC_CHECKPOINT.md."
+        "2026-10-11 continuation: Separated datum value, independent explanation and accessible favourite buttons; no nested buttons, contextual bounded back stack, async cross-object request guards and unknown vertical-rate label. Real airframe/airport/flight facts navigate explicitly. Latest complete Node suite: 114 pass. Final Chromium fixture acceptance passed desktop, phone portrait, short landscape and tablet; independent explanation/favourite/drill/back, replay unit changes/cursor preservation, Home/Explore/BOARD propagation, account failed-save/retry/reload and recent catchments. Hash-qualified report: docs/qa/units-catchment-account-acceptance.json. See RELEASE_RC_CHECKPOINT.md.",
+        "2026-10-11 Inspector checkpoint: shared Flight timing/progress, fresh/source-qualified telemetry, conflict-aware Airframe/BIO, recorded Sightings navigation and bounded read-only dossier path implemented; 141 Node tests passed. Browser/provider completion remains separately qualified in release checkpoint and docs/qa. See FLIGHT_INSPECTOR_CONTRACT.md and CHAT_HANDOFF_2026-10-11.md. Full operative requirements remain partial."
       ],
       "outstanding_engineering_work": "Finish Inspector datum/source content and all cross-surface navigation; verify failure/identity revisions and actual signed-in Preview. Interaction grammar remains partial beyond the tested existing surfaces.",
       "dependencies": [
@@ -306,11 +316,16 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "tests/inspector-contexts.test.cjs"
+        "tests/inspector-contexts.test.cjs",
+        "flight-core.js",
+        "inspector-flight.js",
+        "tests/flight-core.test.cjs",
+        "tests/inspector-read-budget.test.mjs"
       ],
       "evidence": [
         "Inspector shell, cells, renderSurface, openObject, contextual tab dispatch",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 Inspector checkpoint: shared Flight timing/progress, fresh/source-qualified telemetry, conflict-aware Airframe/BIO, recorded Sightings navigation and bounded read-only dossier path implemented; 141 Node tests passed. Browser/provider completion remains separately qualified in release checkpoint and docs/qa. See FLIGHT_INSPECTOR_CONTRACT.md and CHAT_HANDOFF_2026-10-11.md. Full operative requirements remain partial."
       ],
       "outstanding_engineering_work": "Complete grounded contextual content, independent datum controls, history/back, source-level missing states and responsive interaction.",
       "dependencies": [
@@ -345,11 +360,16 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "tests/inspector-contexts.test.cjs"
+        "tests/inspector-contexts.test.cjs",
+        "flight-core.js",
+        "inspector-flight.js",
+        "tests/flight-core.test.cjs",
+        "tests/inspector-read-budget.test.mjs"
       ],
       "evidence": [
         "Inspector shell, cells, renderSurface, openObject, contextual tab dispatch",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 Inspector checkpoint: shared Flight timing/progress, fresh/source-qualified telemetry, conflict-aware Airframe/BIO, recorded Sightings navigation and bounded read-only dossier path implemented; 141 Node tests passed. Browser/provider completion remains separately qualified in release checkpoint and docs/qa. See FLIGHT_INSPECTOR_CONTRACT.md and CHAT_HANDOFF_2026-10-11.md. Full operative requirements remain partial."
       ],
       "outstanding_engineering_work": "Complete grounded contextual content, independent datum controls, history/back, source-level missing states and responsive interaction.",
       "dependencies": [
@@ -384,11 +404,16 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "tests/inspector-contexts.test.cjs"
+        "tests/inspector-contexts.test.cjs",
+        "flight-core.js",
+        "inspector-flight.js",
+        "tests/flight-core.test.cjs",
+        "tests/inspector-read-budget.test.mjs"
       ],
       "evidence": [
         "Inspector shell, cells, renderSurface, openObject, contextual tab dispatch",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 Inspector checkpoint: shared Flight timing/progress, fresh/source-qualified telemetry, conflict-aware Airframe/BIO, recorded Sightings navigation and bounded read-only dossier path implemented; 141 Node tests passed. Browser/provider completion remains separately qualified in release checkpoint and docs/qa. See FLIGHT_INSPECTOR_CONTRACT.md and CHAT_HANDOFF_2026-10-11.md. Full operative requirements remain partial."
       ],
       "outstanding_engineering_work": "Complete grounded contextual content, independent datum controls, history/back, source-level missing states and responsive interaction.",
       "dependencies": [
@@ -423,11 +448,16 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "tests/inspector-contexts.test.cjs"
+        "tests/inspector-contexts.test.cjs",
+        "flight-core.js",
+        "inspector-flight.js",
+        "tests/flight-core.test.cjs",
+        "tests/inspector-read-budget.test.mjs"
       ],
       "evidence": [
         "Inspector shell, cells, renderSurface, openObject, contextual tab dispatch",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 Inspector checkpoint: shared Flight timing/progress, fresh/source-qualified telemetry, conflict-aware Airframe/BIO, recorded Sightings navigation and bounded read-only dossier path implemented; 141 Node tests passed. Browser/provider completion remains separately qualified in release checkpoint and docs/qa. See FLIGHT_INSPECTOR_CONTRACT.md and CHAT_HANDOFF_2026-10-11.md. Full operative requirements remain partial."
       ],
       "outstanding_engineering_work": "Complete grounded contextual content, independent datum controls, history/back, source-level missing states and responsive interaction.",
       "dependencies": [
@@ -462,11 +492,16 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "tests/inspector-contexts.test.cjs"
+        "tests/inspector-contexts.test.cjs",
+        "flight-core.js",
+        "inspector-flight.js",
+        "tests/flight-core.test.cjs",
+        "tests/inspector-read-budget.test.mjs"
       ],
       "evidence": [
         "Inspector shell, cells, renderSurface, openObject, contextual tab dispatch",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 Inspector checkpoint: shared Flight timing/progress, fresh/source-qualified telemetry, conflict-aware Airframe/BIO, recorded Sightings navigation and bounded read-only dossier path implemented; 141 Node tests passed. Browser/provider completion remains separately qualified in release checkpoint and docs/qa. See FLIGHT_INSPECTOR_CONTRACT.md and CHAT_HANDOFF_2026-10-11.md. Full operative requirements remain partial."
       ],
       "outstanding_engineering_work": "Complete grounded contextual content, independent datum controls, history/back, source-level missing states and responsive interaction.",
       "dependencies": [
@@ -501,11 +536,16 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "tests/inspector-contexts.test.cjs"
+        "tests/inspector-contexts.test.cjs",
+        "flight-core.js",
+        "inspector-flight.js",
+        "tests/flight-core.test.cjs",
+        "tests/inspector-read-budget.test.mjs"
       ],
       "evidence": [
         "Inspector shell, cells, renderSurface, openObject, contextual tab dispatch",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 Inspector checkpoint: shared Flight timing/progress, fresh/source-qualified telemetry, conflict-aware Airframe/BIO, recorded Sightings navigation and bounded read-only dossier path implemented; 141 Node tests passed. Browser/provider completion remains separately qualified in release checkpoint and docs/qa. See FLIGHT_INSPECTOR_CONTRACT.md and CHAT_HANDOFF_2026-10-11.md. Full operative requirements remain partial."
       ],
       "outstanding_engineering_work": "Complete grounded contextual content, independent datum controls, history/back, source-level missing states and responsive interaction.",
       "dependencies": [
@@ -540,11 +580,16 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "tests/inspector-contexts.test.cjs"
+        "tests/inspector-contexts.test.cjs",
+        "flight-core.js",
+        "inspector-flight.js",
+        "tests/flight-core.test.cjs",
+        "tests/inspector-read-budget.test.mjs"
       ],
       "evidence": [
         "Inspector shell, cells, renderSurface, openObject, contextual tab dispatch",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 Inspector checkpoint: shared Flight timing/progress, fresh/source-qualified telemetry, conflict-aware Airframe/BIO, recorded Sightings navigation and bounded read-only dossier path implemented; 141 Node tests passed. Browser/provider completion remains separately qualified in release checkpoint and docs/qa. See FLIGHT_INSPECTOR_CONTRACT.md and CHAT_HANDOFF_2026-10-11.md. Full operative requirements remain partial."
       ],
       "outstanding_engineering_work": "Complete grounded contextual content, independent datum controls, history/back, source-level missing states and responsive interaction.",
       "dependencies": [
@@ -579,11 +624,16 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "tests/inspector-contexts.test.cjs"
+        "tests/inspector-contexts.test.cjs",
+        "flight-core.js",
+        "inspector-flight.js",
+        "tests/flight-core.test.cjs",
+        "tests/inspector-read-budget.test.mjs"
       ],
       "evidence": [
         "Inspector shell, cells, renderSurface, openObject, contextual tab dispatch",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 Inspector checkpoint: shared Flight timing/progress, fresh/source-qualified telemetry, conflict-aware Airframe/BIO, recorded Sightings navigation and bounded read-only dossier path implemented; 141 Node tests passed. Browser/provider completion remains separately qualified in release checkpoint and docs/qa. See FLIGHT_INSPECTOR_CONTRACT.md and CHAT_HANDOFF_2026-10-11.md. Full operative requirements remain partial."
       ],
       "outstanding_engineering_work": "Complete grounded contextual content, independent datum controls, history/back, source-level missing states and responsive interaction.",
       "dependencies": [
@@ -968,11 +1018,16 @@
       "files_and_code_paths": [
         "flight-enrichment.js",
         "doaa-memory.js",
-        "src/worker.js"
+        "src/worker.js",
+        "flight-core.js",
+        "inspector-flight.js",
+        "tests/flight-core.test.cjs",
+        "tests/inspector-read-budget.test.mjs"
       ],
       "evidence": [
         "renderSurface(track-history) currently renders unavailable placeholder; /memory/history returns aggregates, not track samples",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 Inspector checkpoint: shared Flight timing/progress, fresh/source-qualified telemetry, conflict-aware Airframe/BIO, recorded Sightings navigation and bounded read-only dossier path implemented; 141 Node tests passed. Browser/provider completion remains separately qualified in release checkpoint and docs/qa. See FLIGHT_INSPECTOR_CONTRACT.md and CHAT_HANDOFF_2026-10-11.md. Full operative requirements remain partial."
       ],
       "outstanding_engineering_work": "Add encounter-scoped observed samples, geographically grounded map and shared telemetry/time cursor; real interval playback; deliberate two-aircraft comparison, union clock, follow and loop.",
       "dependencies": [
@@ -1373,11 +1428,16 @@
         "flight-enrichment.js",
         "doaa-memory.js",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "flight-core.js",
+        "inspector-flight.js",
+        "tests/flight-core.test.cjs",
+        "tests/inspector-read-budget.test.mjs"
       ],
       "evidence": [
         "dossier / rememberIdentifier / claims+evidence / biography / doaaHistory / mediaView / mergeJourneyChronology",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 Inspector checkpoint: shared Flight timing/progress, fresh/source-qualified telemetry, conflict-aware Airframe/BIO, recorded Sightings navigation and bounded read-only dossier path implemented; 141 Node tests passed. Browser/provider completion remains separately qualified in release checkpoint and docs/qa. See FLIGHT_INSPECTOR_CONTRACT.md and CHAT_HANDOFF_2026-10-11.md. Full operative requirements remain partial."
       ],
       "outstanding_engineering_work": "Temporalize identity and interpretation revisions; grounded BIO eras, comprehensive cross-source Operations, Sightings footprints, licensed media gallery/era links.",
       "dependencies": [
@@ -1412,11 +1472,16 @@
         "flight-enrichment.js",
         "doaa-memory.js",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "flight-core.js",
+        "inspector-flight.js",
+        "tests/flight-core.test.cjs",
+        "tests/inspector-read-budget.test.mjs"
       ],
       "evidence": [
         "dossier / rememberIdentifier / claims+evidence / biography / doaaHistory / mediaView / mergeJourneyChronology",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 Inspector checkpoint: shared Flight timing/progress, fresh/source-qualified telemetry, conflict-aware Airframe/BIO, recorded Sightings navigation and bounded read-only dossier path implemented; 141 Node tests passed. Browser/provider completion remains separately qualified in release checkpoint and docs/qa. See FLIGHT_INSPECTOR_CONTRACT.md and CHAT_HANDOFF_2026-10-11.md. Full operative requirements remain partial."
       ],
       "outstanding_engineering_work": "Temporalize identity and interpretation revisions; grounded BIO eras, comprehensive cross-source Operations, Sightings footprints, licensed media gallery/era links.",
       "dependencies": [
@@ -1451,11 +1516,16 @@
         "flight-enrichment.js",
         "doaa-memory.js",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "flight-core.js",
+        "inspector-flight.js",
+        "tests/flight-core.test.cjs",
+        "tests/inspector-read-budget.test.mjs"
       ],
       "evidence": [
         "dossier / rememberIdentifier / claims+evidence / biography / doaaHistory / mediaView / mergeJourneyChronology",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 Inspector checkpoint: shared Flight timing/progress, fresh/source-qualified telemetry, conflict-aware Airframe/BIO, recorded Sightings navigation and bounded read-only dossier path implemented; 141 Node tests passed. Browser/provider completion remains separately qualified in release checkpoint and docs/qa. See FLIGHT_INSPECTOR_CONTRACT.md and CHAT_HANDOFF_2026-10-11.md. Full operative requirements remain partial."
       ],
       "outstanding_engineering_work": "Temporalize identity and interpretation revisions; grounded BIO eras, comprehensive cross-source Operations, Sightings footprints, licensed media gallery/era links.",
       "dependencies": [
@@ -1490,11 +1560,16 @@
         "flight-enrichment.js",
         "doaa-memory.js",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "flight-core.js",
+        "inspector-flight.js",
+        "tests/flight-core.test.cjs",
+        "tests/inspector-read-budget.test.mjs"
       ],
       "evidence": [
         "dossier / rememberIdentifier / claims+evidence / biography / doaaHistory / mediaView / mergeJourneyChronology",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 Inspector checkpoint: shared Flight timing/progress, fresh/source-qualified telemetry, conflict-aware Airframe/BIO, recorded Sightings navigation and bounded read-only dossier path implemented; 141 Node tests passed. Browser/provider completion remains separately qualified in release checkpoint and docs/qa. See FLIGHT_INSPECTOR_CONTRACT.md and CHAT_HANDOFF_2026-10-11.md. Full operative requirements remain partial."
       ],
       "outstanding_engineering_work": "Temporalize identity and interpretation revisions; grounded BIO eras, comprehensive cross-source Operations, Sightings footprints, licensed media gallery/era links.",
       "dependencies": [
@@ -1529,11 +1604,16 @@
         "flight-enrichment.js",
         "doaa-memory.js",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "flight-core.js",
+        "inspector-flight.js",
+        "tests/flight-core.test.cjs",
+        "tests/inspector-read-budget.test.mjs"
       ],
       "evidence": [
         "dossier / rememberIdentifier / claims+evidence / biography / doaaHistory / mediaView / mergeJourneyChronology",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 Inspector checkpoint: shared Flight timing/progress, fresh/source-qualified telemetry, conflict-aware Airframe/BIO, recorded Sightings navigation and bounded read-only dossier path implemented; 141 Node tests passed. Browser/provider completion remains separately qualified in release checkpoint and docs/qa. See FLIGHT_INSPECTOR_CONTRACT.md and CHAT_HANDOFF_2026-10-11.md. Full operative requirements remain partial."
       ],
       "outstanding_engineering_work": "Temporalize identity and interpretation revisions; grounded BIO eras, comprehensive cross-source Operations, Sightings footprints, licensed media gallery/era links.",
       "dependencies": [
@@ -1568,11 +1648,16 @@
         "flight-enrichment.js",
         "doaa-memory.js",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "flight-core.js",
+        "inspector-flight.js",
+        "tests/flight-core.test.cjs",
+        "tests/inspector-read-budget.test.mjs"
       ],
       "evidence": [
         "dossier / rememberIdentifier / claims+evidence / biography / doaaHistory / mediaView / mergeJourneyChronology",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 Inspector checkpoint: shared Flight timing/progress, fresh/source-qualified telemetry, conflict-aware Airframe/BIO, recorded Sightings navigation and bounded read-only dossier path implemented; 141 Node tests passed. Browser/provider completion remains separately qualified in release checkpoint and docs/qa. See FLIGHT_INSPECTOR_CONTRACT.md and CHAT_HANDOFF_2026-10-11.md. Full operative requirements remain partial."
       ],
       "outstanding_engineering_work": "Temporalize identity and interpretation revisions; grounded BIO eras, comprehensive cross-source Operations, Sightings footprints, licensed media gallery/era links.",
       "dependencies": [
@@ -1607,11 +1692,16 @@
         "flight-enrichment.js",
         "doaa-memory.js",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "flight-core.js",
+        "inspector-flight.js",
+        "tests/flight-core.test.cjs",
+        "tests/inspector-read-budget.test.mjs"
       ],
       "evidence": [
         "dossier / rememberIdentifier / claims+evidence / biography / doaaHistory / mediaView / mergeJourneyChronology",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 Inspector checkpoint: shared Flight timing/progress, fresh/source-qualified telemetry, conflict-aware Airframe/BIO, recorded Sightings navigation and bounded read-only dossier path implemented; 141 Node tests passed. Browser/provider completion remains separately qualified in release checkpoint and docs/qa. See FLIGHT_INSPECTOR_CONTRACT.md and CHAT_HANDOFF_2026-10-11.md. Full operative requirements remain partial."
       ],
       "outstanding_engineering_work": "Temporalize identity and interpretation revisions; grounded BIO eras, comprehensive cross-source Operations, Sightings footprints, licensed media gallery/era links.",
       "dependencies": [
@@ -1646,11 +1736,16 @@
         "flight-enrichment.js",
         "doaa-memory.js",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "flight-core.js",
+        "inspector-flight.js",
+        "tests/flight-core.test.cjs",
+        "tests/inspector-read-budget.test.mjs"
       ],
       "evidence": [
         "dossier / rememberIdentifier / claims+evidence / biography / doaaHistory / mediaView / mergeJourneyChronology",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 Inspector checkpoint: shared Flight timing/progress, fresh/source-qualified telemetry, conflict-aware Airframe/BIO, recorded Sightings navigation and bounded read-only dossier path implemented; 141 Node tests passed. Browser/provider completion remains separately qualified in release checkpoint and docs/qa. See FLIGHT_INSPECTOR_CONTRACT.md and CHAT_HANDOFF_2026-10-11.md. Full operative requirements remain partial."
       ],
       "outstanding_engineering_work": "Temporalize identity and interpretation revisions; grounded BIO eras, comprehensive cross-source Operations, Sightings footprints, licensed media gallery/era links.",
       "dependencies": [
@@ -1841,11 +1936,16 @@
         "flight-enrichment.js",
         "doaa-memory.js",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "flight-core.js",
+        "inspector-flight.js",
+        "tests/flight-core.test.cjs",
+        "tests/inspector-read-budget.test.mjs"
       ],
       "evidence": [
         "dossier / rememberIdentifier / claims+evidence / biography / doaaHistory / mediaView / mergeJourneyChronology",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 Inspector checkpoint: shared Flight timing/progress, fresh/source-qualified telemetry, conflict-aware Airframe/BIO, recorded Sightings navigation and bounded read-only dossier path implemented; 141 Node tests passed. Browser/provider completion remains separately qualified in release checkpoint and docs/qa. See FLIGHT_INSPECTOR_CONTRACT.md and CHAT_HANDOFF_2026-10-11.md. Full operative requirements remain partial."
       ],
       "outstanding_engineering_work": "Temporalize identity and interpretation revisions; grounded BIO eras, comprehensive cross-source Operations, Sightings footprints, licensed media gallery/era links.",
       "dependencies": [
@@ -7120,11 +7220,16 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "tests/inspector-contexts.test.cjs"
+        "tests/inspector-contexts.test.cjs",
+        "flight-core.js",
+        "inspector-flight.js",
+        "tests/flight-core.test.cjs",
+        "tests/inspector-read-budget.test.mjs"
       ],
       "evidence": [
         "Inspector shell, cells, renderSurface, openObject, contextual tab dispatch",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 Inspector checkpoint: shared Flight timing/progress, fresh/source-qualified telemetry, conflict-aware Airframe/BIO, recorded Sightings navigation and bounded read-only dossier path implemented; 141 Node tests passed. Browser/provider completion remains separately qualified in release checkpoint and docs/qa. See FLIGHT_INSPECTOR_CONTRACT.md and CHAT_HANDOFF_2026-10-11.md. Full operative requirements remain partial."
       ],
       "outstanding_engineering_work": "Complete grounded contextual content, independent datum controls, history/back, source-level missing states and responsive interaction.",
       "dependencies": [
