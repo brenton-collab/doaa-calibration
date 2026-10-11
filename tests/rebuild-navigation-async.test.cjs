@@ -117,3 +117,32 @@ test('Flight lookup then Back restores Contact and ignores the late response', a
   assert.equal(h.renders.length, 1);
   assert.equal(h.d.dataset.activeSurface, 'contact');
 });
+
+test('Contact to Airframe to Back preserves the original context', async () => {
+  const h = harness();
+  h.d.innerHTML = '<section>Observed Contact</section>';
+  h.d.scrollTop = 19;
+  h.d._doaaRenderedState = { a: h.a, f: null, af: { reg_number: 'C-TEST' }, live: true, ago: 0, dossier: null, history: null, obv: [] };
+  h.d.querySelector = () => null;
+  const ctx = {
+    window: { DOAATrackHistory: { dispose() {} }, DOAAInspector: { tray: { querySelector() { return null; } } } },
+    activeSurface: node => node.dataset.activeSurface,
+    dossierCache: new Map(),
+    dossierKey: a => a.id,
+    wire() {},
+    renderSurface(surface, node) { node.dataset.activeSurface = surface; },
+  };
+  const from = source.indexOf('function rememberInspector(');
+  const to = source.indexOf('\nasync function openObject(', from);
+  const navigation = vm.runInNewContext(source.slice(from, to) + '\n({rememberInspector,backInspector})', ctx);
+  navigation.rememberInspector(h.d);
+  await h.openObject(h.d, { kind: 'airframe', key: 'ABC123' }, h.a, null, { reg_number: 'C-TEST' }, true, 0, null, null, [], false);
+  assert.equal(h.d.dataset.activeSurface, 'aircraft');
+  assert.equal(h.renders.length, 1);
+  navigation.backInspector(h.d);
+  assert.equal(h.d.dataset.activeSurface, 'contact');
+  assert.equal(h.d._doaaSubject, h.a.id);
+  assert.equal(h.d.innerHTML, '<section>Observed Contact</section>');
+  assert.equal(h.d.scrollTop, 19);
+  assert.equal(h.d._doaaBack.length, 0);
+});
