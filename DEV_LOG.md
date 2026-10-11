@@ -1,3 +1,15 @@
+## 2026-10-11 — Inspector implementation checklist (PR #48; not released)
+
+- [x] Read DEV_LOG.md, DOAA_SPEC.md, and all Field Notes decisions. Decision 176 supersedes the earlier Flight two-tab lock; Decision 177 governs Airport. Decision 179/180 defines release scope.
+- [x] Commit contextual Flight tabs Overview / Timing / Progress / Journey and Contact tabs Overview / Journey / Track History; Airframe tabs Overview / BIO / Operations / Media / Sightings in flight-enrichment.js.
+- [x] Add separate Flight Timing scheduled/estimated/actual fields and observation-qualified Progress; reuse existing Journey chronology on Flight and Contact.
+- [x] Make unavailable Track History synchronized replay and Airframe cross-source Operations explicit rather than inventing data.
+- [ ] Build full Track History map/charts, cross-source Operations, Airport tabs, and Flight route progress/map to locked specification.
+- [ ] Execute Node regression suite, syntax checks, and real browser/mobile Inspector interactions. Changes currently committed but not runtime verified.
+- [ ] Verify preview and release gates; production unchanged, no migrations or paid provider calls.
+- **Risk:** Current Inspector content and navigation remain transitional. New tab labels alone do not satisfy locked feature completeness. Avoid treating this branch as release-ready.
+- **Next:** targeted Inspector regression tests and complete actual data-backed content before preview deployment.
+
 
 ## 2026-10-11 — Product recovery branch (PR #48, not released)
 
