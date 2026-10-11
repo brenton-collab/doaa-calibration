@@ -242,3 +242,9 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `dbf0f47` adds a focused source regression test for absence of both Flight-source fallbacks in `aircraft()`.
 - Tests added but **not executed**. Browser/live testing deferred. No deployment, production D1, infrastructure changes or paid CI.
 - Remaining provenance question: Contact-feed registration/type are not direct position-broadcast identity; ensure their source and uncertainty are visible in Aircraft PHYSICAL IDENTITY. Next: add precise on-screen source qualification and test it, then inspect cross-surface dossier claim precedence.
+
+## Aircraft identity review (2026-10-11)
+- `c22fcf1`: removed remaining flight registration fallback in Aircraft identity row; added source qualification to physical identity section.
+- `eae4082`: added static assertions for this boundary.
+- Inspected flight-core field resolution: divergent supported claims or explicit conflicting status yield CONFLICTING; a sole supported claim wins over fallback; fallback wins over inferred claims. This is source inspection, not executed verification.
+- Outstanding: per-field fallback provenance and temporal reconciliation. Tests and browser checks not run. No deployment or infrastructure changes.
