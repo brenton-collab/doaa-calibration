@@ -1,3 +1,10 @@
+## 2026-10-11 — D1 quota guard and sign-in clarification
+
+- Google sign-in code is already implemented and locally tested; Preview lacks OAuth configuration and the two approved stable account identifiers. No new Google accounts are required. User accepts database-backed username/password sign-in if Google setup proves too complicated; fallback is not yet implemented.
+- Airport import preparation now defaults to the five built-in airports, rather than worldwide coverage. The verified source yields five airport rows, twelve runway records and seven SQL statements. Explicit custom/worldwide preparation stays local only; plans require remote quota review and distinguish coverage in their snapshot identity. Index writes must be counted when reviewing D1 budget; SQL statement counts are not billed write counts.
+- Verification: 130 Node tests pass, including scoped preparation and incomplete-snapshot readiness against SQLite. Preview isolation, asset packaging and diff checks pass. Frontend source is unchanged, so the previous four-viewport browser acceptance remains applicable.
+- This session’s one remote D1 schema query reported 90 rows read and zero written. No remote migration/import or deployment was performed. The earlier 41,214-airport verification was local SQLite only. Runway selection, unit changes and tab returns reuse loaded reference data.
+
 ## 2026-10-11 — sourced runway reference workspace
 
 - Published the prior Airport weather/navigation batch as `646118d`; the connected commit's tree exactly matched local `ffabe59`. Draft PR #48 now describes the full implemented scope and remaining release gates.
