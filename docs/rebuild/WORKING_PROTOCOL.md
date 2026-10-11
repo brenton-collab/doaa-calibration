@@ -190,3 +190,9 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `48ece31`: Back restores the prior subject identity as well as surface and rendered content.
 - `79d4c86`: cached enrichment refresh during Back is limited to Contact Overview; other dossier snapshots are not silently replaced with Contact enrichment.
 - Regression assertion write was blocked; browser/live verification remains deferred by request. No deployment or paid infrastructure changes.
+
+## Pending Inspector lookup containment (2026-10-11)
+- `c92e8e7`: switching Inspector sections advances the navigation token without adding Back history, invalidating older asynchronous object lookups.
+- `1ff7cb5`: flight lookup completion also checks that the Flight surface is still active.
+- `0dc36dc`: source-level regression assertions for section switching and flight response containment.
+- Automated tests and browser/live transitions have not been executed; no deployment or infrastructure changes.
