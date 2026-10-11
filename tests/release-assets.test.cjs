@@ -21,5 +21,5 @@ test('all local frontend references are represented in curated assets',()=>{
 test('inline scripts and bundled modules parse',()=>{
  const html=read('index.html');
  for(const [,code] of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(code.trim())new vm.Script(code);
- for(const p of ['vector-base.js','flight-enrichment.js','ambient.js','ambient-media.js','look.js','track-core.js','track-history.js','airport-weather.js', 'units.js','catchment-core.js','preference-core.js','account.js','bookmarks.js'])new vm.Script(read(p));
+ for(const p of ['vector-base.js','flight-enrichment.js','ambient.js','ambient-media.js','look.js','track-core.js','track-history.js','airfield.js', 'airport-weather.js', 'units.js','catchment-core.js','preference-core.js','account.js','bookmarks.js'])new vm.Script(read(p));
 });

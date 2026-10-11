@@ -22,7 +22,7 @@ const session=async(DB,subject='david-subject',expires=Date.now()+86400000)=>{co
 
 test('anonymous visitors cannot read app, static aviation assets, live APIs or memory',async()=>{
   const DB=database(),env={DB,DOAA_ALLOWED_SUBJECTS:allowed};
-  for(const path of ['/','/index.html','/track-history.js','/api/traffic','/api/health','/memory/encounters']){
+  for(const path of ['/','/index.html','/track-history.js','/api/airfield','/airfield.js','/api/traffic','/api/health','/memory/encounters']){
     const r=await worker.fetch(request(path),env,{});
     if(path.startsWith('/api/')||path.startsWith('/memory/')){assert.equal(r.status,401,path);assert.equal((await r.json()).error,'Sign-in required');}
     else {assert.equal(r.status,200,path);assert.match(await r.text(),/Sign in with Google/);}

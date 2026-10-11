@@ -700,14 +700,20 @@
         "airport-weather.js",
         "tests/airport-weather.test.cjs",
         "tests/airport-api.test.cjs",
-        "scripts/browser-acceptance.cjs"
+        "scripts/browser-acceptance.cjs",
+        "airfield.js",
+        "src/airfield.mjs",
+        "migrations/0013_airfield_reference.sql",
+        "scripts/prepare-airfield-import.mjs",
+        "tests/airfield-source.test.mjs"
       ],
       "evidence": [
+        "2026-10-11 Airfield continuation (partial): Airfield now has sourced endpoint diagram, physical-strip/end selection, unit conversion and visible reference failure/retry. 129 Node tests pass; source preparation and full import verified locally only. Exact browser fixtures/hashes: docs/qa/airfield-reference-acceptance.json. No deployed/reference-import/live-account acceptance.",
         "2026-10-11 Airport continuation (partial): Shared Airport Inspector with Overview/Operations/Movements/Airfield, sourced METAR dashboard and explicit absent runway/operational evidence. Local tests and browser fixture evidence: docs/qa/airport-inspector-acceptance.json. No live-provider or signed-in Preview acceptance.",
         "Inspector shell, cells, renderSurface, openObject, contextual tab dispatch",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
       ],
-      "outstanding_engineering_work": "Remaining full contract: sourced runway geometry/end dossiers, state/condition notices, weather/forecast/map relationship, historical canonical deduplicated movement model and actual private Preview acceptance.",
+      "outstanding_engineering_work": "Remaining full contract: isolated Preview schema/source import and authenticated provider/runtime acceptance; current authority notices and conditions; full runway-end approach/lighting/declared-distance and history dossiers; evidence-linked runway activity and broader shared movement history. Do not equate reference flags with live operational state.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -751,14 +757,20 @@
         "airport-weather.js",
         "tests/airport-weather.test.cjs",
         "tests/airport-api.test.cjs",
-        "scripts/browser-acceptance.cjs"
+        "scripts/browser-acceptance.cjs",
+        "airfield.js",
+        "src/airfield.mjs",
+        "migrations/0013_airfield_reference.sql",
+        "scripts/prepare-airfield-import.mjs",
+        "tests/airfield-source.test.mjs"
       ],
       "evidence": [
+        "2026-10-11 Airfield continuation (partial): Prepared public reference snapshot uses separate D1 tables and cannot manufacture movement, runway assignment or observation evidence. 129 Node tests pass; source preparation and full import verified locally only. Exact browser fixtures/hashes: docs/qa/airfield-reference-acceptance.json. No deployed/reference-import/live-account acceptance.",
         "2026-10-11 Airport continuation (partial): Airport Movements uses the same /api/board adapter, distinguishes reported associations from track inference, and opens Flight with preserved Back context. Local tests and browser fixture evidence: docs/qa/airport-inspector-acceptance.json. No live-provider or signed-in Preview acceptance.",
         "hydrateBoard / boardApi / airportMovementEvidence / airport lookup",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
       ],
-      "outstanding_engineering_work": "Remaining full contract: sourced runway geometry/end dossiers, state/condition notices, weather/forecast/map relationship, historical canonical deduplicated movement model and actual private Preview acceptance.",
+      "outstanding_engineering_work": "Remaining full contract: isolated Preview schema/source import and authenticated provider/runtime acceptance; current authority notices and conditions; full runway-end approach/lighting/declared-distance and history dossiers; evidence-linked runway activity and broader shared movement history. Do not equate reference flags with live operational state.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -1868,13 +1880,19 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "src/board-schedule.mjs"
+        "src/board-schedule.mjs",
+        "airfield.js",
+        "src/airfield.mjs",
+        "migrations/0013_airfield_reference.sql",
+        "scripts/prepare-airfield-import.mjs",
+        "tests/airfield-source.test.mjs"
       ],
       "evidence": [
+        "2026-10-11 Airfield continuation (partial): Diagram includes reference-listed closure only with current status unverified; airport operational status remains unknown. 129 Node tests pass; source preparation and full import verified locally only. Exact browser fixtures/hashes: docs/qa/airfield-reference-acceptance.json. No deployed/reference-import/live-account acceptance.",
         "hydrateBoard / boardApi / airportMovementEvidence / airport lookup",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
       ],
-      "outstanding_engineering_work": "Unify canonical movement records and timelines; separate Home/Explore; add date/evidence/runway navigation and sourced Airport conditions/geometry.",
+      "outstanding_engineering_work": "Remaining full contract: isolated Preview schema/source import and authenticated provider/runtime acceptance; current authority notices and conditions; full runway-end approach/lighting/declared-distance and history dossiers; evidence-linked runway activity and broader shared movement history. Do not equate reference flags with live operational state.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -1902,18 +1920,24 @@
       "requirement": "On Airfield > Overview, selecting a runway in the geographically accurate interactive runway graphic highlights its geometry and opens a compact in-place detail panel with runway designation/directions, dimensions, surface and sourced operational state. A clear **Explore runway ↗** action opens Airfield > Runways with the same runway preselected, exposing its full technical dossier. Preserve selection and back navigation between views; accessible keyboard/touch selection and non-colour-only closed/restricted indication. Keep runway-specific status pills attached to their runway without obscuring geometry; all claims and status freshness retain provenance. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "src/board-schedule.mjs"
+        "src/board-schedule.mjs",
+        "airfield.js",
+        "src/airfield.mjs",
+        "migrations/0013_airfield_reference.sql",
+        "scripts/prepare-airfield-import.mjs",
+        "tests/airfield-source.test.mjs"
       ],
       "evidence": [
+        "2026-10-11 Airfield continuation (partial): North-up diagram uses actual OurAirports paired endpoint positions and sourced pavement widths, with missing geometry excluded and antimeridian wrapping. 129 Node tests pass; source preparation and full import verified locally only. Exact browser fixtures/hashes: docs/qa/airfield-reference-acceptance.json. No deployed/reference-import/live-account acceptance.",
         "hydrateBoard / boardApi / airportMovementEvidence / airport lookup",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
       ],
-      "outstanding_engineering_work": "Unify canonical movement records and timelines; separate Home/Explore; add date/evidence/runway navigation and sourced Airport conditions/geometry.",
+      "outstanding_engineering_work": "Remaining full contract: isolated Preview schema/source import and authenticated provider/runtime acceptance; current authority notices and conditions; full runway-end approach/lighting/declared-distance and history dossiers; evidence-linked runway activity and broader shared movement history. Do not equate reference flags with live operational state.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -1941,18 +1965,24 @@
       "requirement": "Airfield > Runways retains the interactive geographically grounded runway diagram as the selector, with a comprehensive dossier for the selected runway: **physical characteristics** (designation, true/magnetic bearing, length/width, surface, elevations/slope and declared distances where evidenced); **navigation and approach** (verified instrument approach facilities, ILS/localizer, lighting and other aids explicitly differentiated by runway end); **operational information** (sourced closures, restrictions, limitations and advisories with effective periods); and **history and changes** (documented renumbering, extensions, resurfacing, lighting/approach upgrades and other significant alterations). Preserve temporal context, date precision, provenance and unavailable states; never present historical designations/restrictions as current or conflate facilities serving opposite runway ends. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "src/board-schedule.mjs"
+        "src/board-schedule.mjs",
+        "airfield.js",
+        "src/airfield.mjs",
+        "migrations/0013_airfield_reference.sql",
+        "scripts/prepare-airfield-import.mjs",
+        "tests/airfield-source.test.mjs"
       ],
       "evidence": [
+        "2026-10-11 Airfield continuation (partial): Physical and selected-end reference fields retain dimensions/surface, true heading, elevation and displaced threshold; approach facilities, declared distances and historical changes remain unknown. 129 Node tests pass; source preparation and full import verified locally only. Exact browser fixtures/hashes: docs/qa/airfield-reference-acceptance.json. No deployed/reference-import/live-account acceptance.",
         "hydrateBoard / boardApi / airportMovementEvidence / airport lookup",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
       ],
-      "outstanding_engineering_work": "Unify canonical movement records and timelines; separate Home/Explore; add date/evidence/runway navigation and sourced Airport conditions/geometry.",
+      "outstanding_engineering_work": "Remaining full contract: isolated Preview schema/source import and authenticated provider/runtime acceptance; current authority notices and conditions; full runway-end approach/lighting/declared-distance and history dossiers; evidence-linked runway activity and broader shared movement history. Do not equate reference flags with live operational state.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -1980,18 +2010,24 @@
       "requirement": "Selecting a runway in the interactive diagram initially selects the single physical runway and shows its shared pavement/geometry/physical characteristics. Within its Runways dossier, allow explicit selection of either reciprocal runway end (e.g. 07 versus 25) for direction-specific approach procedures and aids, lighting, declared distances, navigational facilities and operational restrictions. The diagram continues highlighting the physical runway and clearly indicates the selected direction. Never model reciprocal runway ends as unrelated strips or merge their directional capabilities. Preserve evidence provenance, effective dates, accessibility and selection context. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "src/board-schedule.mjs"
+        "src/board-schedule.mjs",
+        "airfield.js",
+        "src/airfield.mjs",
+        "migrations/0013_airfield_reference.sql",
+        "scripts/prepare-airfield-import.mjs",
+        "tests/airfield-source.test.mjs"
       ],
       "evidence": [
+        "2026-10-11 Airfield continuation (partial): One physical strip with reciprocal end selection; selected strip and end persist across tabs and units. 129 Node tests pass; source preparation and full import verified locally only. Exact browser fixtures/hashes: docs/qa/airfield-reference-acceptance.json. No deployed/reference-import/live-account acceptance.",
         "hydrateBoard / boardApi / airportMovementEvidence / airport lookup",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
       ],
-      "outstanding_engineering_work": "Unify canonical movement records and timelines; separate Home/Explore; add date/evidence/runway navigation and sourced Airport conditions/geometry.",
+      "outstanding_engineering_work": "Remaining full contract: isolated Preview schema/source import and authenticated provider/runtime acceptance; current authority notices and conditions; full runway-end approach/lighting/declared-distance and history dossiers; evidence-linked runway activity and broader shared movement history. Do not equate reference flags with live operational state.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -2067,14 +2103,20 @@
         "airport-weather.js",
         "tests/airport-weather.test.cjs",
         "tests/airport-api.test.cjs",
-        "scripts/browser-acceptance.cjs"
+        "scripts/browser-acceptance.cjs",
+        "airfield.js",
+        "src/airfield.mjs",
+        "migrations/0013_airfield_reference.sql",
+        "scripts/prepare-airfield-import.mjs",
+        "tests/airfield-source.test.mjs"
       ],
       "evidence": [
+        "2026-10-11 Airfield continuation (partial): Diagram can plot a sourced true-direction wind indicator with freshness; variable wind is explicitly not plotted as a single direction. No active-runway inference. 129 Node tests pass; source preparation and full import verified locally only. Exact browser fixtures/hashes: docs/qa/airfield-reference-acceptance.json. No deployed/reference-import/live-account acceptance.",
         "2026-10-11 Airport continuation (partial): Sourced METAR observation dashboard: true/variable/calm wind, gust, lower-bound visibility, ceiling, temperature/dew point, altimeter, source category, observation/retrieval times, raw report, freshness and request recovery. Runway-relative diagram and forecast remain unimplemented. Local tests and browser fixture evidence: docs/qa/airport-inspector-acceptance.json. No live-provider or signed-in Preview acceptance.",
         "hydrateBoard / boardApi / airportMovementEvidence / airport lookup",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
       ],
-      "outstanding_engineering_work": "Remaining full contract: sourced runway geometry/end dossiers, state/condition notices, weather/forecast/map relationship, historical canonical deduplicated movement model and actual private Preview acceptance.",
+      "outstanding_engineering_work": "Remaining full contract: isolated Preview schema/source import and authenticated provider/runtime acceptance; current authority notices and conditions; full runway-end approach/lighting/declared-distance and history dossiers; evidence-linked runway activity and broader shared movement history. Do not equate reference flags with live operational state.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -2243,15 +2285,21 @@
         "airport-weather.js",
         "tests/airport-weather.test.cjs",
         "tests/airport-api.test.cjs",
-        "scripts/browser-acceptance.cjs"
+        "scripts/browser-acceptance.cjs",
+        "airfield.js",
+        "src/airfield.mjs",
+        "migrations/0013_airfield_reference.sql",
+        "scripts/prepare-airfield-import.mjs",
+        "tests/airfield-source.test.mjs"
       ],
       "evidence": [
+        "2026-10-11 Airfield continuation (partial): Runway dimensions/elevation/threshold labels use independent feet/metres preference; geometry and selection remain unchanged. 129 Node tests pass; source preparation and full import verified locally only. Exact browser fixtures/hashes: docs/qa/airfield-reference-acceptance.json. No deployed/reference-import/live-account acceptance.",
         "2026-10-11 Airport continuation (partial): METAR quantities use shared independent units; original raw METAR is preserved. Includes visibility lower-bound semantics and true-direction convention. Local tests and browser fixture evidence: docs/qa/airport-inspector-acceptance.json. No live-provider or signed-in Preview acceptance.",
         "BASE/STREET exists; no MET workspace, temporal weather adapters, NAV dataset or global quantity preferences",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
         "2026-10-11 continuation: Independent distance/speed/altitude/temperature/pressure/visibility/vertical-speed selectors and Aviation standard reset; display conversions across currently present SKY/Rack/Inspector/LOOK/SLIDES/replay paths. Canonical inputs unchanged, unknown and zero distinguished, chart labels convert together with values. Latest complete Node suite: 114 pass. Final Chromium fixture acceptance passed desktop, phone portrait, short landscape and tablet; independent explanation/favourite/drill/back, replay unit changes/cursor preservation, Home/Explore/BOARD propagation, account failed-save/retry/reload and recent catchments. Hash-qualified report: docs/qa/units-catchment-account-acceptance.json. See RELEASE_RC_CHECKPOINT.md."
       ],
-      "outstanding_engineering_work": "Remaining universal quantity coverage as runway, forecast and MET layers are implemented; real private Preview and provider acceptance.",
+      "outstanding_engineering_work": "Remaining full contract: isolated Preview schema/source import and authenticated provider/runtime acceptance; current authority notices and conditions; full runway-end approach/lighting/declared-distance and history dossiers; evidence-linked runway activity and broader shared movement history. Do not equate reference flags with live operational state.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -7115,14 +7163,20 @@
         "airport-weather.js",
         "tests/airport-weather.test.cjs",
         "tests/airport-api.test.cjs",
-        "scripts/browser-acceptance.cjs"
+        "scripts/browser-acceptance.cjs",
+        "airfield.js",
+        "src/airfield.mjs",
+        "migrations/0013_airfield_reference.sql",
+        "scripts/prepare-airfield-import.mjs",
+        "tests/airfield-source.test.mjs"
       ],
       "evidence": [
+        "2026-10-11 Airfield continuation (partial): Airport Airfield tab mounts the shared sourced reference workspace, with D1-ready snapshot and missing-initialization states. 129 Node tests pass; source preparation and full import verified locally only. Exact browser fixtures/hashes: docs/qa/airfield-reference-acceptance.json. No deployed/reference-import/live-account acceptance.",
         "2026-10-11 Airport continuation (partial): Map airport markers and relationship links enter the same four-tab Airport Inspector; Movements connects the canonical BOARD evidence to individual Flight/back, without claiming confirmed completion. Local tests and browser fixture evidence: docs/qa/airport-inspector-acceptance.json. No live-provider or signed-in Preview acceptance.",
         "Inspector shell, cells, renderSurface, openObject, contextual tab dispatch",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
       ],
-      "outstanding_engineering_work": "Remaining full contract: sourced runway geometry/end dossiers, state/condition notices, weather/forecast/map relationship, historical canonical deduplicated movement model and actual private Preview acceptance.",
+      "outstanding_engineering_work": "Remaining full contract: isolated Preview schema/source import and authenticated provider/runtime acceptance; current authority notices and conditions; full runway-end approach/lighting/declared-distance and history dossiers; evidence-linked runway activity and broader shared movement history. Do not equate reference flags with live operational state.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
