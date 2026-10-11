@@ -16,7 +16,7 @@ test('Rack rows are keyboard operable and retain focus across refresh',()=>{
  assert.match(html,/role="button" tabindex="0" data-id="\$\{a\.id\}"/);
  assert.match(html,/el\.onkeydown=e=>/);
  assert.match(html,/e\.key==='Enter'\|\|e\.key===' '/);
- assert.match(html,/row\?\.focus\(\{preventScroll:true\}\)/);
+ assert.match(html,/\(row\|\|racksearch\)\.focus\(\{preventScroll:true\}\)/);
 });
 
 test('Inspector offers a close control and keyboard-visible navigation',()=>{
