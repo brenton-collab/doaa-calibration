@@ -105,3 +105,9 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `7761878` adds a scoped warm-light design layer (`field-notes.css`) for SKY, Rack, Inspector, BOARD, and responsive surfaces; `6ea232c` loads it after existing styles; `da1e357` includes it in the explicit build allowlist; `f9308a7` serves it through Worker-first routing.
 - This is an initial cohesive CSS integration, **not** a browser-reviewed or complete redesign. Existing map canvas draw colors, legacy Inspector internal styles, and dense viewports still require visual verification and refinement. Source-level asset test should now see the new stylesheet in both allowlists.
 - `312b1ba` preserves surrounding aircraft on selection; `86e2c4c`/`166a097` distinguish recent vs last-known Inspector fallback; `1ee60fe` adds static checks. Tests not executed. No deployment or infrastructure changes.
+
+## SKY visual refinement (2026-10-11)
+- `a1ead18`: selected contact gets a restrained high-contrast circular halo, while unselected contacts retain full visibility; search de-emphasis is softened.
+- `94f758c`: updated source regression expectations for halo and context.
+- `e3d340a`: light map tiles no longer receive the legacy dark-map color filter.
+- Browser and automated tests still not executed. Next verification gate is actual viewport rendering, map attribution and Inspector interactions. No deployment.
