@@ -180,7 +180,7 @@
       lastSlideId=signature;slideChangedAt=Date.now();
       photo.style.backgroundImage='';
       const image = new Image();
-      image.onload=()=>{if(active&&mode==='SLIDES'&&lastSlideId===signature){photo.style.backgroundImage='url('+JSON.stringify(String(a.photo.url))+')';count.textContent='PHOTO VERIFIED';}};
+      image.onload=()=>{if(active&&mode==='SLIDES'&&lastSlideId===signature){photo.style.backgroundImage='url('+JSON.stringify(String(a.photo.url))+')';count.textContent='RECENT OBSERVATION · PHOTO VERIFIED';}};
       image.onerror=()=>{failedPhotos.add(a.photo.url);if(lastSlideId===signature){lastSlideId='';photo.style.backgroundImage='';if(active&&mode==='SLIDES')update();}};
       image.src=a.photo.url;
 
