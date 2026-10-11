@@ -86,6 +86,7 @@
     const observed=Number(snapshot.observedAt)||0;
     const recent=observed>0&&Date.now()>=observed&&Date.now()-observed<90000;
     const aircraft = recent?(snapshot.aircraft || []).filter(usable):[];
+    if(!recent)trails.clear();
     const cx = w * .5, cy = h * .5;
     const scale = Math.min(w,h) * .46 / 80;
     const lat = validHome ? Number(home.lat) : 0;
@@ -127,10 +128,12 @@
         ctx.lineWidth=1.2;
         ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();
       }
-      const heading=(a.trk!=null&&a.trk!==''&&Number.isFinite(Number(a.trk))?Number(a.trk):0)*Math.PI/180;
-      ctx.save();ctx.translate(x,y);ctx.rotate(heading);
+      const hasTrack=a.trk!=null&&a.trk!==''&&Number.isFinite(Number(a.trk));
+      ctx.save();ctx.translate(x,y);
       ctx.fillStyle='rgba(205,242,243,.8)';
-      ctx.beginPath();ctx.moveTo(0,-5);ctx.lineTo(2.7,3.5);ctx.lineTo(0,1);ctx.lineTo(-2.7,3.5);ctx.closePath();ctx.fill();ctx.restore();
+      if(hasTrack){ctx.rotate(Number(a.trk)*Math.PI/180);ctx.beginPath();ctx.moveTo(0,-5);ctx.lineTo(2.7,3.5);ctx.lineTo(0,1);ctx.lineTo(-2.7,3.5);ctx.closePath();ctx.fill();}
+      else{ctx.beginPath();ctx.arc(0,0,3.2,0,Math.PI*2);ctx.fill();}
+      ctx.restore();
       ctx.fillStyle='rgba(124,212,222,.08)';
       ctx.beginPath();ctx.arc(x,y,15,0,Math.PI*2);ctx.fill();
     }
