@@ -81,3 +81,22 @@ test('ambient excludes absent and invalid coordinates from aircraft and home pro
  assert.match(ambient,/home\.lat != null && home\.lat !== ''/);
  assert.match(ambient,/home\.lon != null && home\.lon !== ''/);
 });
+
+
+test('AMBIENT SKY resets screen-space trails when the viewport changes, not on stable redraw',()=>{
+ const begin=ambient.indexOf('function dimensions() {');
+ const end=ambient.indexOf('  // Persistent strokes accumulate',begin);
+ assert.ok(begin>=0&&end>begin,'actual dimensions implementation available');
+ const dimensionsSource=ambient.slice(begin,end);
+ const canvas={width:0,height:0,style:{}};
+ const ctx={setTransform(){}};
+ const trails=new Map([['a',[{x:50,y:60,t:1}]]]);
+ const run=new Function('canvas','ctx','trails','devicePixelRatio','innerWidth','innerHeight',dimensionsSource+';return dimensions();');
+ assert.deepEqual(run(canvas,ctx,trails,1,800,600),{w:800,h:600});
+ assert.equal(trails.size,0,'initial projection clears incompatible trails');
+ trails.set('a',[{x:50,y:60,t:2}]);
+ run(canvas,ctx,trails,1,800,600);
+ assert.equal(trails.size,1,'same geometry preserves real movement');
+ run(canvas,ctx,trails,1,600,800);
+ assert.equal(trails.size,0,'orientation change discards stale screen coordinates');
+});
