@@ -145,3 +145,17 @@ Added a final live-snapshot freshness and aircraft registration/identity check a
 
 ### 2026-10-10 — AMBIENT SLIDES quiet handoff check
 Removed redundant slideshow footer observation captions (f918ed9). Executed an isolated JavaScript DOM/Image mock against the current ambient.js source: first photo is not shown before onload, next photo begins preloading after the 45-second hold, previous photo remains visible while next loads, failed replacement retains previous photo, verification pill remains PHOTO VERIFIED, and slideshow footer status remains empty. Initial mock attempt expected rotation before 45 seconds and correctly failed; revised test advanced the clock and passed. This is an executable mocked lifecycle check, not a real browser, real network, or device acceptance. Production remains unchanged.
+
+
+## 2026-10-10 — main-line checkpoint reconciliation
+
+The following main-branch documentation checkpoints were preserved while reconciling release history; these describe prior state and do not supersede newer branch implementation evidence.
+
+## 2026-10-10 — Frontend release isolation branch
+
+Branch `work/immutable-frontend-release` contains the Worker asset-bundle change, static regression tests, deploy syntax-gate integration, and docs/FRONTEND_RELEASE_BOUNDARY_GATE.md. Connector-side checks passed eight source/configuration assertions. Cloudflare read-only settings confirm production ASSETS and DB bindings. Node tests, preview/browser flows and production verification remain outstanding. No merge or deployment was performed. Next: run tests in a safe environment, verify static route behavior, and prepare controlled rollout with bundle-aware rollback.
+
+
+## 2026-10-10 evening — integrated AMBIENT and LOOK branch
+
+On `work/immutable-frontend-release`: ambient.js/css, shared live snapshot bridge, minimal art-directed AMBIENT SKY with observed-position trails and sparse upper-right branding/mode switch, AMBIENT SLIDES guarded shell, and LOOK view with explainable cues and SKY Inspector tap-through. Integration contract tests expanded and deployment syntax gate references them. GitHub source checks confirm module inclusion, shared snapshot and no new provider fetch in AMBIENT/LOOK. Detailed status: docs/AMBIENT_IMPLEMENTATION_STATE.md on branch. **Not executed in browser/Node, not merged or deployed.** Next: runtime validation, photo evidence adapter, event-driven SLIDES, and coherent integrated release acceptance.
