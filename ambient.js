@@ -185,6 +185,9 @@
       if (pendingSlideId !== signature) return;
       pendingSlideId = '';
       if (!active || mode !== 'SLIDES') return;
+      const current = data();
+      const observed = Number(current.observedAt)||0;
+      if (!(observed>0 && Date.now()>=observed && Date.now()-observed<90000) || !(current.aircraft||[]).some(v=>String(v.id)===String(a.id) && String(v.reg||'').toUpperCase()===String(a.reg).toUpperCase())) {update();return;}
       lastSlideId = signature;
       slideChangedAt = Date.now();
       photo.style.backgroundImage = 'url('+JSON.stringify(String(a.photo.url))+')';
