@@ -134,3 +134,9 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `138632f`: after Rack rerender, keyboard focus returns to the matching contact if still present, otherwise to the existing Rack search button. This closes the previously documented disappearing-contact focus gap.
 - `672634e`: updated source regression expectation for this fallback. Verified `racksearch` is bound to the actual `#racksearch` button in `index.html` by direct source inspection.
 - Actual browser interaction and Node test execution remain outstanding; no deployment or infrastructure changes.
+
+## SKY → Inspector keyboard continuity (2026-10-11)
+- `5b0c874`, `67d87ef`, `92eb44a`: record the originating Rack contact by ID and restore focus to its current row when Inspector closes, falling back to Rack search when the contact disappears. ID-based restoration survives Rack DOM replacement.
+- `46c0a0e`: when opened from a keyboard-focused Rack row, Inspector focuses its close control. `7172178`: Escape from within Inspector dismisses it through the existing cleanup path.
+- `96b9ee0`, `65aac70`: regression assertions for return focus, keyboard entry, and Escape dismissal. Source checks confirmed the return-focus capture/lookup/fallback code; full Node and real browser checks still outstanding.
+- No deployment, infrastructure or paid CI changes.
