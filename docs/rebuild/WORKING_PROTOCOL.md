@@ -273,3 +273,6 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `5c29080`: regression tests for differing and duplicate inferred values.
 - Deliberate limit: effective dates do not automatically resolve competing supported claims into current identity.
 - Tests committed but not executed. Browser verification and deployment deferred; no paid CI, D1 or infrastructure changes.
+
+## Related Airframe link
+Flight lookup identity removed from related Airframe labels. ICAO24 is the fallback label when registration is unknown. Source regression added. Tests remain unexecuted.
