@@ -11,3 +11,10 @@ test('Inspector fallback labels position freshness instead of claiming LIVE',()=
  assert.match(html,/LAST KNOWN POSITION/);
  assert.match(html,/inspectorTelemetry\(a,live\)/);
 });
+
+test('Rack rows are keyboard operable and retain focus across refresh',()=>{
+ assert.match(html,/role="button" tabindex="0" data-id="\$\{a\.id\}"/);
+ assert.match(html,/el\.onkeydown=e=>/);
+ assert.match(html,/e\.key==='Enter'\|\|e\.key===' '/);
+ assert.match(html,/row\?\.focus\(\{preventScroll:true\}\)/);
+});
