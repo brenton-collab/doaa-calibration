@@ -48,6 +48,18 @@ test('LOOK only offers actionable cues with recent evidence',()=>{
  window.DOAALook.render(board,{observedAt:Date.now(),aircraft},()=>{});
  assert.match(board.innerHTML,/Emergency transponder code/);
 });
+
+test('multi-cell merge never treats old aircraft as recent',()=>{
+ const src=functionSource(html,'mergeResponses','function compose');
+ const norm=x=>({id:x.hex,lat:x.lat,lon:x.lon});
+ const lastAircraft=new Map();
+ const merge=new Function('norm','lastAircraft','GHOST_LIFE',src+';return mergeResponses')(norm,lastAircraft,300000);
+ const fresh={now:Date.now(),aircraft:[{hex:'fresh',lat:45,lon:-75}],tracks:{}};
+ const old={now:Date.now()-200000,aircraft:[{hex:'old',lat:45,lon:-75}],tracks:{}};
+ const result=merge([old,fresh]);
+ assert.deepEqual(result.aircraft.map(x=>x.id),['fresh']);
+ assert.equal(lastAircraft.has('old'),false);
+});
 test('acquisition and presentation reject false freshness',()=>{
  assert.match(html,/Number\(e\.data\.now\)>0/);
  assert.match(html,/aircraft:aircraft\.filter\(a=>!a\._pinned\)/);
