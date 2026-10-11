@@ -1,3 +1,10 @@
+## Airport movement lifecycle verification
+
+- [x] Added request sequencing and a distinct loading label.
+- [x] Executed five isolated asynchronous checks: success, network failure, tab switch, airport switch, and out-of-order responses. All five passed; module parses.
+- [ ] Live endpoint and actual browser/device interactions remain unverified. Node regression suite outstanding.
+- Production unchanged; no paid CI.
+
 ## Airport evidence integration checkpoint
 
 - [x] Airport sections retain the looked-up airport identity; Overview retains known coordinates.
