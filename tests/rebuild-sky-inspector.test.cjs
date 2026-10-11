@@ -232,6 +232,6 @@ test('Contact identity does not borrow Flight lookup identifiers',()=>{
  const contact=src.slice(src.indexOf('function contact('),src.indexOf('function flight('));
  assert.ok(contact.includes("id=a.call||a.id.toUpperCase()"));
  assert.ok(contact.includes("reg=af?.reg_number||a.reg||'UNKNOWN'"));
- assert.ok(!contact.includes('f?.reg_number'));
+ assert.ok(!contact.includes('||f?.reg_number'));
  assert.ok(!contact.includes('f?.aircraft_icao'));
 });
