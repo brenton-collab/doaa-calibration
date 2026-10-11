@@ -261,3 +261,8 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `b285961`: biography displays effective_to where present.
 - `bcf88ee`: added source assertion for end-date rendering.
 - Core resolver does not reconcile claim periods. Conflicting values remain visible. Tests not executed; no deployment or infrastructure changes.
+
+## Chronology ambiguity display (2026-10-11)
+- `707a214`: dated biography now warns that source effective dates are ordered but not reconciled into current identity.
+- `1c3790f`: source assertion for that warning.
+- No change to claim conflict resolution. Tests not executed; no browser verification or deployment.
