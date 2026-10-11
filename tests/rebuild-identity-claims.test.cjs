@@ -73,3 +73,9 @@ test('multiple inferred disagreements remain conflicting without fallback',()=>{
  assert.equal(result.state,'conflicting');
  assert.equal(result.claims.length,2);
 });
+
+test('rendered biography keeps date-only end boundary',()=>{
+ const fs=require('node:fs'),path=require('node:path');
+ const src=fs.readFileSync(path.join(__dirname,'../inspector-flight.js'),'utf8');
+ assert.ok(src.includes("q.effective_to+' · DATE ONLY'"));
+});
