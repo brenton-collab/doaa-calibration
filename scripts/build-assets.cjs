@@ -4,7 +4,7 @@ const fs=require('node:fs');
 const path=require('node:path');
 const root=path.resolve(__dirname,'..');
 const out=path.join(root,'dist');
-const assets=['index.html','sky-map-core.js','vector-base.js','flight-enrichment.js','flight-core.js','inspector-flight.js','movement-core.js','movement-workspace.js','movement-workspace.css','ambient.js','ambient.css','ambient-media.js','look.js','track-core.js','track-history.js','track-history.css', 'airfield.js', 'airport-weather.js', 'units.js', 'catchment-core.js', 'preference-core.js', 'bookmarks.js', 'account.js'];
+const assets=['admin-users.html','admin-users.css','admin-users.js','index.html','sky-map-core.js','vector-base.js','flight-enrichment.js','flight-core.js','inspector-flight.js','movement-core.js','movement-workspace.js','movement-workspace.css','ambient.js','ambient.css','ambient-media.js','look.js','track-core.js','track-history.js','track-history.css', 'airfield.js', 'airport-weather.js', 'units.js', 'catchment-core.js', 'preference-core.js', 'bookmarks.js', 'account.js'];
 const staging=path.join(root,'.dist-staging');
 fs.rmSync(staging,{recursive:true,force:true});
 fs.mkdirSync(staging,{recursive:true});
