@@ -331,3 +331,5 @@ Flight lookup identity removed from related Airframe labels. ICAO24 is the fallb
 - Added executable Contact → Flight → Back journey regression (`f0e2889`): restores Contact subject, HTML and scroll, and suppresses the delayed Flight response. Isolated async suite now passes 5 cases / 20 assertions. SKY entry and Airframe journey, plus real browser execution, remain unverified.
 
 - Contact → Airframe → Back executable navigation regression committed (`615c4bc`), including restored subject, surface, content, scroll, and history. Isolated V8 async navigation suite passes 6 tests / 27 assertions. Browser smoke and SKY entry still unverified.
+
+- SKY entry: `selectEncounter` now validates encounter existence before changing selected aircraft/follow state (`932065e`), with executable missing-encounter regression (`672ac63`). Isolated navigation suite passes 7 cases / 30 assertions. Browser-level verification remains outstanding.
