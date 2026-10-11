@@ -86,6 +86,8 @@
       canvas.height = Math.round(h * ratio);
       canvas.style.width = w + 'px';
       canvas.style.height = h + 'px';
+      // Trails store screen-space points; old pixels cannot survive a viewport re-projection.
+      trails.clear();
     }
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
     return {w,h};
