@@ -43,12 +43,12 @@ async function runScenario(kind){
   license:'CC BY',attribution:'Photographer'
  }]})});
  for(let i=0;i<8;i++)await Promise.resolve();
- assert.equal(emitted.length,(kind==='good'||kind==='missing')?1:0);
+ assert.equal(emitted.length,kind==='good'?1:0);
 }
 test('SLIDES emits matching current exact-airframe media',()=>runScenario('good'));
 test('SLIDES discards media when aircraft registration changed',()=>runScenario('stale'));
 test('SLIDES discards response after exit',()=>runScenario('closed'));
-test('SLIDES accepts exact media for a contact whose registration disappears',()=>runScenario('missing'));
+test('SLIDES discards response after registration disappears',()=>runScenario('missing'));
 test('SLIDES retries failed cache reads',()=>runScenario('failure'));
 
 test('SLIDES rejects insecure cached photo URLs',()=>runScenario('insecure'));
