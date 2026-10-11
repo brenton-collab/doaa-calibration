@@ -38,7 +38,7 @@ export async function authentication(request,env){
   if(request.method!=='POST')return json({ok:false,error:'Method not allowed'},405);
   if(!sameOrigin(request))return json({ok:false,error:'Same-origin request required'},403);
   const token=cookies(request).__Host_doaa_session;
-  if(!token||!/^[\\w-]{43}$/.test(token)||!env.DB)return json({ok:false,error:'Sign-in required'},401);
+  if(!token||!/^[A-Za-z0-9_-]{43}$/.test(token)||!env.DB)return json({ok:false,error:'Sign-in required'},401);
   const tokenHash=await hash(token);
   const session=await env.DB.prepare('SELECT subject,expires_at FROM auth_sessions WHERE token_hash=?').bind(tokenHash).first();
   if(!session||Date.parse(session.expires_at)<=Date.now())return json({ok:false,error:'Sign-in required'},401);
