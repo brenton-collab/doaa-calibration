@@ -66,3 +66,10 @@ test('SKY markers and Rack share per-aircraft freshness filtering',()=>{
  assert.ok(html.includes('a._pinned||DOAASkyMapCore.fresh(a,t)'));
  assert.ok(html.includes('inView(a)&&DOAASkyMapCore.fresh(a,t)'));
 });
+
+test('Field Notes Inspector has reusable semantic layout styles',()=>{
+ const css=fs.readFileSync(require('node:path').join(__dirname,'../field-notes.css'),'utf8');
+ assert.ok(css.includes('.fn-inspector-header'));
+ assert.ok(css.includes('.fn-inspector-section-title'));
+ assert.ok(css.includes('.fn-inspector-hero'));
+});
