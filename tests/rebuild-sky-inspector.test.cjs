@@ -133,3 +133,10 @@ test('Unresolved flight evidence has a functional retry path',()=>{
  assert.match(source,/if\(same&&pushHistory\)/);
  assert.match(source,/status:'unavailable'/);
 });
+
+test('Flight dossier distinguishes callsign association from confirmed assignment',()=>{
+ const source=fs.readFileSync(require('node:path').join(__dirname,'../flight-enrichment.js'),'utf8');
+ assert.match(source,/section\('ASSOCIATION'/);
+ assert.match(source,/A dated aircraft-to-flight assignment has not been established/);
+ assert.match(source,/current_assignment_established:f\?\.current_assignment_established===true/);
+});
