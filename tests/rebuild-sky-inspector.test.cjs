@@ -243,3 +243,12 @@ test('Airport movement navigation invalidates pending lookup responses',()=>{
  assert.ok(src.includes('d._doaaNavigation===navigation&&d._doaaSubject===subject'));
  assert.ok(src.includes('d._doaaNavigation=(d._doaaNavigation||0)+1;window.DOAATrackHistory?.dispose(d)'));
 });
+
+test('Back navigation restores subject and invalidates stale responses',()=>{
+ const src=fs.readFileSync(require('node:path').join(__dirname,'../flight-enrichment.js'),'utf8');
+ const back=src.slice(src.indexOf('function backInspector('),src.indexOf('async function openObject('));
+ assert.ok(back.includes('d._doaaNavigation=(d._doaaNavigation||0)+1'));
+ assert.ok(back.includes('d._doaaSubject=previous.state.a.id'));
+ assert.ok(back.includes('d.dataset.activeSurface=previous.surface'));
+ assert.ok(back.includes('d.scrollTop=previous.scroll'));
+});
