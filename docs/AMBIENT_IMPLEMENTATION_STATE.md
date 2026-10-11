@@ -100,3 +100,8 @@ Important remaining issues: track drawing is observation-history only while the 
 - eb7b515 changes the production workflow from a hand-selected test subset to all tests/*.test.cjs, tests/*.test.mjs, and airlabs-budget.test.cjs.
 - f445135 commits executable asset-builder tests for missing sources, unknown local HTML references, and successful allowlisted packaging. All three equivalent tests were run under Node 22 in an isolated local fixture and passed.
 - Complete checkout tests and browser acceptance remain pending. No CI was triggered and no production deployment occurred.
+
+## 2026-10-10 — user-facing SLIDES rotation
+- 15ece00 adds a 45-second quiet hold followed by cycling among currently eligible exact-airframe images. If an aircraft becomes ineligible, the composition changes without retaining an obsolete current aircraft.
+- 83b1743 refreshes flight text on each update without forcing photo transitions. 84a9279 preserves unknown telemetry text in that refreshed copy. e6f39a2 labels recent versus last-observed evidence honestly.
+- JavaScript parse checked after the rotation change. This is feature implementation on the integration branch, not browser acceptance. No provider calls, D1 changes, CI or production deploy.
