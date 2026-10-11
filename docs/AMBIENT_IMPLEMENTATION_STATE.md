@@ -116,3 +116,8 @@ Important remaining issues: track drawing is observation-history only while the 
 - e3c5dea: BOARD-to-Inspector preserves absent altitude, groundspeed, heading and vertical rate as unknown instead of manufacturing zeros, and checks coordinate bounds.
 - 6a0e276: closing an Inspector opened from BOARD returns to BOARD; other navigation remains unchanged.
 - Both inline HTML scripts parsed successfully after the changes; API and navigation contract source checks passed. Full browser and backend integration not yet verified. No production deploy, premium requests, D1 writes or CI.
+
+## 2026-10-10 — shared acquisition and Inspector truth contract
+- 92c1d03 fixes Worker liveAircraft normalization: absent latitude/longitude are invalid rather than coercing to 0. BOARD track inference rejects incomplete or out-of-range coordinates and absent altitude/time samples.
+- 3b5468f makes Inspector contact altitude, speed and track explicitly unknown when absent, rather than displaying false zero readings.
+- Worker and Inspector scripts parsed successfully; four isolated Worker normalization scenarios passed. Full provider-to-browser integration remains pending. No production, CI, D1 or premium-provider changes.
