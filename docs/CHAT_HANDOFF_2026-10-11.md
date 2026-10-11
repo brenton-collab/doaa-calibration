@@ -40,3 +40,9 @@ No remote D1 writes, imports, migrations or deployment occurred in this Inspecto
 Preview D1: `939eda3b-4894-497b-9f67-209771761b3f`. Production D1: `434f90d3-397b-48d3-8249-4c48cf1e8936`. Latest binding inspection confirmed Preview's own DB, with no Google configuration. Its existing schema includes 0001–0012; 0013 reference is not applied. Do not run the empty-schema initializer or destructive historical migrations against it. Default airport preparation is five airports/twelve runway records, local only; SQL statement count is not billed row/index write count. Review exact remote quota effects before any import or schema action. Do not poll D1 to refresh documentation.
 
 No main merge, Production deployment, paid activation, destructive migration or automatic Actions run is authorized. Publish only this authorized work branch, retain the draft PR, and verify the connected tree equals the tested local tree. Production remains unchanged.
+
+## Later SKY UX continuation
+
+Brent authorized a bounded SKY push with remaining WORK credit. MAP now groups Mode / Base / Layers with NAV/MET honestly unavailable. Fresh selection follows with manual pause/resume; zoom/north-up are preserved. One-hour session trails retain loaded history through outages, use fixed blue altitude gradients with grey unknowns, and have a session-only visibility toggle and settings legend. Scope/limits: SKY_MAP_UX_CONTRACT.md. Verification evidence is in docs/qa after final checks. This supersedes any earlier assumption that all SKY follow/trail controls are untouched; it does not defer or declare NAV/MET complete.
+
+CHAT can review authoritative free Canadian NAV/MET sources, licensing, temporal coverage and product expectations. WORK still owns source adapters, MET/NAV implementation, unified search, identity reconciliation, cross-device trail restoration and browser/live verification. No remote D1 change or deployment was made.

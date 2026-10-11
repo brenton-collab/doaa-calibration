@@ -2781,17 +2781,22 @@
       "requirement": "SKY exposes three orthogonal control dimensions: **Style** (BASE / STREET underlying geographic map), **Mode** (TRAFFIC / MET investigation workspace), and **Layers** (NAV chart-convention airspace overlay and other optional overlays, with MET's grouped meteorological layers when MET is active). Combinations such as MET + STREET + NAV are supported; BASE/STREET/NAV/MET are not four mutually exclusive map choices. Desktop uses a compact floating toolbar; mobile opens a tidy layer sheet to protect map and Inspector space. Changing Style preserves active Mode, layer selections, camera and playback cursor; changing Mode should preserve sensible investigation context while honoring each mode's temporal semantics. Controls must be accessible and indicate unavailable data without implying it is active. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
-        "vector-base.js"
+        "vector-base.js",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "BASE/STREET exists; no MET workspace, temporal weather adapters, NAV dataset or global quantity preferences",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement independent units, map modes/layers, verified free weather/NAV sources, timestamped History/Now/Forecast and contextual feature inspection.",
+      "outstanding_engineering_work": "Implement verified NAV/MET datasets, temporal workspaces and layer combinations; verify authenticated Preview/live/physical-device controls.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -2803,14 +2808,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -5040,18 +5046,23 @@
       "requirement": "Selecting an aircraft activates map follow mode by default: as fresh, identity-confirmed position observations arrive, keep the selected aircraft centered in the map viewport. Do not manufacture interpolated positions or continue apparent movement after live observations become stale or unavailable; retain the selection and clearly show its non-live status under Decisions 112–118. Keep aircraft detail information accessible during following. User-driven map interaction should remain possible, with its effect on following to be specified separately. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
         "relay.js",
-        "tests/observation-contract.test.cjs"
+        "tests/observation-contract.test.cjs",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "recent timestamp/pinned-state/partial-cell guards exist; draw and selection have no full source-aware lifecycle/follow policy",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement per-observation freshness, retained selection, qualified stale markers, outage/recovery policy and north-up offset Follow.",
+      "outstanding_engineering_work": "Complete identity/conflict reconciliation and selected stale-state integration; validate real fresh/recovery observations, geographic coverage and physical devices.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -5063,14 +5074,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -5079,18 +5091,23 @@
       "requirement": "Deliberately panning or otherwise navigating the map suspends automatic recentering of the selected aircraft. Keep the aircraft selected and its detail panel open, with a clear control to resume following. Do not automatically resume after a timeout or force recentering on the next aircraft update. Selecting another aircraft activates following for that new selection under Decision 119. Distinguish deliberate user gestures from programmatic map movement. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
         "relay.js",
-        "tests/observation-contract.test.cjs"
+        "tests/observation-contract.test.cjs",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "recent timestamp/pinned-state/partial-cell guards exist; draw and selection have no full source-aware lifecycle/follow policy",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement per-observation freshness, retained selection, qualified stale markers, outage/recovery policy and north-up offset Follow.",
+      "outstanding_engineering_work": "Complete identity/conflict reconciliation and selected stale-state integration; validate real fresh/recovery observations, geographic coverage and physical devices.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -5102,14 +5119,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -5118,18 +5136,23 @@
       "requirement": "Automatic following recenters the selected aircraft on fresh, identity-confirmed position updates without changing the map's zoom level. Do not automatically zoom based on aircraft speed, movement or surrounding geography, or switch to a fixed tracking scale. User-controlled zoom remains authoritative; intentional zoom gestures should not cause surprise recentering, consistent with the manual-navigation pause rule of Decision 120. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
         "relay.js",
-        "tests/observation-contract.test.cjs"
+        "tests/observation-contract.test.cjs",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "recent timestamp/pinned-state/partial-cell guards exist; draw and selection have no full source-aware lifecycle/follow policy",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement per-observation freshness, retained selection, qualified stale markers, outage/recovery policy and north-up offset Follow.",
+      "outstanding_engineering_work": "Complete identity/conflict reconciliation and selected stale-state integration; validate real fresh/recovery observations, geographic coverage and physical devices.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -5141,14 +5164,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -5157,18 +5181,23 @@
       "requirement": "Keep north at the top while following an aircraft. Do not rotate the map to its heading. Rotate the aircraft symbol only when trustworthy direction information is available; never suggest stale or unknown direction is current. Preserve zoom and manual-navigation behavior under Decisions 120–121. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
         "relay.js",
-        "tests/observation-contract.test.cjs"
+        "tests/observation-contract.test.cjs",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "recent timestamp/pinned-state/partial-cell guards exist; draw and selection have no full source-aware lifecycle/follow policy",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement per-observation freshness, retained selection, qualified stale markers, outage/recovery policy and north-up offset Follow.",
+      "outstanding_engineering_work": "Complete identity/conflict reconciliation and selected stale-state integration; validate real fresh/recovery observations, geographic coverage and physical devices.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -5180,14 +5209,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -5196,18 +5226,23 @@
       "requirement": "During automatic aircraft following, place the selected aircraft behind the center of the usable map viewport to show more geography ahead along its reliably observed direction of travel. Respect occlusion by panels and controls. Do not infer direction from an unreliable or stale report; when reliable direction is unavailable, fall back to centered placement. Maintain north-up orientation, unchanged zoom, and manual-navigation pause behavior under Decisions 120–122. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
         "relay.js",
-        "tests/observation-contract.test.cjs"
+        "tests/observation-contract.test.cjs",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "recent timestamp/pinned-state/partial-cell guards exist; draw and selection have no full source-aware lifecycle/follow policy",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement per-observation freshness, retained selection, qualified stale markers, outage/recovery policy and north-up offset Follow.",
+      "outstanding_engineering_work": "Complete identity/conflict reconciliation and selected stale-state integration; validate real fresh/recovery observations, geographic coverage and physical devices.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -5219,14 +5254,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -5318,13 +5354,18 @@
         "index.html",
         "src/worker.js",
         "relay.js",
-        "doaa-memory.js"
+        "doaa-memory.js",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "drawTrack / draw / mergeResponses / norm / checkpointObservation",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement one-hour altitude gradients/trail restoration and aging, source/quality reconciliation and immutable conflict/correction evidence, animation plausibility/orientation policy.",
+      "outstanding_engineering_work": "Verify per-point altitude quality/provenance and identity boundaries, cross-device one-hour restoration, real data/render performance and deployment acceptance. Delivered display extent follows Decision 128; legacy alt measurement type is unspecified.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -5336,14 +5377,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -5357,13 +5399,18 @@
         "index.html",
         "src/worker.js",
         "relay.js",
-        "doaa-memory.js"
+        "doaa-memory.js",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "drawTrack / draw / mergeResponses / norm / checkpointObservation",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement one-hour altitude gradients/trail restoration and aging, source/quality reconciliation and immutable conflict/correction evidence, animation plausibility/orientation policy.",
+      "outstanding_engineering_work": "Verify per-point altitude quality/provenance and identity boundaries, cross-device one-hour restoration, real data/render performance and deployment acceptance. Delivered display extent follows Decision 128; legacy alt measurement type is unspecified.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -5375,14 +5422,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -5396,13 +5444,18 @@
         "index.html",
         "src/worker.js",
         "relay.js",
-        "doaa-memory.js"
+        "doaa-memory.js",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "drawTrack / draw / mergeResponses / norm / checkpointObservation",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement one-hour altitude gradients/trail restoration and aging, source/quality reconciliation and immutable conflict/correction evidence, animation plausibility/orientation policy.",
+      "outstanding_engineering_work": "Verify per-point altitude quality/provenance and identity boundaries, cross-device one-hour restoration, real data/render performance and deployment acceptance. Delivered display extent follows Decision 128; legacy alt measurement type is unspecified.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -5414,14 +5467,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -5435,13 +5489,18 @@
         "index.html",
         "src/worker.js",
         "relay.js",
-        "doaa-memory.js"
+        "doaa-memory.js",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "drawTrack / draw / mergeResponses / norm / checkpointObservation",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement one-hour altitude gradients/trail restoration and aging, source/quality reconciliation and immutable conflict/correction evidence, animation plausibility/orientation policy.",
+      "outstanding_engineering_work": "Verify per-point altitude quality/provenance and identity boundaries, cross-device one-hour restoration, real data/render performance and deployment acceptance. Delivered display extent follows Decision 128; legacy alt measurement type is unspecified.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -5453,14 +5512,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -5474,13 +5534,18 @@
         "index.html",
         "src/worker.js",
         "relay.js",
-        "doaa-memory.js"
+        "doaa-memory.js",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "drawTrack / draw / mergeResponses / norm / checkpointObservation",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement one-hour altitude gradients/trail restoration and aging, source/quality reconciliation and immutable conflict/correction evidence, animation plausibility/orientation policy.",
+      "outstanding_engineering_work": "Verify per-point altitude quality/provenance and identity boundaries, cross-device one-hour restoration, real data/render performance and deployment acceptance. Delivered display extent follows Decision 128; legacy alt measurement type is unspecified.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -5492,14 +5557,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -5552,13 +5618,18 @@
         "index.html",
         "src/worker.js",
         "relay.js",
-        "doaa-memory.js"
+        "doaa-memory.js",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "drawTrack / draw / mergeResponses / norm / checkpointObservation",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement one-hour altitude gradients/trail restoration and aging, source/quality reconciliation and immutable conflict/correction evidence, animation plausibility/orientation policy.",
+      "outstanding_engineering_work": "Verify per-point altitude quality/provenance and identity boundaries, cross-device one-hour restoration, real data/render performance and deployment acceptance. Delivered display extent follows Decision 128; legacy alt measurement type is unspecified.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -5570,14 +5641,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -5591,13 +5663,18 @@
         "index.html",
         "src/worker.js",
         "relay.js",
-        "doaa-memory.js"
+        "doaa-memory.js",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "drawTrack / draw / mergeResponses / norm / checkpointObservation",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement one-hour altitude gradients/trail restoration and aging, source/quality reconciliation and immutable conflict/correction evidence, animation plausibility/orientation policy.",
+      "outstanding_engineering_work": "Verify per-point altitude quality/provenance and identity boundaries, cross-device one-hour restoration, real data/render performance and deployment acceptance. Delivered display extent follows Decision 128; legacy alt measurement type is unspecified.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -5609,14 +5686,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -5625,18 +5703,23 @@
       "requirement": "Aircraft trails are visible by default, across all aircraft and zoom levels under Decisions 128–133. Provide a discreet, accessible map control to temporarily hide or show all aircraft trails together, without removing stored observations or altering live aircraft markers. Do not add separate per-aircraft or altitude-colour visibility controls at this stage. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
         "relay.js",
-        "doaa-memory.js"
+        "doaa-memory.js",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "drawTrack / draw / mergeResponses / norm / checkpointObservation",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement one-hour altitude gradients/trail restoration and aging, source/quality reconciliation and immutable conflict/correction evidence, animation plausibility/orientation policy.",
+      "outstanding_engineering_work": "Verify per-point altitude quality/provenance and identity boundaries, cross-device one-hour restoration, real data/render performance and deployment acceptance. Delivered display extent follows Decision 128; legacy alt measurement type is unspecified.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -5648,14 +5731,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -5664,18 +5748,23 @@
       "requirement": "The trail show/hide control from Decision 134 is session-only. On every fresh DOAA opening or reload, restore the default of showing all available aircraft trails, regardless of the prior toggle state. Do not save or synchronize trail visibility as an account or device preference. Other account preferences remain governed by Decisions 108–111. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
         "relay.js",
-        "doaa-memory.js"
+        "doaa-memory.js",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "drawTrack / draw / mergeResponses / norm / checkpointObservation",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement one-hour altitude gradients/trail restoration and aging, source/quality reconciliation and immutable conflict/correction evidence, animation plausibility/orientation policy.",
+      "outstanding_engineering_work": "Verify per-point altitude quality/provenance and identity boundaries, cross-device one-hour restoration, real data/render performance and deployment acceptance. Delivered display extent follows Decision 128; legacy alt measurement type is unspecified.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -5687,14 +5776,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -5708,13 +5798,18 @@
         "index.html",
         "src/worker.js",
         "relay.js",
-        "doaa-memory.js"
+        "doaa-memory.js",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "drawTrack / draw / mergeResponses / norm / checkpointObservation",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement one-hour altitude gradients/trail restoration and aging, source/quality reconciliation and immutable conflict/correction evidence, animation plausibility/orientation policy.",
+      "outstanding_engineering_work": "Verify per-point altitude quality/provenance and identity boundaries, cross-device one-hour restoration, real data/render performance and deployment acceptance. Delivered display extent follows Decision 128; legacy alt measurement type is unspecified.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -5726,14 +5821,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -5747,13 +5843,18 @@
         "index.html",
         "src/worker.js",
         "relay.js",
-        "doaa-memory.js"
+        "doaa-memory.js",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "drawTrack / draw / mergeResponses / norm / checkpointObservation",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement one-hour altitude gradients/trail restoration and aging, source/quality reconciliation and immutable conflict/correction evidence, animation plausibility/orientation policy.",
+      "outstanding_engineering_work": "Verify per-point altitude quality/provenance and identity boundaries, cross-device one-hour restoration, real data/render performance and deployment acceptance. Delivered display extent follows Decision 128; legacy alt measurement type is unspecified.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -5765,14 +5866,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -5786,13 +5888,18 @@
         "index.html",
         "src/worker.js",
         "relay.js",
-        "doaa-memory.js"
+        "doaa-memory.js",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "drawTrack / draw / mergeResponses / norm / checkpointObservation",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement one-hour altitude gradients/trail restoration and aging, source/quality reconciliation and immutable conflict/correction evidence, animation plausibility/orientation policy.",
+      "outstanding_engineering_work": "Verify per-point altitude quality/provenance and identity boundaries, cross-device one-hour restoration, real data/render performance and deployment acceptance. Delivered display extent follows Decision 128; legacy alt measurement type is unspecified.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -5804,14 +5911,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -5820,18 +5928,23 @@
       "requirement": "Colour each trail segment with a smooth gradient between the altitude colours of its two observed endpoints when both altitudes are reliable. This is a visual transition only, not evidence of measured intermediate altitudes or positions. Preserve the established one-hour age fade, uniform connector styling, and source/identity boundaries. If either endpoint altitude is unavailable or unreliable, use the established unknown-altitude treatment instead of inventing a gradient. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
         "relay.js",
-        "doaa-memory.js"
+        "doaa-memory.js",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "drawTrack / draw / mergeResponses / norm / checkpointObservation",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement one-hour altitude gradients/trail restoration and aging, source/quality reconciliation and immutable conflict/correction evidence, animation plausibility/orientation policy.",
+      "outstanding_engineering_work": "Verify per-point altitude quality/provenance and identity boundaries, cross-device one-hour restoration, real data/render performance and deployment acceptance. Delivered display extent follows Decision 128; legacy alt measurement type is unspecified.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -5843,14 +5956,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -5859,18 +5973,23 @@
       "requirement": "Use a blue-only altitude colour scale for aircraft trails, progressing from pale blue at lower reported altitudes through medium blue to deep navy at higher reported altitudes. Preserve smooth endpoint gradients, the one-hour age fade, and unknown-altitude distinctions. Provide a readable legend and non-colour altitude cues where applicable. Exact colour stops and altitude thresholds remain implementation details to validate for contrast. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
         "relay.js",
-        "doaa-memory.js"
+        "doaa-memory.js",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "drawTrack / draw / mergeResponses / norm / checkpointObservation",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement one-hour altitude gradients/trail restoration and aging, source/quality reconciliation and immutable conflict/correction evidence, animation plausibility/orientation policy.",
+      "outstanding_engineering_work": "Verify per-point altitude quality/provenance and identity boundaries, cross-device one-hour restoration, real data/render performance and deployment acceptance. Delivered display extent follows Decision 128; legacy alt measurement type is unspecified.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -5882,14 +6001,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -5898,18 +6018,23 @@
       "requirement": "Map each reliably reported altitude to the same shade of the monochromatic blue palette across aircraft, sessions, and map views. Do not rescale colours relative to an individual flight or the currently visible traffic. Maintain a stable legend; exact altitude endpoints and colour stops are implementation calibration details. Preserve unknown-altitude handling and age-based trail fading. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
         "relay.js",
-        "doaa-memory.js"
+        "doaa-memory.js",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "drawTrack / draw / mergeResponses / norm / checkpointObservation",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement one-hour altitude gradients/trail restoration and aging, source/quality reconciliation and immutable conflict/correction evidence, animation plausibility/orientation policy.",
+      "outstanding_engineering_work": "Verify per-point altitude quality/provenance and identity boundaries, cross-device one-hour restoration, real data/render performance and deployment acceptance. Delivered display extent follows Decision 128; legacy alt measurement type is unspecified.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -5921,14 +6046,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -5937,18 +6063,23 @@
       "requirement": "Use reliable reported barometric altitude as the primary input to the fixed blue altitude-colour scale. When unavailable, use reliable reported geometric altitude as a fallback, preserving which measurement type supplied the colour and its provenance. Do not treat the two measurements as identical or invent missing values. If neither is reliable, use the established unknown-altitude treatment. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
         "relay.js",
-        "doaa-memory.js"
+        "doaa-memory.js",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "drawTrack / draw / mergeResponses / norm / checkpointObservation",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement one-hour altitude gradients/trail restoration and aging, source/quality reconciliation and immutable conflict/correction evidence, animation plausibility/orientation policy.",
+      "outstanding_engineering_work": "Verify per-point altitude quality/provenance and identity boundaries, cross-device one-hour restoration, real data/render performance and deployment acceptance. Delivered display extent follows Decision 128; legacy alt measurement type is unspecified.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -5960,14 +6091,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -5976,18 +6108,23 @@
       "requirement": "Draw trail portions lacking reliable altitude in a restrained neutral grey, subject to the same rolling one-hour age fade as other trails. Do not use pale blue or inherit a previous altitude colour as though altitude were known. Preserve the observations and trail continuity under existing rules. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
         "relay.js",
-        "doaa-memory.js"
+        "doaa-memory.js",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "drawTrack / draw / mergeResponses / norm / checkpointObservation",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement one-hour altitude gradients/trail restoration and aging, source/quality reconciliation and immutable conflict/correction evidence, animation plausibility/orientation policy.",
+      "outstanding_engineering_work": "Verify per-point altitude quality/provenance and identity boundaries, cross-device one-hour restoration, real data/render performance and deployment acceptance. Delivered display extent follows Decision 128; legacy alt measurement type is unspecified.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -5999,14 +6136,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -6015,18 +6153,23 @@
       "requirement": "When exactly one endpoint of a trail segment has reliable altitude, blend smoothly between that endpoint's fixed-scale blue altitude colour and neutral grey at the unknown-altitude endpoint, in the correct direction. This conveys the boundary of known and unknown altitude without inventing an intermediate measurement. When both endpoints are unknown, use grey; when both are known, follow Decision 139. Preserve age fading and source provenance. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
         "relay.js",
-        "doaa-memory.js"
+        "doaa-memory.js",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "drawTrack / draw / mergeResponses / norm / checkpointObservation",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement one-hour altitude gradients/trail restoration and aging, source/quality reconciliation and immutable conflict/correction evidence, animation plausibility/orientation policy.",
+      "outstanding_engineering_work": "Verify per-point altitude quality/provenance and identity boundaries, cross-device one-hour restoration, real data/render performance and deployment acceptance. Delivered display extent follows Decision 128; legacy alt measurement type is unspecified.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -6038,14 +6181,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -6059,13 +6203,18 @@
         "index.html",
         "src/worker.js",
         "relay.js",
-        "doaa-memory.js"
+        "doaa-memory.js",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "drawTrack / draw / mergeResponses / norm / checkpointObservation",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement one-hour altitude gradients/trail restoration and aging, source/quality reconciliation and immutable conflict/correction evidence, animation plausibility/orientation policy.",
+      "outstanding_engineering_work": "Verify per-point altitude quality/provenance and identity boundaries, cross-device one-hour restoration, real data/render performance and deployment acceptance. Delivered display extent follows Decision 128; legacy alt measurement type is unspecified.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -6077,14 +6226,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {
@@ -6093,18 +6243,23 @@
       "requirement": "Keep the map free of an always-visible or collapsible altitude legend. Place the fixed monochromatic-blue altitude scale, labelled bounds, and unknown-altitude explanation in map settings, where users can consult it. Preserve non-colour altitude information in relevant aircraft details. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
         "relay.js",
-        "doaa-memory.js"
+        "doaa-memory.js",
+        "sky-map-core.js",
+        "tests/sky-map-core.test.cjs",
+        "scripts/sky-browser-acceptance.cjs",
+        "docs/SKY_MAP_UX_CONTRACT.md"
       ],
       "evidence": [
         "drawTrack / draw / mergeResponses / norm / checkpointObservation",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 SKY UX checkpoint: independent map control sheet (NAV/MET unavailable), fresh observation follow with manual pause/resume and preserved zoom/north-up, rolling one-hour session trails retained through outages, fixed blue endpoint gradients with grey unknowns and settings legend, visual-only trails and session visibility toggle. 152 Node tests; browser result and source hashes are qualified in docs/qa/sky-map-acceptance.json and SKY_MAP_UX_CONTRACT.md. No deployment or full source/identity acceptance is implied."
       ],
-      "outstanding_engineering_work": "Implement one-hour altitude gradients/trail restoration and aging, source/quality reconciliation and immutable conflict/correction evidence, animation plausibility/orientation policy.",
+      "outstanding_engineering_work": "Verify per-point altitude quality/provenance and identity boundaries, cross-device one-hour restoration, real data/render performance and deployment acceptance. Delivered display extent follows Decision 128; legacy alt measurement type is unspecified.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -6116,14 +6271,15 @@
       ],
       "required_for_agreed_release": true,
       "verification_state": {
-        "code_implemented": false,
-        "tests_executed": false,
-        "committed": false,
+        "code_implemented": true,
+        "tests_executed": true,
+        "committed": true,
         "merged": false,
         "preview_deployed": false,
         "preview_browser_verified": false,
         "production_deployed": false,
-        "production_verified": false
+        "production_verified": false,
+        "local_browser_verified": true
       }
     },
     {

@@ -1,9 +1,10 @@
 {
-  "date": "2026-10-11T18:12:22.329Z",
+  "date": "2026-10-11T18:29:36.839Z",
   "browser": "151.0.7922.34",
   "data": "Offline deterministic fixtures, never provider acceptance",
   "files": {
-    "index.html": "6ce70cc3de31bd967840a433a194766e817030b534a229b47976e3930eeedbc1",
+    "index.html": "fc5b048a1d7e56b8b81dbc466a870c18e5ae4477caa267579e612a5a7621510a",
+    "sky-map-core.js": "c4df398981cd1b9e94c2ecf9d583600845194f6d127f3deed591bc986627ad96",
     "flight-enrichment.js": "5d4cc272645b35296bc0a0d5c13f485ea6260c782c483a9fbbcf3816fc5344c9",
     "flight-core.js": "51b9a3a7e4bfb4e33641293daefa179a190b80890c0c96dde7b33d6c5903571c",
     "inspector-flight.js": "fa87b3c337761c0e9419d8bbd0981350da246d7f6ca09191fccf4df1c9a7cf8d",

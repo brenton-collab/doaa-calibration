@@ -1,7 +1,7 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),os=require('node:os'),path=require('node:path'),{spawnSync}=require('node:child_process');
 const source=fs.readFileSync(path.join(__dirname,'../scripts/build-assets.cjs'),'utf8');
-const assets=['index.html','vector-base.js','flight-enrichment.js','flight-core.js','inspector-flight.js','movement-core.js','movement-workspace.js','movement-workspace.css','ambient.js','ambient.css','ambient-media.js','look.js','track-core.js','track-history.js','track-history.css','airfield.js', 'airport-weather.js', 'units.js','catchment-core.js', 'preference-core.js', 'bookmarks.js', 'account.js'];
+const assets=['index.html','sky-map-core.js','vector-base.js','flight-enrichment.js','flight-core.js','inspector-flight.js','movement-core.js','movement-workspace.js','movement-workspace.css','ambient.js','ambient.css','ambient-media.js','look.js','track-core.js','track-history.js','track-history.css','airfield.js', 'airport-weather.js', 'units.js','catchment-core.js', 'preference-core.js', 'bookmarks.js', 'account.js'];
 function fixture(fn){
  const root=fs.mkdtempSync(path.join(os.tmpdir(),'doaa-assets-'));
  try{

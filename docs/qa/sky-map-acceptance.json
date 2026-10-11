@@ -1,0 +1,74 @@
+{
+  "date": "2026-10-11T18:30:40.690Z",
+  "data": "Offline deterministic fixture; not provider acceptance",
+  "files": {
+    "index.html": "fc5b048a1d7e56b8b81dbc466a870c18e5ae4477caa267579e612a5a7621510a",
+    "sky-map-core.js": "c4df398981cd1b9e94c2ecf9d583600845194f6d127f3deed591bc986627ad96"
+  },
+  "viewports": [
+    {
+      "viewport": {
+        "name": "desktop",
+        "width": 1440,
+        "height": 900
+      },
+      "flows": [
+        "orthogonal controls and truthful unavailable modes/layers",
+        "style preserves camera",
+        "session trail toggle resets on reload",
+        "fresh selection follows without zoom change",
+        "wheel/pan pauses; explicit resume preserves selection and zoom",
+        "responsive SKY controls and Inspector"
+      ],
+      "errors": []
+    },
+    {
+      "viewport": {
+        "name": "phone",
+        "width": 393,
+        "height": 851
+      },
+      "flows": [
+        "orthogonal controls and truthful unavailable modes/layers",
+        "style preserves camera",
+        "session trail toggle resets on reload",
+        "fresh selection follows without zoom change",
+        "wheel/pan pauses; explicit resume preserves selection and zoom",
+        "responsive SKY controls and Inspector"
+      ],
+      "errors": []
+    },
+    {
+      "viewport": {
+        "name": "landscape",
+        "width": 851,
+        "height": 393
+      },
+      "flows": [
+        "orthogonal controls and truthful unavailable modes/layers",
+        "style preserves camera",
+        "session trail toggle resets on reload",
+        "fresh selection follows without zoom change",
+        "wheel/pan pauses; explicit resume preserves selection and zoom",
+        "responsive SKY controls and Inspector"
+      ],
+      "errors": []
+    },
+    {
+      "viewport": {
+        "name": "tablet",
+        "width": 820,
+        "height": 1180
+      },
+      "flows": [
+        "orthogonal controls and truthful unavailable modes/layers",
+        "style preserves camera",
+        "session trail toggle resets on reload",
+        "fresh selection follows without zoom change",
+        "wheel/pan pauses; explicit resume preserves selection and zoom",
+        "responsive SKY controls and Inspector"
+      ],
+      "errors": []
+    }
+  ]
+}

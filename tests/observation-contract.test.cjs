@@ -97,7 +97,7 @@ test('Inspector live classification excludes pinned and aging aircraft',()=>{
  assert.match(src,/!x\._pinned/);
  assert.match(src,/Date\.now\(\)>=now/);
  assert.doesNotMatch(html,/id:id\|\|\('board:/);
- assert.match(html,/if\(!a\._pinned\)drawTrack/);
+ assert.match(html,/for\(const \[id,e\] of tracks\)drawTrack/);
  assert.match(html,/if\(a\._pinned\)ctx\.globalAlpha\*=\.42/);
 });
 
