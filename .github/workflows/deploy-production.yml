@@ -11,6 +11,8 @@ on:
       - 'ambient-media.js'
       - 'look.js'
       - 'scripts/build-assets.cjs'
+      - 'tests/**'
+      - 'airlabs-budget.test.cjs'
       - 'src/**'
       - 'doaa-memory.js'
       - 'wrangler.jsonc'
