@@ -23,7 +23,7 @@
   const store = (key, value) => { try { localStorage.setItem(key, value); } catch {} };
   let mode = safeStorage('doaa.ambient.mode', 'SKY') === 'SLIDES' ? 'SLIDES' : 'SKY';
   let idleEnabled = safeStorage('doaa.ambient.idle', 'off') === 'on';
-  let active = false, lastInteraction = Date.now(), lastSlideId = '', slideChangedAt = 0;
+  let active = false, lastInteraction = Date.now(), lastSlideId = '', pendingSlideId = '', slideChangedAt = 0;
   let lastFrame = 0, lastSignature = '', lastObservationAt = 0, lastCandidates = [];
   const idleMs = 5 * 60 * 1000;
   const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -47,6 +47,7 @@
   function leave() {
     if (!active) return;
     active = false;
+    pendingSlideId = '';
     root.hidden = true;
     document.documentElement.classList.remove('ambient-active');
     lastInteraction = Date.now();
@@ -55,7 +56,7 @@
     if (next !== 'SKY' && next !== 'SLIDES') return;
     mode = next;
     store('doaa.ambient.mode', mode);
-    lastSlideId = '';
+    pendingSlideId = '';
     updateButtons();
     syncSwitcher();
     enter();
@@ -169,24 +170,34 @@
     canvas.hidden = true;
     root.classList.add('ambient-slides-mode');
     if (!a) {
-      lastSlideId='';
+      pendingSlideId = '';
+      lastSlideId = '';
       photo.style.backgroundImage = '';
       copy.innerHTML = recent?'<div class="ambient-empty-title">Watching for an identified airframe</div><p>No exact-aircraft photograph has been verified in this session. Ambient Slides will not substitute an unrelated aircraft image.</p>':'<div class="ambient-empty-title">Observations paused</div><p>Waiting for recent aircraft observations before displaying verified photographs.</p>';
-      count.textContent = recent?'AWAITING VERIFIED MEDIA':'AWAITING OBSERVATIONS';
+      count.textContent = '';
       return;
     }
     const signature = [a.id,a.photo.url].join('|');
-    if (signature !== lastSlideId) {
-      lastSlideId=signature;slideChangedAt=Date.now();
-      photo.style.backgroundImage='';
-      const image = new Image();
-      image.onload=()=>{if(active&&mode==='SLIDES'&&lastSlideId===signature){photo.style.backgroundImage='url('+JSON.stringify(String(a.photo.url))+')';count.textContent='RECENT OBSERVATION · PHOTO VERIFIED';}};
-      image.onerror=()=>{failedPhotos.add(a.photo.url);if(lastSlideId===signature){lastSlideId='';photo.style.backgroundImage='';if(active&&mode==='SLIDES')update();}};
-      image.src=a.photo.url;
-
-      count.textContent='LOADING VERIFIED PHOTO';
-    }
+    if (signature === lastSlideId || signature === pendingSlideId) return;
+    pendingSlideId = signature;
+    const image = new Image();
+    image.onload = () => {
+      if (pendingSlideId !== signature) return;
+      pendingSlideId = '';
+      if (!active || mode !== 'SLIDES') return;
+      lastSlideId = signature;
+      slideChangedAt = Date.now();
+      photo.style.backgroundImage = 'url('+JSON.stringify(String(a.photo.url))+')';
       copy.innerHTML = '<div class="ambient-slide-reg">'+escapeHtml(a.reg)+'</div><div class="ambient-slide-type">'+escapeHtml(a.type||'Aircraft type unconfirmed')+'</div><div class="ambient-slide-details">'+escapeHtml(a.call||'')+' · '+escapeHtml(a.alt!=null&&a.alt!==''&&Number.isFinite(Number(a.alt))?Math.round(Number(a.alt))+' FT':'ALT UNKNOWN')+' · '+escapeHtml(a.gs!=null&&a.gs!==''&&Number.isFinite(Number(a.gs))?Math.round(Number(a.gs))+' KT':'SPEED UNKNOWN')+'</div><div class="ambient-slide-credit">'+escapeHtml(a.photo.attribution)+' · '+escapeHtml(a.photo.license)+'</div>';
+      count.textContent = 'PHOTO VERIFIED';
+    };
+    image.onerror = () => {
+      failedPhotos.add(a.photo.url);
+      if (pendingSlideId !== signature) return;
+      pendingSlideId = '';
+      if (active && mode === 'SLIDES') update();
+    };
+    image.src = a.photo.url;
   }
   function update() {
     if (!active) return;
@@ -202,7 +213,7 @@
       drawSky(snapshot);
     } else {
       drawSlides(snapshot);
-      if(lastSlideId&&fresh&&photo.style.backgroundImage)count.textContent='RECENT OBSERVATION · PHOTO VERIFIED';
+
     }
   }
   function heartbeat() {
