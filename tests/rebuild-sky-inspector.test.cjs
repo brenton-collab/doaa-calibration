@@ -7,7 +7,7 @@ test('SKY keeps unselected aircraft visible during inspection',()=>{
 });
 test('Inspector fallback labels position freshness instead of claiming LIVE',()=>{
  assert.match(html,/function inspectorTelemetry\(a,live=false\)/);
- assert.match(html,/RECENT POSITION/);
+ assert.match(html,/DOAASkyMapCore\.observation\(a,Date\.now\(\)\)\.label/);
  assert.match(html,/LAST KNOWN POSITION/);
  assert.match(html,/inspectorTelemetry\(a,live\)/);
 });
