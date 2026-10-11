@@ -235,3 +235,10 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `03ecae2` adds source-level regression assertions for the qualified Flight label, airport links, and Flight-context guards.
 - Source reviewed but automated Node tests **not executed**; no browser/live testing, deployment, D1 modification, or paid CI. Remaining verification: exercise actual Contact → Flight → Airport → Back and Aircraft navigation when browser testing resumes; confirm source semantics for airport endpoint display.
 - Next implementation: review Aircraft dossier's flight-source fallback fields and explicit identity claims for any remaining provenance leakage, then extend focused regressions.
+
+## Aircraft identity fallback isolation (2026-10-11)
+- Source inspection found Aircraft PHYSICAL IDENTITY registration and ICAO type falling back to `f.reg_number` and `f.aircraft_icao`, which could promote a possible Flight association into airframe identity.
+- `2f2c7de` removes both Flight-source fallbacks from the Aircraft dossier. Airframe-reference (`af`) and Contact-feed (`a`) fallback values remain, as do dossier claim resolution and existing provenance explanations. Flight dossier still displays its own explicitly source-labelled registration/type.
+- `dbf0f47` adds a focused source regression test for absence of both Flight-source fallbacks in `aircraft()`.
+- Tests added but **not executed**. Browser/live testing deferred. No deployment, production D1, infrastructure changes or paid CI.
+- Remaining provenance question: Contact-feed registration/type are not direct position-broadcast identity; ensure their source and uncertainty are visible in Aircraft PHYSICAL IDENTITY. Next: add precise on-screen source qualification and test it, then inspect cross-surface dossier claim precedence.
