@@ -53,6 +53,5 @@
   notify();
  });
  apply();
- notify();
  window.DOAADisplayPreferences={get appearance(){return choice;},get effective(){return document.documentElement.getAttribute('data-doaa-theme');},get units(){return units;},get altitudeUnits(){return altitude;},measure};
 })();
