@@ -111,3 +111,9 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `94f758c`: updated source regression expectations for halo and context.
 - `e3d340a`: light map tiles no longer receive the legacy dark-map color filter.
 - Browser and automated tests still not executed. Next verification gate is actual viewport rendering, map attribution and Inspector interactions. No deployment.
+
+## Inspector integration and source checks (2026-10-11)
+- `04606fa`: Field Notes Light styling extended to Inspector evidence rows, labels, values, timing, route map, biography, fallback telemetry and reduced-motion loading. No fabricated content or new data acquisition.
+- `08c3db9`: removed dead SKY selection dimming state; selection still has a halo and other contacts remain visible.
+- Performed **10 direct source-level integration checks** through the GitHub connector: stylesheet linked, included in asset and Worker allowlists, SKY halo, undimmed context, Inspector freshness labels, renewal changed-row guard and mock, renewal race test, and evidence styling. All 10 checks passed. These are not Node tests or visual browser tests.
+- Full Node suite, browser viewport review, live auth and Cloudflare D1 validation remain outstanding. No production or preview deployment, database writes or paid CI.
