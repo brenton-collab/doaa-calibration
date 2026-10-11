@@ -6,6 +6,11 @@ on:
       - 'index.html'
       - 'vector-base.js'
       - 'flight-enrichment.js'
+      - 'ambient.js'
+      - 'ambient.css'
+      - 'ambient-media.js'
+      - 'look.js'
+      - 'scripts/build-assets.cjs'
       - 'src/**'
       - 'doaa-memory.js'
       - 'wrangler.jsonc'
@@ -34,12 +39,15 @@ jobs:
           node --check vector-base.js
           node --check flight-enrichment.js
           node --check doaa-memory.js
+          node --test tests/*.test.cjs tests/*.test.mjs airlabs-budget.test.cjs
           node - <<'NODE'
           const fs = require('node:fs');
           const vm = require('node:vm');
           const html = fs.readFileSync('index.html','utf8');
           for (const [,source] of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)) if(source.trim()) new vm.Script(source);
           NODE
+      - name: Package curated web assets
+        run: node scripts/build-assets.cjs
       - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3
         with:
