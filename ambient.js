@@ -77,7 +77,7 @@
   // Persistent strokes accumulate from actual observed movement, never simulated traffic.
   const trails = new Map();
   const verifiedMedia = new Map();
-  window.addEventListener('doaa:airframe-media', event => {const m=event.detail||{};if(m.id&&m.url&&m.registration&&m.license&&m.attribution)verifiedMedia.set(String(m.id).toLowerCase(),{...m,seenAt:Date.now()});});
+  window.addEventListener('doaa:airframe-media', event => {const m=event.detail||{};if(m.id&&/^https:\/\//i.test(String(m.url||''))&&m.registration&&m.license&&m.attribution)verifiedMedia.set(String(m.id).toLowerCase(),{...m,seenAt:Date.now()});});
   let lastDrawAt = 0;
   function drawSky(snapshot) {
     const {w,h} = dimensions();
