@@ -3,7 +3,7 @@
  'use strict';
  const esc = s => String(s ?? '').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','"':'&quot;'}[ch]));
  function candidates(snapshot){
-   return (snapshot.aircraft||[]).filter(a=>a&&a.id&&a.lat!=null&&a.lat!==''&&a.lon!=null&&a.lon!==''&&Number.isFinite(Number(a.lat))&&Number.isFinite(Number(a.lon))&&Math.abs(Number(a.lat))<=90&&Math.abs(Number(a.lon))<=180).map(a=>{
+   return (Array.isArray(snapshot?.aircraft)?snapshot.aircraft:[]).filter(a=>a&&a.id&&a.lat!=null&&a.lat!==''&&a.lon!=null&&a.lon!==''&&Number.isFinite(Number(a.lat))&&Number.isFinite(Number(a.lon))&&Math.abs(Number(a.lat))<=90&&Math.abs(Number(a.lon))<=180).map(a=>{
      const reasons=[];
      const code=String(a.squawk||'');
      if(a.emergency&&String(a.emergency).toLowerCase()!=='none')reasons.push([100,'Emergency signal reported']);
@@ -19,7 +19,7 @@
  }
  window.DOAALook={
    render(board,snapshot,onSelect){
-     const stamp=Number(snapshot.observedAt)||0;
+     const stamp=Number(snapshot?.observedAt)||0;
      const age=Date.now()-stamp;
      const fresh=stamp>0&&age>=0&&age<90000;
      const items=fresh?candidates(snapshot):[];
