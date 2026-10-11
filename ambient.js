@@ -201,7 +201,8 @@
     }
   }
   function heartbeat() {
-    if (!active && idleEnabled && !document.hidden && Date.now()-lastInteraction>=idleMs) enter();
+    if (document.hidden) return;
+    if (!active && idleEnabled && Date.now()-lastInteraction>=idleMs) enter();
     if (active) update();
   }
   root.querySelector('.ambient-return').addEventListener('click',leave);
