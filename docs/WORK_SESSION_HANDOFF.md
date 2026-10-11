@@ -32,7 +32,15 @@ DOAA is an Ottawa aviation-awareness instrument, not a generic flight tracker. S
 ## Work progress (append entries below)
 Each entry: timestamp | commit SHA | feature/fix | tests (with environment) | remaining risk.
 
-No Work implementation entries yet.
+### Baseline execution (2026-10-11 UTC / October 10 Toronto evening)
+- Starting Work head verified: `2e2c6e7201b28fba5e525ce5d9c880a1cab7df4f`; recovery and integration refs remain `7784868d5052318cba0dbfdc5501f0c60174f514`. Main was read-only observed at `7cd2ffc0a72be7e6457dd101ca198875ae1b5e97`.
+- Complete isolated checkout; Node 24.19.0; Python 3.12.14. Native suite: 72 tests, 71 pass, 1 fail. The failed source assertion expects `GS UNKNOWN`, while current code uses `SPEED UNKNOWN`; preserve the unknown-value behavior and verify it in-browser before updating this obsolete string assertion.
+- Curated seven-asset packaging passed; synthetic SQLite lead-index regression passed (1 test).
+- Actual headless Chromium 153.0.8010.0 launched through Playwright. Standard browser download failed; an npm-packaged local Chromium succeeded after ownership-free extraction. No deployed runtime accessed.
+- Added explicit `scripts/browser-acceptance.cjs` and synthetic fixtures. Real DOM/layout/input/image loading; all API responses, media evidence/images, and clock advances are simulated. External maps/logos blocked. No provider calls, D1 writes, CI or deployment.
+- Browser baseline: 11 checks, 4 pass, 7 fail. Reproduced LOOK return-focus loss, unescaped provider HTML in BOARD, nested datum buttons losing values during HTML parsing, obsolete Inspector response overwriting selection, mobile Inspector/map-control overlap, missing preload during hold, and lost verification/focus on AMBIENT resume. No page runtime errors. Desktop/tablet/390x844 phone/844x390 landscape screenshots inspected.
+- Priority: fix AMBIENT preload/hold/atomicity and cancellation; then Inspector request ownership, independent datum controls, return focus, provider-string safety, and responsive shell. Rerun affected browser journeys plus existing offline checks. Map-source rendering, live providers, production D1 and physical-device endurance remain unverified.
+- Browser command: set `DOAA_PLAYWRIGHT_MODULE` to installed Playwright, `DOAA_CHROMIUM` to local Chromium (or omit both when normally installed), and optionally `DOAA_ACCEPTANCE_OUTPUT`; run `node scripts/browser-acceptance.cjs`. Default evidence output is ignored `tmp/acceptance/`.
 
 ## Release/rollback status
 NOT ACCEPTED; NOT MERGED; NOT DEPLOYED.
