@@ -121,3 +121,6 @@ SKY now excludes pinned historical contacts and aircraft from aging snapshots fr
 
 ### 2026-10-10 — AMBIENT keyboard usability
 Fixed AMBIENT's keyboard handling: Enter on the focused composition switch no longer bubbles into a blanket close action; Escape remains the deliberate dismissal key. Commit e59e29e, inspected one-line diff and updated the integration branch with a checked branch-head lease. Verified the updated ambient.js parses as JavaScript; no browser keyboard journey was available, so runtime focus behavior remains an acceptance item. No production deployment, CI, D1 mutation, or paid provider calls.
+
+### 2026-10-10 — BOARD keyboard-first navigation
+BOARD flight rows are now native buttons rather than clickable divs, so Tab/Enter/Space are available without custom keyboard handlers. Restyled buttons to preserve the restrained board appearance with a visible focus ring. When returning from a BOARD-origin Inspector, the board remembers the row index and focuses that flight after the asynchronous BOARD refresh renders. Source parsed successfully before commit. Commits 865e5b5 and 8e01222. Remaining browser acceptance: test keyboard, changed flight ordering across refresh, and focus in loading/error states; not yet verified in a browser. No production deployment or paid services.
