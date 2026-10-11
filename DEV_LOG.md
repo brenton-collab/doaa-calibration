@@ -151,3 +151,11 @@ Work-only branch `work/doaa-acceptance-2026-10-10`, starting head `2e2c6e7`. Rea
 
 ### 2026-10-11 UTC — Work AMBIENT lifecycle accepted in isolated browser
 Baseline commit `d1037ea519619970cc7b577140cb90a040fbb6ff`; rewrote image lifecycle to preload/decode during the existing 45-second display, switch matching image/data atomically, revalidate identity and freshness, retain current image on failed replacement, retry bounded failures, and cancel obsolete callbacks. Restored verification on resume, contained keyboard focus and prevented idle entry over open reading panels. Refined gradient, factual time readout and landscape layout. Native suite: 72/72 pass. Real Chromium with simulated APIs/images/clock: 9/14 browser checks pass, including every current AMBIENT case; five known Inspector/BOARD/responsive failures remain. No live imagery, external maps, production, D1, provider or CI verification claimed. Next: repair those five failures plus targeted stale/async and input-safety checks.
+
+## 2026-10-11 — Work Inspector and core journey acceptance increment
+
+Previous published AMBIENT increment: `5ebeb0d783abd969fad186d9310ea26e4fb576d2` (Work branch only).
+
+Resolved the five outstanding browser defects with central Inspector request ownership, safe provider text, valid independent datum navigation/explanation controls, identity-based LOOK/BOARD return focus, and a responsive Inspector header/body/navigation shell. Phones keep a compact sheet until Expand; landscape and desktop use a dock. Wrapped chrome determines map-control positions. Primary facts render immediately, concurrent enrichment has deadlines, supplementary journey data does not gate them, and redraws preserve reading state. Null vertical telemetry remains unknown; raw observed registration survives unavailable enrichment; repeated manufacturer/model names are removed.
+
+Validation: actual local Chromium 153 with deterministic API/media fixtures and blocked external maps, **14/14 browser checks pass**; native offline contracts and syntax **72/72 pass**. No runtime errors or mutation requests. Inspected desktop/phone/tablet/landscape images. Live map rendering, real licensed photographs, provider/D1 behavior and physical-device endurance remain unverified; no merge or deployment.

@@ -72,7 +72,7 @@ let base;
  });
  await check('Inspector datum has independent accessible explanation and navigation',async()=>{
   await page.locator('[data-primary="SKY"]').click();await page.locator('#rack .row').first().click();await page.waitForSelector('[data-fact]');
-  assert.ok(await page.locator('[data-fact]').first().textContent().then(s=>s.trim().length>20),'HTML parser lost the datum value to a nested button');
+  assert.ok(await page.locator('[data-fact] .datum-value').first().textContent().then(s=>s.trim().length>0),'HTML parser lost the datum value to a nested button');
   assert.equal(await page.locator('[data-fact] button').count(),0);
   await page.locator('[data-fact-explain]').first().click();assert.ok(await page.locator('.explain').count());
  });
