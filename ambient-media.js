@@ -17,6 +17,8 @@
    discoveryTimer=null;
    if(document.hidden||window.DOAAAmbient?.mode!=='SLIDES'||!window.DOAAAmbient?.active)return;
    const a=candidates[0],latest=window.DOAALiveSnapshot?.();
+   const stamp=Number(latest?.observedAt)||0;
+   if(!(stamp>0&&Date.now()>=stamp&&Date.now()-stamp<90000))return;
    const current=latest?.aircraft?.find(x=>String(x.id).toLowerCase()===String(a.id).toLowerCase());
    if(!current||String(current.reg||'').toUpperCase()!==String(a.reg).toUpperCase())return;
    const key=String(a.id).toLowerCase()+':'+String(a.reg).toUpperCase();
