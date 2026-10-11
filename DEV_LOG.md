@@ -1,3 +1,11 @@
+## Airport Inspector checkpoint
+
+- [x] Airport four-tab navigation committed and executed in isolated JavaScript checks.
+- [x] Specialist sections expose unavailable-data states rather than invented activity.
+- [x] Unresolved airport lookup resets object context; complete source parses.
+- [ ] Successful airport lookup context, tab event wiring, real operational data, and browser acceptance remain outstanding.
+- Production unchanged.
+
 ## Inspector related-object navigation fix
 
 - [x] Corrected active Flight context for resolved and unresolved related-flight drilldowns.
