@@ -100,3 +100,13 @@ html,body{background:var(--bg);color:var(--ice);font-family:Inter,ui-sans-serif,
 .detail-body .fn-inspector-hero img{display:block;width:100%;height:clamp(120px,24vh,210px);object-fit:cover}
 .detail-body .fn-inspector-hero figcaption{position:absolute;bottom:0;left:0;right:0;padding:20px 12px 8px;background:linear-gradient(transparent,rgba(20,31,39,.82));font:500 10px/1.3 ui-sans-serif,system-ui,sans-serif;color:#fff}
 @media(max-width:420px){.detail-body .fn-inspector-header{flex-wrap:wrap;gap:4px}.detail-body .fn-inspector-kicker{text-align:left;padding:0}}
+
+/* Contact observations: grounded evidence, real navigation and touch-safe targets. */
+.detail-body .fn-observation-list{display:grid;gap:0}
+.detail-body .fn-observation-link{display:flex;flex-direction:column;align-items:stretch;text-align:left;gap:4px;width:100%;min-height:48px;padding:11px 9px;border:0;border-bottom:1px solid #e0e7e3;border-radius:4px;background:transparent;color:#263f4d;cursor:pointer;font:inherit}
+.detail-body .fn-observation-link:hover{background:#eef3f1}
+.detail-body .fn-observation-link:focus-visible{outline:3px solid #3377a5;outline-offset:-3px;background:#eef3f1}
+.detail-body .fn-observation-title{display:flex;justify-content:space-between;gap:12px;font-size:12px;font-weight:650;line-height:1.4}
+.detail-body .fn-observation-title [aria-hidden]{color:#557c92}
+.detail-body .fn-observation-basis{font-size:12px;line-height:1.5;color:#647982;overflow-wrap:anywhere}
+.detail-body .fn-encounter-summary{font-size:12px;line-height:1.5;color:#536f80;margin:0 0 8px}
