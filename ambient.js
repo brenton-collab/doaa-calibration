@@ -83,7 +83,9 @@
     const {w,h} = dimensions();
     const home = snapshot.home;
     const validHome = home && home.lat != null && home.lat !== '' && home.lon != null && home.lon !== '' && Number.isFinite(Number(home.lat)) && Number.isFinite(Number(home.lon)) && Math.abs(Number(home.lat)) <= 90 && Math.abs(Number(home.lon)) <= 180;
-    const aircraft = (snapshot.aircraft || []).filter(usable);
+    const observed=Number(snapshot.observedAt)||0;
+    const recent=observed>0&&Date.now()>=observed&&Date.now()-observed<90000;
+    const aircraft = recent?(snapshot.aircraft || []).filter(usable):[];
     const cx = w * .5, cy = h * .5;
     const scale = Math.min(w,h) * .46 / 80;
     const lat = validHome ? Number(home.lat) : 0;
@@ -125,7 +127,7 @@
         ctx.lineWidth=1.2;
         ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();
       }
-      const heading=(Number(a.trk)||0)*Math.PI/180;
+      const heading=(a.trk!=null&&a.trk!==''&&Number.isFinite(Number(a.trk))?Number(a.trk):0)*Math.PI/180;
       ctx.save();ctx.translate(x,y);ctx.rotate(heading);
       ctx.fillStyle='rgba(205,242,243,.8)';
       ctx.beginPath();ctx.moveTo(0,-5);ctx.lineTo(2.7,3.5);ctx.lineTo(0,1);ctx.lineTo(-2.7,3.5);ctx.closePath();ctx.fill();ctx.restore();
