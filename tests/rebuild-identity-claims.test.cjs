@@ -61,3 +61,15 @@ test('duplicate inferred values remain visibly inferred',()=>{
  assert.equal(result.state,'inferred');
  assert.equal(result.value,'C-SAME · INFERRED');
 });
+
+test('supported identity is not replaced by inferred disagreement',()=>{
+ const result=field({claims:[claim('C-SUPPORTED'),claim('C-INFERRED','inferred')]},'registration');
+ assert.equal(result.state,'supported');
+ assert.equal(result.value,'C-SUPPORTED');
+});
+
+test('multiple inferred disagreements remain conflicting without fallback',()=>{
+ const result=field({claims:[claim('C-A','inferred'),claim('C-B','inferred')]},'registration');
+ assert.equal(result.state,'conflicting');
+ assert.equal(result.claims.length,2);
+});
