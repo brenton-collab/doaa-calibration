@@ -146,3 +146,11 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `fd72d0e`/`ff23841`: Rack empty state now distinguishes acquisition, unavailable source, and genuinely empty observed view. A usable scout-only response is recognized via `now`, not cell count. `ec049aa` adds static regression assertions.
 - `3697b86`/`8944bcb`: asynchronous Rack searches use request sequence tokens, ignore superseded responses, and reject non-2xx HTTP. `2932f94`: failed search shows an explicit alert and clears stale search highlighting. `472b772`: closing search cancels the debounce and invalidates in-flight requests. `66843a8` adds source checks.
 - No browser/live test or full Node suite executed. No deployment or infrastructure changes. Next implementation should focus on source-aware position freshness and Inspector/BOARD coherence, preserving evidence semantics.
+
+## SKY / Inspector freshness and fallback implementation (2026-10-11)
+- `d569ecf`: Inspector fallback now calls telemetry last reported, never categorically live.
+- `cde69c7`: async dossier rejection no longer replaces a different aircraft's selected Inspector. `380b2ad`: synchronous renderer failures preserve available observed telemetry instead of replacing it with an error-only view.
+- `44a2379`: pinned historical Rack contact explicitly reads `LAST KNOWN POSITION · NOT LIVE` rather than implying current telemetry.
+- `f402fd4`: static regression assertions for stale data and selection safety.
+- Discovered `import.meta.url` in a `.cjs` regression test (invalid CommonJS syntax). Corrected both HTML and CSS fixture paths using `__dirname` in `e165b34` and `d41e681`. Tests have **not** been executed; syntax inspection only.
+- User explicitly deferred live testing; no production deployment, infrastructure modification or paid CI runs.
