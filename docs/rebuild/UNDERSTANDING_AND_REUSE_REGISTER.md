@@ -20,7 +20,7 @@ Reviewed 2026-10-11. Classification: **Design** (locked intended behavior), **So
 | LOOK attention logic | ADAPT | Derives from current evidence, not independent acquisition |
 | AMBIENT SKY/SLIDES | ADAPT | Must meet both locked compositions and evidence constraints |
 | Global index.html shell/navigation | REPLACE | DOM/global state, return-context coupling |
-| Password auth, sessions, personal storage | ADAPT | Source implementation; missing checked-in password table migration; seven-day login |
+| Password auth, sessions, personal storage | ADAPT | Source implementation; outdated generated preview schema (0013) despite password migrations 0014–0015; seven-day login |
 | Google OAuth | RETIRE from new product | Superseded by user 2026-10-11 |
 | Release validation | REPLACE | Fixture tests insufficient for real authenticated deployed application |
 
@@ -29,7 +29,7 @@ Cloudflare production Worker `doaa-calibration` with ASSETS, D1 `434f90d3-397b-4
 
 ## Unresolved checks — must be tested, not assumed
 1. Authenticated live fetch of all assets; `run_worker_first=true` and missing explicit routes for flight-core/inspector-flight indicate a source-level defect. Do not call a live 404 proven until measured.
-2. Exact production D1 schema, password account provisioning and safe additive migration path; empty-preview schema lacks `password_accounts`.
+2. Exact production D1 schema, password account provisioning and safe additive migration path; generated empty-preview schema stops at 0013; migration 0015 defines `password_accounts`.
 3. Full inventory of historical migrations and obsolete/legacy routes; avoid destructive cleanup before usage tests.
 4. Real Google OAuth state is no longer product-relevant; verify old records only for safe transition.
 5. Authenticated Inspector data availability, enrichment timing and error handling; production evidence not established.
