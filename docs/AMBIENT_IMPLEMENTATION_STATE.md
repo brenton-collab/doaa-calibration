@@ -126,3 +126,8 @@ Important remaining issues: track drawing is observation-history only while the 
 - e6a3227 tightens ambient-media.js to reject non-HTTPS image URLs before dispatching the verified media event.
 - 22fc7fe adds a native Node runtime-harness scenario that supplies an HTTP image and requires zero emitted events.
 - Both commits are on the isolated integration branch. Connector fetch confirmed the updated files. Native full-suite execution, browser acceptance, branch reconciliation and production deployment remain pending; no external-provider or D1 operations were performed.
+
+## 2026-10-10 — executed HTTPS media regression in isolated V8
+- Executed six behavioral scenarios against the actual GitHub-fetched ambient-media.js source in an isolated V8 JavaScript harness: valid exact-airframe media, HTTP URL rejection, changed registration, missing registration, exited AMBIENT, and retry after failed response. All six passed.
+- The committed Node test source includes the new HTTP URL case. This run is **not** native `node --test` and does not establish the full repository suite or browser acceptance.
+- GitHub compare main...work/immutable-frontend-release reports 168 ahead and 2 behind; reconcile divergence before any release. Direct git transport from local container still fails github.com DNS resolution. No CI, deployment, provider calls or D1 writes.
