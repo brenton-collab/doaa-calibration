@@ -201,3 +201,9 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `947791c` records loading, ready and unavailable identity lookup states. `1fb7d99` and `2e3b3d3` render an inline airport identity status and a retry control without hiding the known airport code.
 - `d54d611` wires retry to repeat the airport lookup without pushing duplicate Back history. `46cb794` adds source-level regression assertions.
 - Tests are not executed and browser/live testing is deferred. No deployment or paid infrastructure changes.
+
+## Flight evidence lookup feedback (2026-10-11)
+- `d82b0af`, `03c83b2`, `0bfb0c6`: track loading, ready, unavailable states for external flight lookups, including network failure.
+- `6fc06d9`, `43b9a3f`: display an accessible lookup status and retry control while retaining the known callsign.
+- `0e9a9f1`, `4cc6309`: retry repeats the remote lookup without pushing duplicate Back history; `a45d531` adds source-level regression assertions.
+- Tests not executed; browser/live testing remains deferred. No deployment or paid resource use.
