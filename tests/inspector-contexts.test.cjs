@@ -39,3 +39,5 @@ test('Flight and Contact Journey use the same evidence-qualified chronology',()=
  assert.match(journey,/adjacency_established===true/);
  assert.match(journey,/current_assignment_established===true/);
 });
+
+test('Inspector module parses without syntax errors',()=>{assert.doesNotThrow(()=>new vm.Script(source,{filename:'flight-enrichment.js'}));});
