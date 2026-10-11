@@ -205,3 +205,8 @@ test('Aircraft biography includes effective end date',()=>{
  const helper=fs.readFileSync(require('node:path').join(__dirname,'../inspector-flight.js'),'utf8');
  assert.ok(helper.includes('q.effective_to'));
 });
+
+test('Dated Aircraft claims do not imply resolved current identity',()=>{
+ const helper=fs.readFileSync(require('node:path').join(__dirname,'../inspector-flight.js'),'utf8');
+ assert.ok(helper.includes('Overlapping periods, missing end dates and differing claims'));
+});
