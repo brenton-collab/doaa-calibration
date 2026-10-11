@@ -258,3 +258,9 @@ test('Movement workspace is disposed once per Inspector surface change',()=>{
  const section=source.slice(source.indexOf('function renderSurface('),source.indexOf("if(z==='airport')",source.indexOf('function renderSurface(')));
  assert.equal(section.split('_doaaMovementsDispose?.()').length-1,1);
 });
+
+test('Late dossier enrichment cannot rewire a navigated Inspector',()=>{
+ const src=fs.readFileSync(require('node:path').join(__dirname,'../flight-enrichment.js'),'utf8');
+ const show=src.slice(src.indexOf('async show(a,live,ago,d,force=false)'),src.indexOf('refresh(a,d){'));
+ assert.ok(show.includes("if(d._doaaNavigation!==navigation||activeSurface(d)!=='contact')return;wire(d,a,x.flight"));
+});
