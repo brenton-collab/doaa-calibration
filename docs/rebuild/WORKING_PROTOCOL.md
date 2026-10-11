@@ -286,3 +286,8 @@ Flight lookup identity removed from related Airframe labels. ICAO24 is the fallb
 - Executed committed flight-core.js and all 12 cases in tests/rebuild-identity-claims.test.cjs using an isolated V8 runtime with test/assert adapters: 12 passed, 21 assertions.
 - This is runtime verification of the actual source and cases, not a Node test-runner invocation or browser test.
 - GitHub Actions not used; no deployment or infrastructure changes.
+
+## Inspector regression runtime check
+- Executed 32 Inspector regression cases against committed HTML/CSS/JS using isolated V8 with Node test/fs/assert adapters: 32 passed, 100 assertions.
+- Five assertion corrections removed stale literal expectations and substring false positives (`56a6203`, `da2f9e0`, `072fb19`, `2d5af3b`, `96d8c4e`). Application source was not changed by these fixes.
+- This is not the native Node runner or a browser interaction test. No deployment or paid CI.
