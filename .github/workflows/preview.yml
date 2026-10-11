@@ -44,5 +44,5 @@ jobs:
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          accountId: 7e63bcb7915749183e2cb592a8f802eb
           command: deploy --config wrangler.preview.jsonc
