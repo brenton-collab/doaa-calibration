@@ -132,3 +132,7 @@ html,body{background:var(--bg);color:var(--ice);font-family:Inter,ui-sans-serif,
 .detail-body .fn-object-title{display:flex;justify-content:space-between;gap:12px;font-size:13px;line-height:1.45;font-weight:650;overflow-wrap:anywhere}
 .detail-body .fn-object-title [aria-hidden]{color:#557c92}
 .detail-body .fn-object-sub{font-size:11px;line-height:1.5;color:#687e88;overflow-wrap:anywhere}
+
+.detail-body .fn-lookup-status{padding:12px 14px;margin:0 0 12px;background:#eef3f1;border-bottom:1px solid #dce5e2;color:#405c6b;font-size:12px;line-height:1.5}
+.detail-body .fn-lookup-status button{margin-top:6px;display:block;min-height:44px;border:1px solid #aac1c9;border-radius:8px;background:#fff;color:#28516b;padding:8px 12px;font:inherit;font-weight:650;cursor:pointer}
+.detail-body .fn-lookup-status button:focus-visible{outline:3px solid #3377a5;outline-offset:2px}
