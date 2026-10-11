@@ -181,7 +181,7 @@
 
       count.textContent='PHOTO VERIFIED';
     }
-      copy.innerHTML = '<div class="ambient-slide-reg">'+escapeHtml(a.reg)+'</div><div class="ambient-slide-type">'+escapeHtml(a.type||'Aircraft type unconfirmed')+'</div><div class="ambient-slide-details">'+escapeHtml(a.call||'')+' · '+escapeHtml(a.alt!=null&&a.alt!==''&&Number.isFinite(Number(a.alt))?Math.round(Number(a.alt))+' FT':'ALT UNKNOWN')+' · '+escapeHtml(a.gs!=null&&a.gs!==''&&Number.isFinite(Number(a.gs))?Math.round(Number(a.gs))+' KT':'SPEED UNKNOWN')</div><div class="ambient-slide-credit">'+escapeHtml(a.photo.attribution)+' · '+escapeHtml(a.photo.license)+'</div>';
+      copy.innerHTML = '<div class="ambient-slide-reg">'+escapeHtml(a.reg)+'</div><div class="ambient-slide-type">'+escapeHtml(a.type||'Aircraft type unconfirmed')+'</div><div class="ambient-slide-details">'+escapeHtml(a.call||'')+' · '+escapeHtml(a.alt!=null&&a.alt!==''&&Number.isFinite(Number(a.alt))?Math.round(Number(a.alt))+' FT':'ALT UNKNOWN')+' · '+escapeHtml(a.gs!=null&&a.gs!==''&&Number.isFinite(Number(a.gs))?Math.round(Number(a.gs))+' KT':'SPEED UNKNOWN')+'</div><div class="ambient-slide-credit">'+escapeHtml(a.photo.attribution)+' · '+escapeHtml(a.photo.license)+'</div>';
   }
   function update() {
     if (!active) return;
