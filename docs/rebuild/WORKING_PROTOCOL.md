@@ -26,5 +26,12 @@ The inherited source contains a Worker-first static-asset routing discrepancy af
 ## Next action (unblocked)
 Verify migrations 0014–0015 and password account bootstrap code; establish a clean, isolated reproducible authentication/schema test without production writes. Validate all bundled asset paths against Worker-first routing. Then implement a polished signed-in SKY → Contact Inspector → Back vertical slice on this branch with realistic error/loading states and browser verification. Update this handoff and test evidence **in the same increment**.
 
+## Engineering increment — 2026-10-11
+- Full migration-directory listing verified migrations 0001–0008, 0010–0015. In particular, 0014 defines `password_login_limits` and 0015 defines `password_accounts`; earlier statement that password migration was missing was **incorrect** and corrected in rebuild contracts. The generated empty-preview schema is stale at 0013.
+- Commit `82aca0a`: added explicit authenticated Worker-first routes for `/flight-core.js` and `/inspector-flight.js` in `src/worker.js`. Source re-fetched and byte-for-byte verified; **not deployed or live browser-tested**.
+- Commit `cece67b`: added `tests/rebuild-asset-contract.test.cjs` to check bundled assets versus Worker routes and HTML references, and both password migrations. A separate connector-based static scan found all 23 bundled assets accounted for (21 allowlisted, index and enrichment special-cased) and no unbundled HTML refs. **Node test has not been executed** because local container network cannot resolve GitHub to obtain repository files; do not report test passing.
+- Existing production, preview, Render and D1 unchanged. No Actions run or cost incurred.
+- **Next executable step:** obtain repo execution through available connected tooling or an accessible local checkout; run Node static test and existing tests, then refresh preview schema from migrations and implement safe persistent sessions/admin user management behind isolated DB. Follow with real signed-in SKY → Inspector visual slice. Avoid production changes.
+
 ## Thread handoff checklist
 Before ending any substantive work session, record: exact branch and commit; files changed; tested flows and commands/results; deployment/DB status; unresolved bugs and risks; the single next executable step; any user action genuinely required. If an action fails, record what was tried and the smallest next investigation. Do not imply asynchronous background work.
