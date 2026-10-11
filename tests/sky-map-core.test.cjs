@@ -21,3 +21,13 @@ test('follow uses only fresh supported coordinates and reliable reported directi
  for(const change of [{_pinned:true},{observed_at:null},{observed_at:now+1},{observed_at:now-90000},{id:'airport:cyow'},{lat:91},{ground:true}])assert.equal(core.fresh({...a,...change},now),false);
  const rect={left:100,right:500,top:200,bottom:600};assert.deepEqual(core.target({...a,trk:null},rect),{x:300,y:400});assert.ok(core.target(a,rect).x<300);assert.equal(core.target(a,rect).y,400);
 });
+
+test('observation evidence labels reflect actual per-aircraft freshness',()=>{
+ const now=4e9,a={id:'c00001',lat:45,lon:-75,observed_at:now-1000};
+ assert.deepEqual(core.observation(a,now),{state:'recent',label:'RECENT POSITION',fresh:true});
+ assert.deepEqual(core.observation({...a,_pinned:true},now),{state:'last-known',label:'LAST KNOWN POSITION · NOT LIVE',fresh:false});
+ assert.equal(core.observation({...a,observed_at:now-90000},now).state,'last-known');
+ assert.equal(core.observation({...a,observed_at:null},now).state,'unavailable');
+ assert.equal(core.observation({...a,observed_at:now+1000},now).state,'unavailable');
+ assert.equal(core.observation(null,now).state,'unavailable');
+});
