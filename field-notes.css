@@ -110,3 +110,14 @@ html,body{background:var(--bg);color:var(--ice);font-family:Inter,ui-sans-serif,
 .detail-body .fn-observation-title [aria-hidden]{color:#557c92}
 .detail-body .fn-observation-basis{font-size:12px;line-height:1.5;color:#647982;overflow-wrap:anywhere}
 .detail-body .fn-encounter-summary{font-size:12px;line-height:1.5;color:#536f80;margin:0 0 8px}
+
+/* Contact telemetry: a readable first glance, with technical evidence on demand. */
+.detail-body .fn-telemetry-primary .inspector-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.detail-body .fn-telemetry-primary .inspector-fact{padding:12px;border:1px solid #dce5e2;border-radius:10px;background:#f7f9f7;min-width:0}
+.detail-body .fn-telemetry-primary .fact-label{font-size:10px;color:#647d89}
+.detail-body .fn-telemetry-primary .fact-value{font-size:clamp(15px,2vw,19px);font-weight:650;letter-spacing:-.025em;color:#233f50;min-height:0;overflow-wrap:anywhere}
+.detail-body .fn-telemetry-more{margin-top:13px;border-top:1px solid #dfe7e2}
+.detail-body .fn-telemetry-more summary{cursor:pointer;padding:12px 4px;min-height:44px;display:list-item;color:#466b80;font-size:12px;font-weight:650}
+.detail-body .fn-telemetry-more summary:focus-visible{outline:3px solid #3377a5;outline-offset:2px;border-radius:4px}
+.detail-body .fn-telemetry-more[open] .inspector-facts{padding-bottom:12px}
+@media(max-width:360px){.detail-body .fn-telemetry-primary .inspector-facts{gap:6px}.detail-body .fn-telemetry-primary .inspector-fact{padding:9px}}
