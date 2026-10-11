@@ -296,3 +296,8 @@ Flight lookup identity removed from related Airframe labels. ICAO24 is the fallb
 - Executed eight rendering assertions against committed Inspector helpers using isolated V8; all passed. This is not a browser DOM test.
 - Date-only end boundary now retains DATE ONLY precision (`b22fc7e`), with source regression (`def8e94`).
 - Reran identity suite with adapters: 13 passing cases, 22 assertions. No deployment or paid CI.
+
+## Contact and Flight evidence boundary
+- Contact title now uses observed callsign or ICAO24 (`b4f4577`). Contact registration and type exclude Flight lookup fallbacks (`3c8c282`, `7cb6012`).
+- Regression committed (`bb7af42`, `9da6855`); executed Inspector suite in isolated V8 with test/fs/assert adapters: 33 cases passed, 104 assertions.
+- Native Node/browser navigation remains unverified. No deployment or infrastructure changes.
