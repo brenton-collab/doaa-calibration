@@ -3,7 +3,7 @@
  'use strict';
  const esc = s => String(s ?? '').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','"':'&quot;'}[ch]));
  function candidates(snapshot){
-   return (snapshot.aircraft||[]).filter(a=>a&&a.id&&Number.isFinite(Number(a.lat))&&Number.isFinite(Number(a.lon))).map(a=>{
+   return (snapshot.aircraft||[]).filter(a=>a&&a.id&&a.lat!=null&&a.lat!==''&&a.lon!=null&&a.lon!==''&&Number.isFinite(Number(a.lat))&&Number.isFinite(Number(a.lon))&&Math.abs(Number(a.lat))<=90&&Math.abs(Number(a.lon))<=180).map(a=>{
      const reasons=[];
      const code=String(a.squawk||'');
      if(a.emergency&&String(a.emergency).toLowerCase()!=='none')reasons.push([100,'Emergency signal reported']);
@@ -21,7 +21,8 @@
    render(board,snapshot,onSelect){
      const items=candidates(snapshot);
      const stamp=Number(snapshot.observedAt)||0;
-     const fresh=stamp>0&&Date.now()-stamp<90000;
+     const age=Date.now()-stamp;
+     const fresh=stamp>0&&age>=0&&age<90000;
      board.innerHTML='<div class="boardhead"><span>LOOK · WORTH NOTICING</span><span>'+ (fresh?'RECENT OBSERVATIONS':'LAST KNOWN OBSERVATIONS') +'</span></div>'+
        '<p class="look-intro">Signals surfaced from aircraft already visible to SKY. These are observational cues, not confirmed incidents or complete airspace coverage.</p>'+
        (items.length?items.map(({a,reasons},i)=>'<button class="look-item" type="button" data-look-index="'+i+'"><strong>'+esc(a.call||a.reg||a.id)+'</strong><span>'+esc(a.reg||a.type||a.id.toUpperCase())+' · '+(a.d!=null&&a.d!==''&&Number.isFinite(Number(a.d))?Math.round(Number(a.d))+' NM':'DISTANCE UNKNOWN')+' · '+(a.alt!=null&&a.alt!==''&&Number.isFinite(Number(a.alt))?Math.round(Number(a.alt))+' FT':'ALTITUDE UNKNOWN')+'</span><small>'+reasons.map(r=>esc(r[1])).join(' · ')+'</small></button>').join(''):'<p class="look-empty">No noteworthy cues in the available observations. This does not mean the sky is empty.</p>');
