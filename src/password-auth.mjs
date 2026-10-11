@@ -40,7 +40,7 @@ export async function passwordAuth(request,env){
   return formPage('Invalid credentials.',401);
  }
  await env.DB.prepare('DELETE FROM password_login_limits WHERE bucket=?').bind(bucket).run();
- const token=secureRandom(),created=new Date(now).toISOString(),age=7*24*3600,expires=new Date(now+age*1000).toISOString();
+ const token=secureRandom(),created=new Date(now).toISOString(),age=180*24*3600,expires=new Date(now+age*1000).toISOString();
  const subject='password:'+username;
  await env.DB.prepare('INSERT INTO auth_sessions(token_hash,subject,created_at,expires_at) VALUES(?,?,?,?)').bind(await digest(token),subject,created,expires).run();
  return new Response(null,{status:303,headers:{location:account.must_change_password?'/auth/change-password':'/', 'set-cookie':cookie(token,age),'cache-control':'no-store'}});
