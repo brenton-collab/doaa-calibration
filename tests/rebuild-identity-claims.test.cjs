@@ -49,3 +49,15 @@ test('reported fallback is distinct from inferred identity',()=>{
 test('unknown identity stays unknown',()=>{
  assert.equal(field({claims:[]},'registration').state,'unknown');
 });
+
+test('multiple differing inferred values cannot silently select first claim',()=>{
+ const result=field({claims:[claim('C-INFERRED-A','inferred'),claim('C-INFERRED-B','inferred')]},'registration');
+ assert.equal(result.state,'conflicting');
+ assert.equal(result.value,'CONFLICTING');
+});
+
+test('duplicate inferred values remain visibly inferred',()=>{
+ const result=field({claims:[claim('C-SAME','inferred'),claim('C-SAME','inferred')]},'registration');
+ assert.equal(result.state,'inferred');
+ assert.equal(result.value,'C-SAME · INFERRED');
+});
