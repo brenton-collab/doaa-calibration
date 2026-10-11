@@ -2,7 +2,7 @@ const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:
 async function body(request){const reader=request.body?.getReader();if(!reader)throw Error('JSON body required');const chunks=[];let size=0;while(true){const r=await reader.read();if(r.done)break;size+=r.value.byteLength;if(size>16384){await reader.cancel();throw Error('Body too large');}chunks.push(r.value);}const bytes=new Uint8Array(size);let i=0;for(const c of chunks){bytes.set(c,i);i+=c.length;}return JSON.parse(new TextDecoder().decode(bytes));}
 export async function personalApi(request,env,user){
  const u=new URL(request.url),sub=user.subject,db=env.DB;
- if(u.pathname==='/api/account'&&request.method==='GET')return json({ok:true,subject:sub});
+ if(u.pathname==='/api/account'&&request.method==='GET'){const name=sub.startsWith('password:')?sub.slice(9):null;const row=name?await db.prepare('SELECT role,disabled_at FROM password_accounts WHERE username=?').bind(name).first():null;return json({ok:true,subject:sub,can_manage_users:!!row&&!row.disabled_at&&(row.role==='admin'||name===env.DOAA_PASSWORD_USERNAME)});}
  if(u.pathname==='/api/preferences'){
   if(request.method==='GET'){const row=await db.prepare('SELECT snapshot_json,revision,accepted_at FROM personal_preferences WHERE subject=?').bind(sub).first();return json({ok:true,snapshot:row?JSON.parse(row.snapshot_json):null,revision:row?.revision||0,accepted_at:row?.accepted_at||null});}
   if(request.method==='PUT'){let p;try{p=await body(request);}catch{return json({ok:false,error:'Valid bounded JSON required'},400);}if(!p||typeof p!=='object'||Array.isArray(p)||JSON.stringify(p).length>12000)return json({ok:false,error:'Preference snapshot required'},400);
