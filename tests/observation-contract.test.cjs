@@ -31,7 +31,7 @@ test('all frontend inline scripts parse',()=>{
 });
 test('SKY normalization rejects missing coordinates and preserves unknown telemetry',()=>{
  const src=functionSource(html,'norm','function resize');
- const norm=new Function('const HOME={lat:45.3,lon:-75.7};const hav=()=>1,bearing=()=>1;'+src+';return norm')();
+ const norm=new Function('const ACTIVE={lat:45.3,lon:-75.7};const hav=()=>1,bearing=()=>1;'+src+';return norm')();
  assert.equal(norm({hex:'abc123',lat:null,lon:-75}),null);
  assert.equal(norm({hex:'abc123',lat:45,lon:''}),null);
  assert.equal(norm({hex:'abc123',lat:95,lon:-75}),null);
@@ -105,7 +105,7 @@ test('BOARD ignores superseded responses for the same airport',()=>{
  assert.match(html,/let boardRequestSeq=0/);
  assert.match(html,/requestSeq=\+\+boardRequestSeq/);
  assert.match(html,/requestSeq!==boardRequestSeq/);
- assert.match(html,/HOME\.icao===requestedHome&&requestSeq===boardRequestSeq/);
+ assert.match(html,/ACTIVE\.icao===requestedHome&&requestSeq===boardRequestSeq/);
 });
 test('acquisition and presentation reject false freshness',()=>{
  assert.match(html,/Number\(e\.data\.now\)>0/);

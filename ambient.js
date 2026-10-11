@@ -1,5 +1,5 @@
 /* DOAA ambient compositions. Reads existing SKY observations; never acquires aviation data. */
-(() => {
+function initializeAmbient(){
   'use strict';
   const root = document.createElement('section');
   root.id = 'doaa-ambient';
@@ -19,10 +19,11 @@
   choice.className = 'ambient-controls';
   choice.innerHTML = `<button type="button" data-ambient-mode="SKY">AMBIENT SKY</button><button type="button" data-ambient-mode="SLIDES">AMBIENT SLIDES</button><button type="button" data-ambient-idle aria-pressed="false">AUTO-ENTER AFTER IDLE</button>`;
   document.body.appendChild(choice);
-  const safeStorage = (key, fallback) => { try { return localStorage.getItem(key) || fallback; } catch { return fallback; } };
-  const store = (key, value) => { try { localStorage.setItem(key, value); } catch {} };
+  const safeStorage = (key, fallback) => { try { return (window.DOAAStorage||localStorage).getItem(key) || fallback; } catch { return fallback; } };
+  const store = (key, value) => { try { (window.DOAAStorage||localStorage).setItem(key, value); } catch {} };
   let mode = safeStorage('doaa.ambient.mode', 'SKY') === 'SLIDES' ? 'SLIDES' : 'SKY';
   let idleEnabled = safeStorage('doaa.ambient.idle', 'off') === 'on';
+  window.addEventListener('doaa:preferences-restored',()=>{mode=safeStorage('doaa.ambient.mode','SKY')==='SLIDES'?'SLIDES':'SKY';idleEnabled=safeStorage('doaa.ambient.idle','off')==='on';updateButtons();});
   let active = false, lastInteraction = Date.now(), lastSlideId = '', pendingSlideId = '', slideChangedAt = 0;
   let lastFrame = 0, lastSignature = '', lastObservationAt = 0, lastCandidates = [];
   const idleMs = 5 * 60 * 1000;
@@ -191,7 +192,7 @@
       lastSlideId = signature;
       slideChangedAt = Date.now();
       photo.style.backgroundImage = 'url('+JSON.stringify(String(a.photo.url))+')';
-      copy.innerHTML = '<div class="ambient-slide-reg">'+escapeHtml(a.reg)+'</div><div class="ambient-slide-type">'+escapeHtml(a.type||'Aircraft type unconfirmed')+'</div><div class="ambient-slide-details">'+escapeHtml(a.call||'')+' · '+escapeHtml(a.alt!=null&&a.alt!==''&&Number.isFinite(Number(a.alt))?Math.round(Number(a.alt))+' FT':'ALT UNKNOWN')+' · '+escapeHtml(a.gs!=null&&a.gs!==''&&Number.isFinite(Number(a.gs))?Math.round(Number(a.gs))+' KT':'SPEED UNKNOWN')+'</div><div class="ambient-slide-credit">'+escapeHtml(a.photo.attribution)+' · '+escapeHtml(a.photo.license)+'</div>';
+      copy.innerHTML = '<div class="ambient-slide-reg">'+escapeHtml(a.reg)+'</div><div class="ambient-slide-type">'+escapeHtml(a.type||'Aircraft type unconfirmed')+'</div><div class="ambient-slide-details">'+escapeHtml(a.call||'')+' · '+escapeHtml(a.alt!=null&&a.alt!==''&&Number.isFinite(Number(a.alt))?window.DOAAUnits.format(a.alt,'altitude'):'ALT UNKNOWN')+' · '+escapeHtml(a.gs!=null&&a.gs!==''&&Number.isFinite(Number(a.gs))?window.DOAAUnits.format(a.gs,'speed'):'SPEED UNKNOWN')+'</div><div class="ambient-slide-credit">'+escapeHtml(a.photo.attribution)+' · '+escapeHtml(a.photo.license)+'</div>';
       count.textContent = 'PHOTO VERIFIED';
     };
     image.onerror = () => {
@@ -242,4 +243,5 @@
   window.DOAAAmbient={enter,leave,choose,openSettings:()=>choice.classList.toggle('show'),get mode(){return mode;},get active(){return active;}};
   updateButtons();
   setInterval(heartbeat,10000);
-})();
+}
+if(window.DOAAReady)window.DOAAReady.then(initializeAmbient,()=>{});else initializeAmbient();

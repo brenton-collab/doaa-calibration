@@ -1,0 +1,130 @@
+{
+  "date": "2026-10-11T15:42:19.149Z",
+  "browser": "151.0.7922.34",
+  "data": "Offline deterministic fixtures, never provider acceptance",
+  "files": {
+    "index.html": "187a14f61e229cc5337cd479e9d43f70da4ac23cdc9c24aebb0beeb46cba1993",
+    "flight-enrichment.js": "9f9d1f2ce9a59eb33b23b4ef5be7fa070746938a32c077ad14423a0d61b4e9ac",
+    "track-history.js": "5f27d80322f64f200c79f504676870b80b3c35cfb374b7e5b10d8efa0d1567ee",
+    "track-core.js": "6e5bb098e9460f9ab76418f4099dc5528b7f49e070794ce0c552ec8ec9aa37d0",
+    "track-history.css": "45a23a33d4677f260ff4d849699d76a4b8fb06357fea4dd2565c08cf4634e6c7",
+    "units.js": "731a236ffd85ceaded9b4e054c85be93d22f1fbe80ab192c36528834da95aaf0",
+    "catchment-core.js": "bb6c14eb426485b673dc09d0413980096baebd0d6bd80718d7a203ff97b5e6ee",
+    "preference-core.js": "195138db4c8398a9766444c032946a3e2c6c285762426efc0bc9635ee8440625",
+    "account.js": "09666502efd177034746ec7ab94469c97aeed12998622a3e2b1f803188d04f60"
+  },
+  "viewports": [
+    {
+      "viewport": {
+        "name": "desktop",
+        "width": 1440,
+        "height": 900
+      },
+      "flows": [
+        "SKY Rack to Contact",
+        "Track History",
+        "synchronized map/charts cursor",
+        "observed event navigation",
+        "gap visibility",
+        "deliberate picker",
+        "union clock",
+        "60x playback/pause",
+        "remove Track 2",
+        "close/context return",
+        "service failure/retry",
+        "unit conversion/reset with preserved replay cursor",
+        "Home/Explore separation",
+        "Inspector independent explanation/favourite/drill/back and keyboard",
+        "BOARD active catchment",
+        "Return Home",
+        "fresh launch and recent catchments",
+        "account snapshot save/failure/retry/persistence"
+      ],
+      "errors": []
+    },
+    {
+      "viewport": {
+        "name": "phone",
+        "width": 393,
+        "height": 851
+      },
+      "flows": [
+        "SKY Rack to Contact",
+        "Track History",
+        "synchronized map/charts cursor",
+        "observed event navigation",
+        "gap visibility",
+        "deliberate picker",
+        "union clock",
+        "60x playback/pause",
+        "remove Track 2",
+        "close/context return",
+        "service failure/retry",
+        "unit conversion/reset with preserved replay cursor",
+        "Home/Explore separation",
+        "Inspector independent explanation/favourite/drill/back and keyboard",
+        "BOARD active catchment",
+        "Return Home",
+        "fresh launch and recent catchments",
+        "account snapshot save/failure/retry/persistence"
+      ],
+      "errors": []
+    },
+    {
+      "viewport": {
+        "name": "landscape",
+        "width": 851,
+        "height": 393
+      },
+      "flows": [
+        "SKY Rack to Contact",
+        "Track History",
+        "synchronized map/charts cursor",
+        "observed event navigation",
+        "gap visibility",
+        "deliberate picker",
+        "union clock",
+        "60x playback/pause",
+        "remove Track 2",
+        "close/context return",
+        "service failure/retry",
+        "unit conversion/reset with preserved replay cursor",
+        "Home/Explore separation",
+        "Inspector independent explanation/favourite/drill/back and keyboard",
+        "BOARD active catchment",
+        "Return Home",
+        "fresh launch and recent catchments",
+        "account snapshot save/failure/retry/persistence"
+      ],
+      "errors": []
+    },
+    {
+      "viewport": {
+        "name": "tablet",
+        "width": 820,
+        "height": 1180
+      },
+      "flows": [
+        "SKY Rack to Contact",
+        "Track History",
+        "synchronized map/charts cursor",
+        "observed event navigation",
+        "gap visibility",
+        "deliberate picker",
+        "union clock",
+        "60x playback/pause",
+        "remove Track 2",
+        "close/context return",
+        "service failure/retry",
+        "unit conversion/reset with preserved replay cursor",
+        "Home/Explore separation",
+        "Inspector independent explanation/favourite/drill/back and keyboard",
+        "BOARD active catchment",
+        "Return Home",
+        "fresh launch and recent catchments",
+        "account snapshot save/failure/retry/persistence"
+      ],
+      "errors": []
+    }
+  ]
+}

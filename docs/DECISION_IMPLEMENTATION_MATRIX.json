@@ -144,13 +144,15 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "tests/inspector-contexts.test.cjs"
+        "tests/inspector-contexts.test.cjs",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
         "Inspector shell, cells, renderSurface, openObject, contextual tab dispatch",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 continuation: Separated datum value, independent explanation and accessible favourite buttons; no nested buttons, contextual bounded back stack, async cross-object request guards and unknown vertical-rate label. Real airframe/airport/flight facts navigate explicitly. Latest complete Node suite: 114 pass. Final Chromium fixture acceptance passed desktop, phone portrait, short landscape and tablet; independent explanation/favourite/drill/back, replay unit changes/cursor preservation, Home/Explore/BOARD propagation, account failed-save/retry/reload and recent catchments. Hash-qualified report: docs/qa/units-catchment-account-acceptance.json. See RELEASE_RC_CHECKPOINT.md."
       ],
-      "outstanding_engineering_work": "Complete grounded contextual content, independent datum controls, history/back, source-level missing states and responsive interaction.",
+      "outstanding_engineering_work": "Finish Inspector datum/source content and all cross-surface navigation; verify failure/identity revisions and actual signed-in Preview. Interaction grammar remains partial beyond the tested existing surfaces.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -183,13 +185,15 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "tests/inspector-contexts.test.cjs"
+        "tests/inspector-contexts.test.cjs",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
         "Inspector shell, cells, renderSurface, openObject, contextual tab dispatch",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 continuation: Separated datum value, independent explanation and accessible favourite buttons; no nested buttons, contextual bounded back stack, async cross-object request guards and unknown vertical-rate label. Real airframe/airport/flight facts navigate explicitly. Latest complete Node suite: 114 pass. Final Chromium fixture acceptance passed desktop, phone portrait, short landscape and tablet; independent explanation/favourite/drill/back, replay unit changes/cursor preservation, Home/Explore/BOARD propagation, account failed-save/retry/reload and recent catchments. Hash-qualified report: docs/qa/units-catchment-account-acceptance.json. See RELEASE_RC_CHECKPOINT.md."
       ],
-      "outstanding_engineering_work": "Complete grounded contextual content, independent datum controls, history/back, source-level missing states and responsive interaction.",
+      "outstanding_engineering_work": "Finish Inspector datum/source content and all cross-surface navigation; verify failure/identity revisions and actual signed-in Preview. Interaction grammar remains partial beyond the tested existing surfaces.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -261,13 +265,15 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "tests/inspector-contexts.test.cjs"
+        "tests/inspector-contexts.test.cjs",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
         "Inspector shell, cells, renderSurface, openObject, contextual tab dispatch",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 continuation: Separated datum value, independent explanation and accessible favourite buttons; no nested buttons, contextual bounded back stack, async cross-object request guards and unknown vertical-rate label. Real airframe/airport/flight facts navigate explicitly. Latest complete Node suite: 114 pass. Final Chromium fixture acceptance passed desktop, phone portrait, short landscape and tablet; independent explanation/favourite/drill/back, replay unit changes/cursor preservation, Home/Explore/BOARD propagation, account failed-save/retry/reload and recent catchments. Hash-qualified report: docs/qa/units-catchment-account-acceptance.json. See RELEASE_RC_CHECKPOINT.md."
       ],
-      "outstanding_engineering_work": "Complete grounded contextual content, independent datum controls, history/back, source-level missing states and responsive interaction.",
+      "outstanding_engineering_work": "Finish Inspector datum/source content and all cross-surface navigation; verify failure/identity revisions and actual signed-in Preview. Interaction grammar remains partial beyond the tested existing surfaces.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -855,13 +861,17 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "src/board-schedule.mjs"
+        "src/board-schedule.mjs",
+        "catchment-core.js",
+        "tests/units-catchment.test.cjs",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
         "hydrateBoard / boardApi / airportMovementEvidence / airport lookup",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 continuation: Saved Home/radius and session exploration are separate; SKY and BOARD share active context; setting Home preserves exploration, Return Home restores default radius, fresh launches restore Home, recent exploration persists. Latest complete Node suite: 114 pass. Final Chromium fixture acceptance passed desktop, phone portrait, short landscape and tablet; independent explanation/favourite/drill/back, replay unit changes/cursor preservation, Home/Explore/BOARD propagation, account failed-save/retry/reload and recent catchments. Hash-qualified report: docs/qa/units-catchment-account-acceptance.json. See RELEASE_RC_CHECKPOINT.md."
       ],
-      "outstanding_engineering_work": "Unify canonical movement records and timelines; separate Home/Explore; add date/evidence/runway navigation and sourced Airport conditions/geometry.",
+      "outstanding_engineering_work": "Signed-in Preview acceptance and remote-account preference refresh acceptance; preserve MET/NAV resume as those layers are implemented.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -894,13 +904,17 @@
         "index.html",
         "flight-enrichment.js",
         "src/worker.js",
-        "src/board-schedule.mjs"
+        "src/board-schedule.mjs",
+        "catchment-core.js",
+        "tests/units-catchment.test.cjs",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
         "hydrateBoard / boardApi / airportMovementEvidence / airport lookup",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 continuation: Saved Home/radius and session exploration are separate; SKY and BOARD share active context; setting Home preserves exploration, Return Home restores default radius, fresh launches restore Home, recent exploration persists. Latest complete Node suite: 114 pass. Final Chromium fixture acceptance passed desktop, phone portrait, short landscape and tablet; independent explanation/favourite/drill/back, replay unit changes/cursor preservation, Home/Explore/BOARD propagation, account failed-save/retry/reload and recent catchments. Hash-qualified report: docs/qa/units-catchment-account-acceptance.json. See RELEASE_RC_CHECKPOINT.md."
       ],
-      "outstanding_engineering_work": "Unify canonical movement records and timelines; separate Home/Explore; add date/evidence/runway navigation and sourced Airport conditions/geometry.",
+      "outstanding_engineering_work": "Signed-in Preview acceptance and remote-account preference refresh acceptance; preserve MET/NAV resume as those layers are implemented.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -975,11 +989,13 @@
         "flight-enrichment.js",
         "tests/track-playback.test.cjs",
         "tests/track-history-api.test.mjs",
-        "scripts/browser-acceptance.cjs"
+        "scripts/browser-acceptance.cjs",
+        "units.js"
       ],
       "evidence": [
         "Actual observed-sample map/charts/shared absolute clock and two-aircraft union comparison implemented; local SQLite queries and four responsive Chromium fixture workflows passed. See docs/RELEASE_RC_CHECKPOINT.md and docs/qa/track-history-acceptance.json.",
-        "Playback, no-future/no-interpolation support, gaps, optional loop/follow, deliberate recorded picker, replacement/removal of either track, service failure/retry and obsolete-selection guards exercised."
+        "Playback, no-future/no-interpolation support, gaps, optional loop/follow, deliberate recorded picker, replacement/removal of either track, service failure/retry and obsolete-selection guards exercised.",
+        "2026-10-11 continuation: Unit changes preserve replay time/positions, update altitude/speed chart values and labels, and change readouts without altering stored samples. Latest complete Node suite: 114 pass. Final Chromium fixture acceptance passed desktop, phone portrait, short landscape and tablet; independent explanation/favourite/drill/back, replay unit changes/cursor preservation, Home/Explore/BOARD propagation, account failed-save/retry/reload and recent catchments. Hash-qualified report: docs/qa/units-catchment-account-acceptance.json. See RELEASE_RC_CHECKPOINT.md."
       ],
       "outstanding_engineering_work": "Authenticated Preview with real collected observations, accessible/provider geographic basemap acceptance, live/physical-device acceptance; global-unit conversion follows the shared units batch.",
       "dependencies": [
@@ -1020,11 +1036,13 @@
         "flight-enrichment.js",
         "tests/track-playback.test.cjs",
         "tests/track-history-api.test.mjs",
-        "scripts/browser-acceptance.cjs"
+        "scripts/browser-acceptance.cjs",
+        "units.js"
       ],
       "evidence": [
         "Actual observed-sample map/charts/shared absolute clock and two-aircraft union comparison implemented; local SQLite queries and four responsive Chromium fixture workflows passed. See docs/RELEASE_RC_CHECKPOINT.md and docs/qa/track-history-acceptance.json.",
-        "Playback, no-future/no-interpolation support, gaps, optional loop/follow, deliberate recorded picker, replacement/removal of either track, service failure/retry and obsolete-selection guards exercised."
+        "Playback, no-future/no-interpolation support, gaps, optional loop/follow, deliberate recorded picker, replacement/removal of either track, service failure/retry and obsolete-selection guards exercised.",
+        "2026-10-11 continuation: Unit changes preserve replay time/positions, update altitude/speed chart values and labels, and change readouts without altering stored samples. Latest complete Node suite: 114 pass. Final Chromium fixture acceptance passed desktop, phone portrait, short landscape and tablet; independent explanation/favourite/drill/back, replay unit changes/cursor preservation, Home/Explore/BOARD propagation, account failed-save/retry/reload and recent catchments. Hash-qualified report: docs/qa/units-catchment-account-acceptance.json. See RELEASE_RC_CHECKPOINT.md."
       ],
       "outstanding_engineering_work": "Authenticated Preview with real collected observations, accessible/provider geographic basemap acceptance, live/physical-device acceptance; global-unit conversion follows the shared units batch.",
       "dependencies": [
@@ -2186,17 +2204,24 @@
       "requirement": "DOAA uses one app-wide measurement preference system with independent selectable display units (distance NM/km/mi, speed kt/km/h/mph, altitude/elevation ft/m, temperature °C/°F, pressure hPa/inHg, and context-appropriate visibility and other quantities), rather than only a Metric/Imperial toggle. Provide an **Aviation standard** preset as default. Apply consistently across SKY, BOARD, Inspector, charts, tooltips and replay while preserving canonical source values/units, converting at display boundaries and retaining explicit unit labels where needed. Do not alter or ambiguously convert flight levels, raw METAR, runway identifiers or other fixed aviation notation. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
-        "vector-base.js"
+        "vector-base.js",
+        "units.js",
+        "flight-enrichment.js",
+        "track-history.js",
+        "look.js",
+        "ambient.js",
+        "tests/units-catchment.test.cjs"
       ],
       "evidence": [
         "BASE/STREET exists; no MET workspace, temporal weather adapters, NAV dataset or global quantity preferences",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 continuation: Independent distance/speed/altitude/temperature/pressure/visibility/vertical-speed selectors and Aviation standard reset; display conversions across currently present SKY/Rack/Inspector/LOOK/SLIDES/replay paths. Canonical inputs unchanged, unknown and zero distinguished, chart labels convert together with values. Latest complete Node suite: 114 pass. Final Chromium fixture acceptance passed desktop, phone portrait, short landscape and tablet; independent explanation/favourite/drill/back, replay unit changes/cursor preservation, Home/Explore/BOARD propagation, account failed-save/retry/reload and recent catchments. Hash-qualified report: docs/qa/units-catchment-account-acceptance.json. See RELEASE_RC_CHECKPOINT.md."
       ],
-      "outstanding_engineering_work": "Implement independent units, map modes/layers, verified free weather/NAV sources, timestamped History/Now/Forecast and contextual feature inspection.",
+      "outstanding_engineering_work": "Finish weather/runway/new Inspector quantity coverage as remaining data/content is implemented; actual signed-in Preview acceptance and future map-layer unit presentation.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -3743,14 +3768,19 @@
         "migrations/0001_doaa_memory.sql",
         "src/personal.mjs",
         "migrations/0012_private_accounts.sql",
-        "tests/account-privacy.test.mjs"
+        "tests/account-privacy.test.mjs",
+        "bookmarks.js",
+        "track-history.js",
+        "account.js",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
-        "Private idempotent bookmark API references existing observations; account isolation and prohibition on fabricated DOAA evidence passed real SQLite regression. Full bookmark/gallery interaction remains unimplemented."
+        "Private idempotent bookmark API references existing observations; account isolation and prohibition on fabricated DOAA evidence passed real SQLite regression. Full bookmark/gallery interaction remains unimplemented.",
+        "2026-10-11 saved-moment batch: one-action save of real observation IDs, idempotent account-owned references, chronological cards and recorded-ICAO24 grouping, original timestamp/provenance detail and encounter playback, deliberate current-Airframe path, direct removal with truthful save/removal failures. 114 Node tests passed, including real SQLite account ownership/idempotence/non-mutation checks. All four Chromium fixture viewport workflows passed, including two distinct moments for one aircraft, exact original playback time, gap without save control, current profile and save/removal failure/retry. Hash-qualified report: docs/qa/saved-moments-acceptance.json."
       ],
-      "outstanding_engineering_work": "Implement approved Google subject authorization and full-app gate, private idempotent moment bookmarks/gallery, persistent sessions and atomic last-save-wins preferences with retry.",
+      "outstanding_engineering_work": "Actual approved-account Preview acceptance; identity correction/merge/split resolution for stable original references; sourced/licensed imagery or eligible evidence-grounded card map previews where available; live Contact bookmark capture at a genuine stored observation. Cards currently use the approved honest text-only fallback and grouping explicitly qualifies recorded ICAO24 continuity.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -3778,17 +3808,24 @@
       "requirement": "Opening an aircraft bookmark restores the saved observation or historical context, including the time, available source evidence, identity qualification and provenance captured or referenced at bookmarking, rather than silently substituting the aircraft's latest state. Provide a direct, deliberate path from that moment to the aircraft's current best-supported profile. Preserve the bookmark's original reference through subsequent identity corrections, merges or splits, and disclose unresolved associations rather than inventing continuity. Distinguish the moment David bookmarked from a confirmed personal sighting. Keep the experience focused rather than presenting two full views side by side by default. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "bookmarks.js",
+        "track-history.js",
+        "account.js",
+        "src/personal.mjs",
+        "tests/account-privacy.test.mjs",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 saved-moment batch: one-action save of real observation IDs, idempotent account-owned references, chronological cards and recorded-ICAO24 grouping, original timestamp/provenance detail and encounter playback, deliberate current-Airframe path, direct removal with truthful save/removal failures. 114 Node tests passed, including real SQLite account ownership/idempotence/non-mutation checks. All four Chromium fixture viewport workflows passed, including two distinct moments for one aircraft, exact original playback time, gap without save control, current profile and save/removal failure/retry. Hash-qualified report: docs/qa/saved-moments-acceptance.json."
       ],
-      "outstanding_engineering_work": "Implement approved Google subject authorization and full-app gate, private idempotent moment bookmarks/gallery, persistent sessions and atomic last-save-wins preferences with retry.",
+      "outstanding_engineering_work": "Actual approved-account Preview acceptance; identity correction/merge/split resolution for stable original references; sourced/licensed imagery or eligible evidence-grounded card map previews where available; live Contact bookmark capture at a genuine stored observation. Cards currently use the approved honest text-only fallback and grouping explicitly qualifies recorded ICAO24 continuity.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -3823,14 +3860,19 @@
         "migrations/0001_doaa_memory.sql",
         "src/personal.mjs",
         "migrations/0012_private_accounts.sql",
-        "tests/account-privacy.test.mjs"
+        "tests/account-privacy.test.mjs",
+        "bookmarks.js",
+        "track-history.js",
+        "account.js",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
-        "Private idempotent bookmark API references existing observations; account isolation and prohibition on fabricated DOAA evidence passed real SQLite regression. Full bookmark/gallery interaction remains unimplemented."
+        "Private idempotent bookmark API references existing observations; account isolation and prohibition on fabricated DOAA evidence passed real SQLite regression. Full bookmark/gallery interaction remains unimplemented.",
+        "2026-10-11 saved-moment batch: one-action save of real observation IDs, idempotent account-owned references, chronological cards and recorded-ICAO24 grouping, original timestamp/provenance detail and encounter playback, deliberate current-Airframe path, direct removal with truthful save/removal failures. 114 Node tests passed, including real SQLite account ownership/idempotence/non-mutation checks. All four Chromium fixture viewport workflows passed, including two distinct moments for one aircraft, exact original playback time, gap without save control, current profile and save/removal failure/retry. Hash-qualified report: docs/qa/saved-moments-acceptance.json."
       ],
-      "outstanding_engineering_work": "Implement approved Google subject authorization and full-app gate, private idempotent moment bookmarks/gallery, persistent sessions and atomic last-save-wins preferences with retry.",
+      "outstanding_engineering_work": "Actual approved-account Preview acceptance; identity correction/merge/split resolution for stable original references; sourced/licensed imagery or eligible evidence-grounded card map previews where available; live Contact bookmark capture at a genuine stored observation. Cards currently use the approved honest text-only fallback and grouping explicitly qualifies recorded ICAO24 continuity.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -3865,14 +3907,19 @@
         "migrations/0001_doaa_memory.sql",
         "src/personal.mjs",
         "migrations/0012_private_accounts.sql",
-        "tests/account-privacy.test.mjs"
+        "tests/account-privacy.test.mjs",
+        "bookmarks.js",
+        "track-history.js",
+        "account.js",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
-        "Private idempotent bookmark API references existing observations; account isolation and prohibition on fabricated DOAA evidence passed real SQLite regression. Full bookmark/gallery interaction remains unimplemented."
+        "Private idempotent bookmark API references existing observations; account isolation and prohibition on fabricated DOAA evidence passed real SQLite regression. Full bookmark/gallery interaction remains unimplemented.",
+        "2026-10-11 saved-moment batch: one-action save of real observation IDs, idempotent account-owned references, chronological cards and recorded-ICAO24 grouping, original timestamp/provenance detail and encounter playback, deliberate current-Airframe path, direct removal with truthful save/removal failures. 114 Node tests passed, including real SQLite account ownership/idempotence/non-mutation checks. All four Chromium fixture viewport workflows passed, including two distinct moments for one aircraft, exact original playback time, gap without save control, current profile and save/removal failure/retry. Hash-qualified report: docs/qa/saved-moments-acceptance.json."
       ],
-      "outstanding_engineering_work": "Implement approved Google subject authorization and full-app gate, private idempotent moment bookmarks/gallery, persistent sessions and atomic last-save-wins preferences with retry.",
+      "outstanding_engineering_work": "Actual approved-account Preview acceptance; identity correction/merge/split resolution for stable original references; sourced/licensed imagery or eligible evidence-grounded card map previews where available; live Contact bookmark capture at a genuine stored observation. Cards currently use the approved honest text-only fallback and grouping explicitly qualifies recorded ICAO24 continuity.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -3907,14 +3954,19 @@
         "migrations/0001_doaa_memory.sql",
         "src/personal.mjs",
         "migrations/0012_private_accounts.sql",
-        "tests/account-privacy.test.mjs"
+        "tests/account-privacy.test.mjs",
+        "bookmarks.js",
+        "track-history.js",
+        "account.js",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
-        "Private idempotent bookmark API references existing observations; account isolation and prohibition on fabricated DOAA evidence passed real SQLite regression. Full bookmark/gallery interaction remains unimplemented."
+        "Private idempotent bookmark API references existing observations; account isolation and prohibition on fabricated DOAA evidence passed real SQLite regression. Full bookmark/gallery interaction remains unimplemented.",
+        "2026-10-11 saved-moment batch: one-action save of real observation IDs, idempotent account-owned references, chronological cards and recorded-ICAO24 grouping, original timestamp/provenance detail and encounter playback, deliberate current-Airframe path, direct removal with truthful save/removal failures. 114 Node tests passed, including real SQLite account ownership/idempotence/non-mutation checks. All four Chromium fixture viewport workflows passed, including two distinct moments for one aircraft, exact original playback time, gap without save control, current profile and save/removal failure/retry. Hash-qualified report: docs/qa/saved-moments-acceptance.json."
       ],
-      "outstanding_engineering_work": "Implement approved Google subject authorization and full-app gate, private idempotent moment bookmarks/gallery, persistent sessions and atomic last-save-wins preferences with retry.",
+      "outstanding_engineering_work": "Actual approved-account Preview acceptance; identity correction/merge/split resolution for stable original references; sourced/licensed imagery or eligible evidence-grounded card map previews where available; live Contact bookmark capture at a genuine stored observation. Cards currently use the approved honest text-only fallback and grouping explicitly qualifies recorded ICAO24 continuity.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -3949,14 +4001,19 @@
         "migrations/0001_doaa_memory.sql",
         "src/personal.mjs",
         "migrations/0012_private_accounts.sql",
-        "tests/account-privacy.test.mjs"
+        "tests/account-privacy.test.mjs",
+        "bookmarks.js",
+        "track-history.js",
+        "account.js",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
-        "Private idempotent bookmark API references existing observations; account isolation and prohibition on fabricated DOAA evidence passed real SQLite regression. Full bookmark/gallery interaction remains unimplemented."
+        "Private idempotent bookmark API references existing observations; account isolation and prohibition on fabricated DOAA evidence passed real SQLite regression. Full bookmark/gallery interaction remains unimplemented.",
+        "2026-10-11 saved-moment batch: one-action save of real observation IDs, idempotent account-owned references, chronological cards and recorded-ICAO24 grouping, original timestamp/provenance detail and encounter playback, deliberate current-Airframe path, direct removal with truthful save/removal failures. 114 Node tests passed, including real SQLite account ownership/idempotence/non-mutation checks. All four Chromium fixture viewport workflows passed, including two distinct moments for one aircraft, exact original playback time, gap without save control, current profile and save/removal failure/retry. Hash-qualified report: docs/qa/saved-moments-acceptance.json."
       ],
-      "outstanding_engineering_work": "Implement approved Google subject authorization and full-app gate, private idempotent moment bookmarks/gallery, persistent sessions and atomic last-save-wins preferences with retry.",
+      "outstanding_engineering_work": "Actual approved-account Preview acceptance; identity correction/merge/split resolution for stable original references; sourced/licensed imagery or eligible evidence-grounded card map previews where available; live Contact bookmark capture at a genuine stored observation. Cards currently use the approved honest text-only fallback and grouping explicitly qualifies recorded ICAO24 continuity.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -3992,14 +4049,19 @@
         "src/auth.mjs",
         "src/personal.mjs",
         "migrations/0012_private_accounts.sql",
-        "tests/account-privacy.test.mjs"
+        "tests/account-privacy.test.mjs",
+        "bookmarks.js",
+        "track-history.js",
+        "account.js",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
-        "Full-app/asset/API gate, verified RSA OIDC token contract, stable-subject allowlist, account ownership and atomic preference snapshots passed executed tests. Provider credentials/verified subjects are unavailable; no live Google sign-in acceptance."
+        "Full-app/asset/API gate, verified RSA OIDC token contract, stable-subject allowlist, account ownership and atomic preference snapshots passed executed tests. Provider credentials/verified subjects are unavailable; no live Google sign-in acceptance.",
+        "2026-10-11 saved-moment batch: one-action save of real observation IDs, idempotent account-owned references, chronological cards and recorded-ICAO24 grouping, original timestamp/provenance detail and encounter playback, deliberate current-Airframe path, direct removal with truthful save/removal failures. 114 Node tests passed, including real SQLite account ownership/idempotence/non-mutation checks. All four Chromium fixture viewport workflows passed, including two distinct moments for one aircraft, exact original playback time, gap without save control, current profile and save/removal failure/retry. Hash-qualified report: docs/qa/saved-moments-acceptance.json."
       ],
-      "outstanding_engineering_work": "Complete client account/preferences UI, secure David/Brent enrollment and OAuth configuration, signed-in Preview and persistent/provider-revocation-aware session acceptance.",
+      "outstanding_engineering_work": "Actual approved-account Preview acceptance; identity correction/merge/split resolution for stable original references; sourced/licensed imagery or eligible evidence-grounded card map previews where available; live Contact bookmark capture at a genuine stored observation. Cards currently use the approved honest text-only fallback and grouping explicitly qualifies recorded ICAO24 continuity.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -4027,17 +4089,24 @@
       "requirement": "David's bookmarks are associated with his authenticated account and stored centrally so his saved collection follows him across phone, desktop and other signed-in devices. Saving, removing and opening bookmarks must respect account ownership and access controls; never expose private collections across users. Reflect real synchronization and persistence state, including network failures and concurrent edits, without claiming success prematurely. Maintain the original bookmarked moment, provenance and identity continuity from Decisions 95–101. Choose an implementation compatible with the project's zero-incremental-cost constraint, and verify service quotas and security before provisioning or deployment. This decision supersedes local-only and optional-sync defaults for bookmarks; offline behavior remains a separate design question. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "bookmarks.js",
+        "track-history.js",
+        "account.js",
+        "src/personal.mjs",
+        "tests/account-privacy.test.mjs",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 saved-moment batch: one-action save of real observation IDs, idempotent account-owned references, chronological cards and recorded-ICAO24 grouping, original timestamp/provenance detail and encounter playback, deliberate current-Airframe path, direct removal with truthful save/removal failures. 114 Node tests passed, including real SQLite account ownership/idempotence/non-mutation checks. All four Chromium fixture viewport workflows passed, including two distinct moments for one aircraft, exact original playback time, gap without save control, current profile and save/removal failure/retry. Hash-qualified report: docs/qa/saved-moments-acceptance.json."
       ],
-      "outstanding_engineering_work": "Implement approved Google subject authorization and full-app gate, private idempotent moment bookmarks/gallery, persistent sessions and atomic last-save-wins preferences with retry.",
+      "outstanding_engineering_work": "Actual approved-account Preview acceptance; identity correction/merge/split resolution for stable original references; sourced/licensed imagery or eligible evidence-grounded card map previews where available; live Contact bookmark capture at a genuine stored observation. Cards currently use the approved honest text-only fallback and grouping explicitly qualifies recorded ICAO24 continuity.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -4239,17 +4308,24 @@
       "requirement": "David and Brent each maintain a private bookmark collection bound to their own approved Google-authenticated identity. Neither user can view, add, remove or modify the other's bookmarks through the interface or API. No shared household collection or in-app bookmark-sharing capability is included. Enforce ownership on every read and write server-side; preserve each user's synchronized bookmarks across their own devices. Common public-source aviation records remain distinct from private saved references, subject to the application-wide sign-in gate. Design locked; implementation pending.",
       "amendments": [],
       "acceptance_criteria": "Every operative clause in requirement and amendments; apply latest explicit supersessions listed in contradiction register. Verify with real data and interaction where relevant.",
-      "status": "missing",
+      "status": "partial",
       "files_and_code_paths": [
         "index.html",
         "src/worker.js",
-        "migrations/0001_doaa_memory.sql"
+        "migrations/0001_doaa_memory.sql",
+        "bookmarks.js",
+        "track-history.js",
+        "account.js",
+        "src/personal.mjs",
+        "tests/account-privacy.test.mjs",
+        "scripts/browser-acceptance.cjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
-        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance."
+        "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
+        "2026-10-11 saved-moment batch: one-action save of real observation IDs, idempotent account-owned references, chronological cards and recorded-ICAO24 grouping, original timestamp/provenance detail and encounter playback, deliberate current-Airframe path, direct removal with truthful save/removal failures. 114 Node tests passed, including real SQLite account ownership/idempotence/non-mutation checks. All four Chromium fixture viewport workflows passed, including two distinct moments for one aircraft, exact original playback time, gap without save control, current profile and save/removal failure/retry. Hash-qualified report: docs/qa/saved-moments-acceptance.json."
       ],
-      "outstanding_engineering_work": "Implement approved Google subject authorization and full-app gate, private idempotent moment bookmarks/gallery, persistent sessions and atomic last-save-wins preferences with retry.",
+      "outstanding_engineering_work": "Actual approved-account Preview acceptance; identity correction/merge/split resolution for stable original references; sourced/licensed imagery or eligible evidence-grounded card map previews where available; live Contact bookmark capture at a genuine stored observation. Cards currently use the approved honest text-only fallback and grouping explicitly qualifies recorded ICAO24 continuity.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -4285,14 +4361,18 @@
         "src/auth.mjs",
         "src/personal.mjs",
         "migrations/0012_private_accounts.sql",
-        "tests/account-privacy.test.mjs"
+        "tests/account-privacy.test.mjs",
+        "preference-core.js",
+        "account.js",
+        "tests/preference-sync.test.cjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
-        "Full-app/asset/API gate, verified RSA OIDC token contract, stable-subject allowlist, account ownership and atomic preference snapshots passed executed tests. Provider credentials/verified subjects are unavailable; no live Google sign-in acceptance."
+        "Full-app/asset/API gate, verified RSA OIDC token contract, stable-subject allowlist, account ownership and atomic preference snapshots passed executed tests. Provider credentials/verified subjects are unavailable; no live Google sign-in acceptance.",
+        "2026-10-11 continuation: Account UI and authenticated bootstrap; complete snapshots from account APIs; account-scoped pending/cached preferences, visible pending/save/failure states, bounded retry/online recovery; in-flight saves cannot discard newer local edits. No aviation observations are persisted as preferences. Latest complete Node suite: 114 pass. Final Chromium fixture acceptance passed desktop, phone portrait, short landscape and tablet; independent explanation/favourite/drill/back, replay unit changes/cursor preservation, Home/Explore/BOARD propagation, account failed-save/retry/reload and recent catchments. Hash-qualified report: docs/qa/units-catchment-account-acceptance.json. See RELEASE_RC_CHECKPOINT.md."
       ],
-      "outstanding_engineering_work": "Complete client account/preferences UI, secure David/Brent enrollment and OAuth configuration, signed-in Preview and persistent/provider-revocation-aware session acceptance.",
+      "outstanding_engineering_work": "Authenticated Preview/provider acceptance; apply future map/filter/MET/NAV settings to the same snapshot allowlist as their product UI is implemented. Local fixture browser save/retry/reload acceptance passed; actual authenticated Preview acceptance remains pending.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -4328,14 +4408,18 @@
         "src/auth.mjs",
         "src/personal.mjs",
         "migrations/0012_private_accounts.sql",
-        "tests/account-privacy.test.mjs"
+        "tests/account-privacy.test.mjs",
+        "preference-core.js",
+        "account.js",
+        "tests/preference-sync.test.cjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
-        "Full-app/asset/API gate, verified RSA OIDC token contract, stable-subject allowlist, account ownership and atomic preference snapshots passed executed tests. Provider credentials/verified subjects are unavailable; no live Google sign-in acceptance."
+        "Full-app/asset/API gate, verified RSA OIDC token contract, stable-subject allowlist, account ownership and atomic preference snapshots passed executed tests. Provider credentials/verified subjects are unavailable; no live Google sign-in acceptance.",
+        "2026-10-11 continuation: Account UI and authenticated bootstrap; complete snapshots from account APIs; account-scoped pending/cached preferences, visible pending/save/failure states, bounded retry/online recovery; in-flight saves cannot discard newer local edits. No aviation observations are persisted as preferences. Latest complete Node suite: 114 pass. Final Chromium fixture acceptance passed desktop, phone portrait, short landscape and tablet; independent explanation/favourite/drill/back, replay unit changes/cursor preservation, Home/Explore/BOARD propagation, account failed-save/retry/reload and recent catchments. Hash-qualified report: docs/qa/units-catchment-account-acceptance.json. See RELEASE_RC_CHECKPOINT.md."
       ],
-      "outstanding_engineering_work": "Complete client account/preferences UI, secure David/Brent enrollment and OAuth configuration, signed-in Preview and persistent/provider-revocation-aware session acceptance.",
+      "outstanding_engineering_work": "Authenticated Preview/provider acceptance; apply future map/filter/MET/NAV settings to the same snapshot allowlist as their product UI is implemented. Local fixture browser save/retry/reload acceptance passed; actual authenticated Preview acceptance remains pending.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -4371,14 +4455,18 @@
         "src/auth.mjs",
         "src/personal.mjs",
         "migrations/0012_private_accounts.sql",
-        "tests/account-privacy.test.mjs"
+        "tests/account-privacy.test.mjs",
+        "preference-core.js",
+        "account.js",
+        "tests/preference-sync.test.cjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
-        "Full-app/asset/API gate, verified RSA OIDC token contract, stable-subject allowlist, account ownership and atomic preference snapshots passed executed tests. Provider credentials/verified subjects are unavailable; no live Google sign-in acceptance."
+        "Full-app/asset/API gate, verified RSA OIDC token contract, stable-subject allowlist, account ownership and atomic preference snapshots passed executed tests. Provider credentials/verified subjects are unavailable; no live Google sign-in acceptance.",
+        "2026-10-11 continuation: Account UI and authenticated bootstrap; complete snapshots from account APIs; account-scoped pending/cached preferences, visible pending/save/failure states, bounded retry/online recovery; in-flight saves cannot discard newer local edits. No aviation observations are persisted as preferences. Latest complete Node suite: 114 pass. Final Chromium fixture acceptance passed desktop, phone portrait, short landscape and tablet; independent explanation/favourite/drill/back, replay unit changes/cursor preservation, Home/Explore/BOARD propagation, account failed-save/retry/reload and recent catchments. Hash-qualified report: docs/qa/units-catchment-account-acceptance.json. See RELEASE_RC_CHECKPOINT.md."
       ],
-      "outstanding_engineering_work": "Complete client account/preferences UI, secure David/Brent enrollment and OAuth configuration, signed-in Preview and persistent/provider-revocation-aware session acceptance.",
+      "outstanding_engineering_work": "Authenticated Preview/provider acceptance; apply future map/filter/MET/NAV settings to the same snapshot allowlist as their product UI is implemented. Local fixture browser save/retry/reload acceptance passed; actual authenticated Preview acceptance remains pending.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -4414,14 +4502,18 @@
         "src/auth.mjs",
         "src/personal.mjs",
         "migrations/0012_private_accounts.sql",
-        "tests/account-privacy.test.mjs"
+        "tests/account-privacy.test.mjs",
+        "preference-core.js",
+        "account.js",
+        "tests/preference-sync.test.cjs"
       ],
       "evidence": [
         "favoriteApi is anonymous generic favourites, not private moment bookmarks; no authentication/session/preferences API",
         "Baseline 2026-10-11: 85 Node regression tests passed; source-level and mocked tests do not prove browser/provider acceptance.",
-        "Full-app/asset/API gate, verified RSA OIDC token contract, stable-subject allowlist, account ownership and atomic preference snapshots passed executed tests. Provider credentials/verified subjects are unavailable; no live Google sign-in acceptance."
+        "Full-app/asset/API gate, verified RSA OIDC token contract, stable-subject allowlist, account ownership and atomic preference snapshots passed executed tests. Provider credentials/verified subjects are unavailable; no live Google sign-in acceptance.",
+        "2026-10-11 continuation: Account UI and authenticated bootstrap; complete snapshots from account APIs; account-scoped pending/cached preferences, visible pending/save/failure states, bounded retry/online recovery; in-flight saves cannot discard newer local edits. No aviation observations are persisted as preferences. Latest complete Node suite: 114 pass. Final Chromium fixture acceptance passed desktop, phone portrait, short landscape and tablet; independent explanation/favourite/drill/back, replay unit changes/cursor preservation, Home/Explore/BOARD propagation, account failed-save/retry/reload and recent catchments. Hash-qualified report: docs/qa/units-catchment-account-acceptance.json. See RELEASE_RC_CHECKPOINT.md."
       ],
-      "outstanding_engineering_work": "Complete client account/preferences UI, secure David/Brent enrollment and OAuth configuration, signed-in Preview and persistent/provider-revocation-aware session acceptance.",
+      "outstanding_engineering_work": "Authenticated Preview/provider acceptance; apply future map/filter/MET/NAV settings to the same snapshot allowlist as their product UI is implemented. Local fixture browser save/retry/reload acceptance passed; actual authenticated Preview acceptance remains pending.",
       "dependencies": [
         "Shared timestamp/provenance/identity contracts",
         "Isolated Preview D1 and non-production release gate"
@@ -7292,5 +7384,6 @@
         "production_verified": false
       }
     }
-  ]
+  ],
+  "continuation_checkpoint": "docs/RELEASE_RC_CHECKPOINT.md"
 }

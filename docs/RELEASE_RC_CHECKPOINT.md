@@ -2,6 +2,30 @@
 
 **Not a finished product or an accepted release candidate.** Full contract and current disposition: `DECISION_IMPLEMENTATION_MATRIX.json`. Work branch: `work/product-recovery-mobile-sky`; draft PR #48. Production/main are unchanged. No GitHub Actions runs were requested.
 
+## Third execution batch — saved moments
+
+- Replay can save the actual supported observation at the shared cursor with one action; unsupported gaps expose no save control. Saved references remain idempotent by observation ID and never create/delete observation or encounter evidence.
+- Saved moments opens from Track History or Account. Newest-first cards preserve original registration/callsign/ICAO24, observation time, source and bookmark time. Optional recorded-address grouping retains every distinct moment and explicitly qualifies uncertain physical continuity. Missing eligible imagery uses the approved readable text fallback.
+- Opening a card defaults to the original moment/provenance, with deliberate original-encounter replay at the actual saved timestamp and an explicit current-Airframe navigation action. No latest-state substitution, synthetic personal visual sighting or invented history.
+- Removal is one action affecting only the personal reference; failed removals leave the card and disclose failure. Saved states reconcile after a complete account collection read.
+- Executed: **114 Node tests passed** (including SQLite privacy/idempotence/non-mutation checks), Preview isolation and final asset packaging passed. **All four final Chromium fixture workflows passed**, including two distinct moments on one aircraft, original time/telemetry replay, current profile navigation, optional grouping and failed save/removal recovery. Source hashes and exact flows: `docs/qa/saved-moments-acceptance.json`. Desktop/phone collection screenshots inspected. Actual signed-in Preview and later identity-revision resolution remain unverified; imagery and live Contact capture are unfinished matrix requirements.
+
+## Publication hold
+
+Local verified commit `246ed0e` contains the second batch; the next commit contains the third batch and this checkpoint. Neither has been pushed. Automatic approval review rejected the feature-branch push as an unverified destination/disclosure. Subsequent connected GitHub checks verified repo ID `1407366985`, clone URL matching origin, approved branch and open draft PR #48 — but repository metadata reports **public** visibility, conflicting with the user's description of a private repository. Do not retry or bypass the rejected push. Obtain explicit permission for publication to this currently public destination, or resolve privacy with the owner before publishing. Making the repository private may affect existing public-source asset loading; do not silently change visibility.
+
+Production/main, deployed Preview and remote schema are unchanged by the second/third batches. Google OAuth client and approved subject enrollment still block actual signed-in Preview. Application is not finished or release-ready. Next executable work after publication permission: push verified commits only to `work/product-recovery-mobile-sky`, then continue complete Inspector/Airfield/BOARD evidence and the remaining matrix requirements. No production merge/deployment is authorized.
+
+## Second execution batch — units, catchments, Inspector and account preferences
+
+- Saved Home/radius is independent of active exploration; SKY and BOARD share the active catchment. Setting Home preserves current investigation; Return Home and fresh launch restore saved Home/radius. Recent explored airports remain available.
+- Shared display units cover current SKY/Rack/Inspector/history/LOOK/SLIDES/replay quantities, with canonical source values unchanged, truthful unknown/zero handling and converted chart axes/readouts. Remaining weather/runway/MET/NAV content must use the same presentation boundary.
+- Inspector facts have separate labelled explanation, real navigation/detail and favourite controls. No nested buttons; keyboard favourites, contextual Back and obsolete-request guards are implemented. Inspector content remains incomplete beyond these interactions.
+- Account bootstrap restores only allowlisted preferences, then acquires fresh aviation observations. Complete server snapshots are authoritative. Pending/cache state is scoped by authenticated subject; local updates apply immediately, retries are bounded, online/manual retry is available and failures are visible. Newer local edits during an in-flight save are retained. Account-owned API tests execute against SQLite.
+- Executed: **114 Node tests passed**, Preview isolation guard and allowlisted packaging passed. **All four final Chromium fixture viewport workflows passed**, including playback/comparison regression, explanations/favourites/drill/Back, unit changes/reset with unchanged cursor, Home/Explore/BOARD propagation, Return Home/reload/recents and account save failure/retry/persistence. Exact hashes/flows: `docs/qa/units-catchment-account-acceptance.json`. Track screenshots at each viewport were inspected. These are offline fixture tests, not live-provider or physical-device acceptance. External basemap tiles remain unavailable in this environment.
+- No deployment, remote schema change, production/main change, paid provider use or Actions request in this batch. Actual Google enrollment, signed-in Preview and remaining product content remain release gates.
+- Next connected batch: saved-moment gallery/bookmark interaction, then complete Inspector/airport/BOARD evidence and the remaining matrix scope.
+
 ## Implemented and locally verified in the first execution batch
 
 - Contact Track History now uses the actual encounter/ICAO24-restricted observation API, chronological keyset pages, an actual geographic projection, coordinate grid and external base tiles, altitude and groundspeed charts, one shared absolute-time scrubber, actual observation timestamps and provider labels.
@@ -11,7 +35,7 @@
 - Asynchronous Contact enrichment cannot overwrite a different selected Contact or reset active Track History on live refresh. Leaving the context disposes playback and pending requests.
 - Additive migration 0011 stores source, reception time, explicit ground report, geometric altitude and reported heading for new observations. Older observations are honestly labelled when provider provenance was not recorded. Per-aircraft reported position age is distinguished from HTTP receipt time.
 - Google OIDC code/PKCE/state/nonce authentication verifies an actual RSA signature and issuer/audience/expiry/nonce, checks stable allowlisted subject IDs, and gates app assets and all HTTP aviation/memory APIs. Sessions are hashed at rest. Sign-out uses a same-origin POST. Browser responses are private/no-store so cached data does not defeat sign-out. No email-based identity guess, public explorer, fixture bypass, or OAuth credential was deployed.
-- Account-owned preference snapshots replace the entire last accepted snapshot. Account-owned moment bookmarks reference existing observations idempotently and cannot manufacture or delete DOAA evidence. Account-owned favourites are isolated. These APIs still require their full product UI and provider sign-in acceptance.
+- Account-owned preference snapshots replace the entire last accepted snapshot. Account-owned moment bookmarks reference existing observations idempotently and cannot manufacture or delete DOAA evidence. Account-owned favourites are isolated. Account preference UI is now locally browser-tested; bookmark/gallery UI and provider sign-in acceptance remain outstanding.
 
 ## Verification and limitations
 
