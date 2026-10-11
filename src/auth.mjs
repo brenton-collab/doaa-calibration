@@ -46,7 +46,8 @@ export async function authentication(request,env){
   if(!user)return json({ok:false,error:'Sign-in required'},401);
   if(Date.parse(session.expires_at)-Date.now()>90*24*3600*1000)return new Response(null,{status:204,headers:{'cache-control':'no-store'}});
   const age=180*24*3600,expires=new Date(Date.now()+age*1000).toISOString();
-  await env.DB.prepare('UPDATE auth_sessions SET expires_at=? WHERE token_hash=? AND expires_at>?').bind(expires,tokenHash,new Date().toISOString()).run();
+  const updated=await env.DB.prepare('UPDATE auth_sessions SET expires_at=? WHERE token_hash=? AND expires_at>?').bind(expires,tokenHash,new Date().toISOString()).run();
+  if(updated.meta?.changes!==1)return json({ok:false,error:'Session no longer available'},401);
   return new Response(null,{status:204,headers:{'set-cookie':cookie('__Host_doaa_session',token,age),'cache-control':'no-store'}});
  }
  if(u.pathname==='/auth/change-password'&&request.method==='POST'){
