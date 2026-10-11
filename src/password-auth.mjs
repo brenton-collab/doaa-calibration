@@ -10,7 +10,7 @@ const formPage=(message='',status=200)=>new Response(`<!doctype html><html lang=
 async function verify(password,secret){
  // Secret format: iterations.saltBase64url.derivedKeyBase64url
  const [iterations,salt,expected,...extra]=String(secret||'').split('.');
- if(extra.length||!/^\d+$/.test(iterations)||Number(iterations)<200000||Number(iterations)>1000000||!salt||!expected)return false;
+ if(extra.length||!/^\d+$/.test(iterations)||Number(iterations)<100000||Number(iterations)>100000||!salt||!expected)return false;
  const key=await crypto.subtle.importKey('raw',te.encode(password),'PBKDF2',false,['deriveBits']);
  const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:from64(salt),iterations:Number(iterations),hash:'SHA-256'},key,256);
  const actual=new Uint8Array(bits),want=from64(expected);let diff=actual.length^want.length;for(let i=0;i<Math.max(actual.length,want.length);i++)diff|=(actual[i]||0)^(want[i]||0);return diff===0;
