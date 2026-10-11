@@ -133,3 +133,6 @@ The BOARD region is programmatically focusable and labelled. Returning from an I
 
 ### 2026-10-10 — AMBIENT sustained-session behavior
 AMBIENT idle entry now treats scroll, wheel and touchmove gestures as user activity, protecting active reading from unwanted interruption (725b8ce). Backgrounded pages skip AMBIENT heartbeat rendering (10d9dd5), and an active composition updates immediately when the page becomes visible again (ecc2dfe). JavaScript syntax verified, changes inspected at commit level for the initial gesture patch. Real long-duration tablet/browser session remains unverified; do not label this production acceptance. No paid API, D1 writes, CI or deployment.
+
+### 2026-10-10 — AMBIENT SLIDES photo lifecycle
+Added image preloading and failed-photo exclusion for exact-airframe verified media; image load callbacks are gated by active composition and slide identity (1ded3f7). Distinguished loading state from displayed media (3641b54), guarded periodic refresh against premature PHOTO VERIFIED (e2b71aa), and attached RECENT OBSERVATION provenance immediately on successful image load (1fab006). JavaScript syntax and committed diffs inspected. The image is still an externally hosted cached-media URL, so browser network/error and tablet endurance checks remain outstanding. No production release, CI or provider spending.
