@@ -166,3 +166,9 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `cd11bdb`: visible airborne count and the Rack's input list now use the same per-aircraft predicate. A fresh overall feed no longer makes a stale individual aircraft count as current.
 - `f02f7b6`: source regression assertions for both filters.
 - Progress estimate shared with product owner: approximately 20–25% of full rebuild by scope, explicitly provisional. UX contracts are established; this is still inherited-app hardening, not completion of the new architecture. Browser/live testing remains deferred by request; automated tests not executed. No deployment or production data writes.
+
+## Contact Overview provenance hierarchy (2026-10-11)
+- Previous Field Notes shell and section changes: `da28dad`, `571cf4e`, `24ebc6f`, `21e9a03`. Contact evidence presentation changes: `b059dbb`, `4f60946`, `9ab4813`, `a5efe60`.
+- `6ef3cd9` separates broadcast Contact identity (ICAO24, callsign, position evidence) and observed telemetry from externally enriched airframe identity, with an explicit provenance note.
+- `ef6930f` labels any route as a **possible flight association**, not proof of a dated operation. `8246cf5` adds source assertions for the hierarchy.
+- The UI is not yet browser-verified and the Node test suite has not been executed. No production deployment or paid infrastructure changes.
