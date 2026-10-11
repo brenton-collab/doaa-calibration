@@ -23,7 +23,7 @@
    for(const media of body.media||[]){
     const a=aircraft.find(x=>String(x.id).toLowerCase()===String(media.id).toLowerCase());
     if(!a||String(a.reg).toUpperCase()!==String(media.registration).toUpperCase()||current.get(String(media.id).toLowerCase())!==String(media.registration).toUpperCase())continue;
-    if(!media.url||!media.license||!media.attribution)continue;
+    if(typeof media.url!=='string'||!/^https:\/\/[^\s/]+\//i.test(media.url)||!media.license||!media.attribution)continue;
     window.dispatchEvent(new CustomEvent('doaa:airframe-media',{detail:media}));
    }
   }catch{lastQuery='';}finally{inflight=false}
