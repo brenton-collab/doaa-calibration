@@ -123,3 +123,18 @@ test('relay rejects stale positions and missing coordinate evidence',()=>{
  assert.match(relay,/a\?\.lat==null\|\|a\.lat===''/);
  assert.match(relay,/!recentAircraft\(a\)/);
 });
+
+test('relay requires known per-aircraft position age',()=>{
+ const start=relay.indexOf('const recentAircraft=');
+ const end=relay.indexOf('function observe(',start);
+ assert.ok(start>=0&&end>start);
+ const predicate=new Function(relay.slice(start,end)+';return recentAircraft')();
+ assert.equal(predicate({seen_pos:5}),true);
+ assert.equal(predicate({seen:0}),true);
+ assert.equal(predicate({seen_pos:91}),false);
+ assert.equal(predicate({seen_pos:120,seen:2}),false);
+ assert.equal(predicate({seen:4}),true);
+ assert.equal(predicate({seen:null}),false);
+ assert.equal(predicate({}),false);
+ assert.equal(predicate({seen:'invalid'}),false);
+});
