@@ -23,7 +23,7 @@
      const age=Date.now()-stamp;
      const fresh=stamp>0&&age>=0&&age<90000;
      const items=fresh?candidates(snapshot):[];
-     const focused=board.contains?.(document.activeElement)&&document.activeElement?.dataset?.lookIndex;
+     const focused=typeof document!=='undefined'&&board.contains?.(document.activeElement)?document.activeElement?.dataset?.lookIndex:null;
      board.innerHTML='<div class="boardhead"><span>LOOK · WORTH NOTICING</span><span>'+ (fresh?'RECENT OBSERVATIONS':'OBSERVATIONS PAUSED') +'</span></div>'+
        '<p class="look-intro">Signals surfaced from aircraft already visible to SKY. These are observational cues, not confirmed incidents or complete airspace coverage.</p>'+
        (items.length?items.map(({a,reasons},i)=>'<button class="look-item" type="button" data-look-index="'+i+'"><strong>'+esc(a.call||a.reg||a.id)+'</strong><span>'+esc(a.reg||a.type||a.id.toUpperCase())+' · '+(a.d!=null&&a.d!==''&&Number.isFinite(Number(a.d))?Math.round(Number(a.d))+' NM':'DISTANCE UNKNOWN')+' · '+(a.alt!=null&&a.alt!==''&&Number.isFinite(Number(a.alt))?Math.round(Number(a.alt))+' FT':'ALTITUDE UNKNOWN')+'</span><small>'+reasons.map(r=>esc(r[1])).join(' · ')+'</small></button>').join(''):'<p class="look-empty">'+(fresh?'No noteworthy cues in the available observations. This does not mean the sky is empty.':'Observations are aging or unavailable. LOOK will resume when recent aircraft evidence arrives.')+'</p>');
