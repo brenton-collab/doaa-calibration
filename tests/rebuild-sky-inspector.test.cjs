@@ -26,3 +26,9 @@ test('Inspector offers a close control and keyboard-visible navigation',()=>{
  assert.match(css,/\.detail\.show \.detail-tray button:focus-visible/);
  assert.match(css,/\.detail\.show \.detail-close:focus-visible/);
 });
+
+test('Inspector returns keyboard focus to its Rack origin even after rerender',()=>{
+ assert.match(html,/inspectorReturnFocus=document\.activeElement\?\.closest\?\.\('#rack \.row'\)\?\.dataset\.id\|\|null/);
+ assert.match(html,/el\.dataset\.id===inspectorReturnFocus/);
+ assert.match(html,/\(row\|\|racksearch\)\.focus\(\{preventScroll:true\}\)/);
+});
