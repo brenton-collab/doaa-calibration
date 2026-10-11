@@ -1,3 +1,11 @@
+## Inspector checkpoint — 2026-10-11
+
+- [x] Fifth Inspector regression test committed (`fe295db`).
+- [x] Progress provenance clarification committed (`40cab89`).
+- [ ] Run Node tests: local runtime lacks checkout and GitHub DNS access.
+- [ ] Browser acceptance, complete Inspector functionality, preview and release gates.
+- No production deployment or paid CI.
+
 ## 2026-10-11 — Inspector regression checklist (PR #48)
 
 - [x] Added `tests/inspector-contexts.test.cjs` (commit e8dbce4): four Node tests for locked object tab sets, render routing, observed-vs-unknown progress/timing, and shared evidence-qualified Journey.
