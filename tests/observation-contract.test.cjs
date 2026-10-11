@@ -59,7 +59,7 @@ test('LOOK restores keyboard focus by aircraft ID after rank changes',()=>{
  global.document=fakeDocument;
  const board={
   innerHTML:'',
-  contains:el=>buttons.includes(el),
+  contains:el=>Boolean(el),
   querySelectorAll:()=>buttons
  };
  const render=(aircraft)=>{
