@@ -121,3 +121,5 @@ html,body{background:var(--bg);color:var(--ice);font-family:Inter,ui-sans-serif,
 .detail-body .fn-telemetry-more summary:focus-visible{outline:3px solid #3377a5;outline-offset:2px;border-radius:4px}
 .detail-body .fn-telemetry-more[open] .inspector-facts{padding-bottom:12px}
 @media(max-width:360px){.detail-body .fn-telemetry-primary .inspector-facts{gap:6px}.detail-body .fn-telemetry-primary .inspector-fact{padding:9px}}
+
+.detail-body .fn-telemetry-status{font-size:10px;font-weight:700;letter-spacing:.075em;color:#587486;margin:0 0 10px;text-transform:uppercase}
