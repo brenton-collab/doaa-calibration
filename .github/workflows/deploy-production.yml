@@ -1,22 +1,5 @@
 name: Deploy DOAA production
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'index.html'
-      - 'vector-base.js'
-      - 'flight-enrichment.js'
-      - 'ambient.js'
-      - 'ambient.css'
-      - 'ambient-media.js'
-      - 'look.js'
-      - 'scripts/build-assets.cjs'
-      - 'tests/**'
-      - 'airlabs-budget.test.cjs'
-      - 'src/**'
-      - 'doaa-memory.js'
-      - 'wrangler.jsonc'
-      - '.github/workflows/deploy-production.yml'
   workflow_dispatch:
 
 permissions:
