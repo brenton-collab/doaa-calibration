@@ -1,3 +1,11 @@
+## Inspector related-object navigation fix
+
+- [x] Corrected active Flight context for resolved and unresolved related-flight drilldowns.
+- [x] Corrected active Airframe context for related-airframe drilldowns.
+- [x] Checked three affected branches in current source and parsed the complete JavaScript module successfully.
+- [ ] Browser click-through and airport contextual tabs remain unverified/unimplemented.
+- Production unchanged; no CI spending.
+
 ## 2026-10-11 — Inspector rendering exercise
 
 - [x] Executed 12 isolated Inspector render-dispatch cases against branch source with representative and missing flight/airframe fields: all 12 returned without errors.
