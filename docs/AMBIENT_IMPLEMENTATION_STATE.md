@@ -121,3 +121,8 @@ Important remaining issues: track drawing is observation-history only while the 
 - 92c1d03 fixes Worker liveAircraft normalization: absent latitude/longitude are invalid rather than coercing to 0. BOARD track inference rejects incomplete or out-of-range coordinates and absent altitude/time samples.
 - 3b5468f makes Inspector contact altitude, speed and track explicitly unknown when absent, rather than displaying false zero readings.
 - Worker and Inspector scripts parsed successfully; four isolated Worker normalization scenarios passed. Full provider-to-browser integration remains pending. No production, CI, D1 or premium-provider changes.
+
+## 2026-10-10 — HTTPS media handoff regression
+- e6a3227 tightens ambient-media.js to reject non-HTTPS image URLs before dispatching the verified media event.
+- 22fc7fe adds a native Node runtime-harness scenario that supplies an HTTP image and requires zero emitted events.
+- Both commits are on the isolated integration branch. Connector fetch confirmed the updated files. Native full-suite execution, browser acceptance, branch reconciliation and production deployment remain pending; no external-provider or D1 operations were performed.
