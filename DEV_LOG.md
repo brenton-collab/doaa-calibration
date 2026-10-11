@@ -1,3 +1,11 @@
+## Airport evidence integration checkpoint
+
+- [x] Airport sections retain the looked-up airport identity; Overview retains known coordinates.
+- [x] Airport Movements calls the existing free observed `/api/board` endpoint with airport coordinates, showing source and evidence counts without claiming verified movements.
+- [x] Isolated successful-response exercise passed; complete JavaScript parsed.
+- [ ] Live network response, DOM lifecycle, mobile acceptance and full suite remain unverified. Operations and Airfield remain coverage-limited.
+- No production change or paid CI.
+
 ## Airport lookup and navigation checkpoint
 
 - [x] Successful and unresolved Airport lookups retain Airport context and wire the Inspector tray.
