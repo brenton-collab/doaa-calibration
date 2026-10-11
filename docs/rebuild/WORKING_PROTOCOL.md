@@ -69,3 +69,8 @@ Before ending any substantive work session, record: exact branch and commit; fil
 
 ## Latest verification (2026-10-11)
 Re-fetched account page, stylesheet, script, asset builder, Worker and admin module. Static inspection confirms all three account assets are bundled, CSS and JS are explicitly routed, and the HTML page is served by the authenticated administrator route. No browser or database tests have been run. Seven-day password session remains unchanged. The local Node runtime is available, but the container cannot resolve github.com to obtain a checkout. Do not deploy these changes until the schema and account flows have been tested.
+
+## Account navigation increment (2026-10-11)
+- `ef79c64`: `/api/account` now returns `can_manage_users` computed server-side from the signed-in password account role or configured bootstrap administrator. It never returns password verifiers.
+- `b50969b`: the existing Account dialog conditionally adds a **Manage people** link to `/account/users` for authorized administrators. Standard users do not see this link, and the server still independently enforces authorization.
+- Source changes re-read via GitHub; no Node/browser or D1 tests executed. The seven-day password session remains an open blocker, and admin creation remains unreleased.
