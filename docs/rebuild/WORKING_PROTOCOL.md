@@ -82,3 +82,10 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `cae0ce0`: protected `/account/users` HTML now sends `Cache-Control: private, no-store`, `X-Content-Type-Options: nosniff`, and restrictive CSP. This prevents browser/shared cache retention of the administration shell and limits script/style origins. CSS and JS remain static bundled resources.
 - `f109a1b`: extended admin-page unit test to assert private no-store response and frame-ancestor denial. Tests remain **unexecuted**.
 - Changes confined to rebuild branch; no production or preview database migration, deployment, or paid CI. Next gate: isolated execution of migrations 0014–0016, account tests, browser checks, and session renewal with revocation.
+
+## Session renewal increment (2026-10-11)
+- `564db65`, `bbcd077`: `/auth/renew` accepts only same-origin POST, validates the session and active password account, and renews D1 expiry plus HttpOnly Secure SameSite cookie only when fewer than 90 days remain. Uses the existing 180-day password session lifetime. A regex escape defect in the initial commit was corrected immediately in `bbcd077`.
+- `0c43e68`: account client requests renewal on successful initialization and when the page becomes visible again. Renewal is intentionally silent and does not block ordinary account loading.
+- `7c6789f`: new mocked-D1 session renewal tests cover no-op when fresh, renewal near expiry, expired and disabled sessions, and cross-origin/wrong-method denial. **Not executed**; isolated runtime tests are mandatory.
+- Design limitation: same bearer token is retained on renewal rather than rotated. Session revocation and bounded inactivity remain, but token rotation, concurrent-session races, browser behavior and actual D1 execution are not yet validated. No production/preview deployment, DB migration or paid CI.
+- **Next:** obtain executable repository checkout and run `node --test` for account, renewal and asset contracts; apply migrations 0014–0016 in isolated SQLite/D1 and test login/create/reset/disable across two accounts. Fix failures before releasing.
