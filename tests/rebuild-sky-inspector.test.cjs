@@ -73,3 +73,11 @@ test('Field Notes Inspector has reusable semantic layout styles',()=>{
  assert.ok(css.includes('.fn-inspector-section-title'));
  assert.ok(css.includes('.fn-inspector-hero'));
 });
+
+test('Contact evidence separates broadcast observations from enrichment and route associations',()=>{
+ const source=fs.readFileSync(require('node:path').join(__dirname,'../flight-enrichment.js'),'utf8');
+ assert.ok(source.includes("section('OBSERVED CONTACT'"));
+ assert.ok(source.includes("section('POSITION & MOVEMENT'"));
+ assert.ok(source.includes("section('AIRFRAME IDENTITY · ENRICHED'"));
+ assert.ok(source.includes("section('POSSIBLE FLIGHT ASSOCIATION'"));
+});
