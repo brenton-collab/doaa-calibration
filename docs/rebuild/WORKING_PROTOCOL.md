@@ -306,3 +306,7 @@ Flight lookup identity removed from related Airframe labels. ICAO24 is the fallb
 - Airport movement → Flight now increments the Inspector navigation generation before rendering (`14b82c2`), preventing older asynchronous lookups from updating a newer surface.
 - Source regression (`1b39632`) and isolated V8 Inspector suite rerun: 34 passing cases, 107 assertions.
 - Browser back-navigation and full asynchronous journey still require integration verification; no deployment or paid CI.
+
+## Live-data verification boundary
+- Live external aviation API testing was requested. The public Render relay was not reachable through the available read-only web fetch; no live response was obtained or validated. Render connector requires explicit workspace selection before account resources can be inspected. Do not report live-data tests as passed.
+- Added back-navigation state regression (`bbc688a`); isolated V8 Inspector suite passed 35 cases, 111 assertions. Native Node/browser and live source testing remain pending.
