@@ -202,7 +202,7 @@
       drawSky(snapshot);
     } else {
       drawSlides(snapshot);
-      if(lastSlideId&&fresh)count.textContent='RECENT OBSERVATION · PHOTO VERIFIED';
+      if(lastSlideId&&fresh&&photo.style.backgroundImage)count.textContent='RECENT OBSERVATION · PHOTO VERIFIED';
     }
   }
   function heartbeat() {
