@@ -184,3 +184,9 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `e1adc5c`: asynchronous enrichment is ignored if the active Inspector surface is no longer Contact, in addition to existing generation and navigation checks.
 - Related-object control commits from preceding pass: `5bee97f`, `6b7e2c1`, `46f3815`, `542a4a8`.
 - These fixes are not browser-verified. Regression assertions for this navigation containment remain outstanding due to a blocked write. No deployment or paid resource use.
+
+## Inspector Back state restoration (2026-10-11)
+- `e845a61`: the Inspector records its actually rendered dossier state in `wire()` and uses that state when saving navigation history, rather than relying solely on the original selected-aircraft state. This preserves historical encounter context and cross-object navigation context.
+- `48ece31`: Back restores the prior subject identity as well as surface and rendered content.
+- `79d4c86`: cached enrichment refresh during Back is limited to Contact Overview; other dossier snapshots are not silently replaced with Contact enrichment.
+- Regression assertion write was blocked; browser/live verification remains deferred by request. No deployment or paid infrastructure changes.
