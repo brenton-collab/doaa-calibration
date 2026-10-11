@@ -30,7 +30,7 @@
    attempted.add(key);discoveryBusy=true;discoveryCount++;lastDiscovery=Date.now();
    const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),12000);
    try{
-    const query=new URLSearchParams({hex:String(a.id),registration:String(a.reg)});
+    const query=new URLSearchParams({hex:String(a.id),registration:String(a.reg),ambient:'1'});
     if(a.type)query.set('type',String(a.type));
     const response=await fetch('/api/investigate?'+query,{cache:'no-store',signal:controller.signal});
     if(response.ok){lastQuery='';setTimeout(poll,0)}
