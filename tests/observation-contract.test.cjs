@@ -89,6 +89,15 @@ test('multi-cell merge never treats old aircraft as recent',()=>{
  assert.deepEqual(result.aircraft.map(x=>x.id),['fresh']);
  assert.equal(lastAircraft.has('old'),false);
 });
+
+test('Inspector live classification excludes pinned and aging aircraft',()=>{
+ const src=html.slice(html.indexOf('function selectEncounter('),html.indexOf('function segDist('));
+ assert.match(src,/Date\.now\(\)-now<90000/);
+ assert.match(src,/!x\._pinned/);
+ assert.match(src,/Date\.now\(\)>=now/);
+ assert.match(html,/const a=\{_pinned:true,id:id\|\|\('board:/);
+});
+
 test('acquisition and presentation reject false freshness',()=>{
  assert.match(html,/Number\(e\.data\.now\)>0/);
  assert.match(html,/aircraft:aircraft\.filter\(a=>!a\._pinned\)/);
