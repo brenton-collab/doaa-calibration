@@ -69,7 +69,7 @@ export async function authentication(request,env){
 }
 export async function gate(request,env){
  const path=new URL(request.url).pathname,isApi=path.startsWith('/api/')||path.startsWith('/memory/');
- let user;try{const handled=await authentication(request,env);if(handled)return{response:handled};user=await authorize(request,env);}catch{return{response:isApi?json({ok:false,error:'Authentication temporarily unavailable'},503):loginPage('Sign-in is temporarily unavailable.',503)};}
+ let user;try{const handled=await authentication(request,env);if(handled)return{response:handled};user=await authorize(request,env);}catch{return{response:isApi?json({ok:false,error:'Authentication temporarily unavailable'},503):passwordLoginPage('Sign-in is temporarily unavailable.',503)};}
  if(!user)return{response:isApi?json({ok:false,error:'Sign-in required'},401):passwordLoginPage()};
  if(!['GET','HEAD','OPTIONS'].includes(request.method)&&!sameOrigin(request))return{response:json({ok:false,error:'Same-origin request required'},403)};
  return{user};
