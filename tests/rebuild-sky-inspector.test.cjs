@@ -109,3 +109,12 @@ test('Inspector tab switches invalidate pending lookup navigation',()=>{
  assert.match(source,/if\(z===activeSurface\(d\)\)return/);
  assert.match(source,/if\(!current\(\)\|\|activeSurface\(d\)!=='flight'\)return/);
 });
+
+test('Airport navigation renders before remote lookup completes',()=>{
+ const source=fs.readFileSync(require('node:path').join(__dirname,'../flight-enrichment.js'),'utf8');
+ const start=source.indexOf("if(p.kind==='airport')");
+ const end=source.indexOf("if(p.kind==='flight')",start);
+ const airport=source.slice(start,end);
+ assert.ok(airport.indexOf("renderSurface('airport'")<airport.indexOf("await fetch('/api/airport-lookup"));
+ assert.match(airport,/activeSurface\(d\)\.startsWith\('airport'\)/);
+});
