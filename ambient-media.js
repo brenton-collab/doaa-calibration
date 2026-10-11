@@ -80,6 +80,6 @@
  }
  window.addEventListener('doaa:ambient-enter',poll);
  window.addEventListener('doaa:ambient-mode',poll);
- document.addEventListener('visibilitychange',()=>{if(document.hidden)cancelPending();else poll()});
+ document.addEventListener?.('visibilitychange',()=>{if(document.hidden)cancelPending();else poll()});
  setInterval(poll,30000);
 })();
