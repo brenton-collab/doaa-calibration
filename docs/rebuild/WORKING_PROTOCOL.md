@@ -223,3 +223,8 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `d5912a3` makes related-object generation context-aware and suppresses inferred Airframe links in Flight context.
 - `e170acc` applies that context to Flight Explore. Contact and aircraft navigation remain unchanged.
 - `8f022d3` adds source-level regression assertions. Tests not executed; browser verification deferred; deployment unchanged.
+
+## Flight related-object navigation (2026-10-11)
+- Flight Explore uses a dedicated context that excludes an airframe link based only on nearby Contact/flight enrichment. The link remains available in Contact contexts with a valid ICAO24.
+- `147539c` removes Flight self-navigation; `db02ab8` adds source-level regression assertions.
+- Automated tests remain unexecuted; browser testing is deferred and deployment unchanged.
