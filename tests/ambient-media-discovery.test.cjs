@@ -9,7 +9,7 @@ const source=fs.readFileSync(path.join(__dirname,'..','ambient-media.js'),'utf8'
 test('SLIDES discovery is delayed, bounded, and uses the existing investigator',async()=>{
  const handlers=new Map(),timers=[],calls=[],events=[];
  const aircraft=[{id:'a1b2c3',reg:'C-TEST',type:'B738'}];
- const win={DOAAAmbient:{mode:'SLIDES',active:true},DOAALiveSnapshot:()=>({aircraft}),addEventListener:(name,fn)=>handlers.set(name,fn),dispatchEvent:e=>events.push(e.detail)};
+ const win={DOAAAmbient:{mode:'SLIDES',active:true},DOAALiveSnapshot:()=>({aircraft,observedAt:Date.now()}),addEventListener:(name,fn)=>handlers.set(name,fn),dispatchEvent:e=>events.push(e.detail)};
  const context={window:win,document:{hidden:false},Date,AbortController,URLSearchParams,encodeURIComponent,
   CustomEvent:class{constructor(name,opts){this.detail=opts.detail}},
   setInterval:()=>1,setTimeout:(fn,ms)=>{timers.push({fn,ms});return timers.length},clearTimeout:()=>{},
