@@ -31,6 +31,7 @@
   if(value===null||value===undefined||value==='')return null;
   const n=Number(value);
   if(!Number.isFinite(n))return null;
+  if(!['distance','speed','altitude'].includes(kind))return null;
   const factors=kind==='distance'?{nm:1,km:1.852,mi:1.150779448}:kind==='speed'?{nm:1,km:1.852,mi:1.150779448}:{ft:1,m:.3048};
   const key=kind==='altitude'?altitude:units;
   if(!Object.prototype.hasOwnProperty.call(factors,key))return null;
