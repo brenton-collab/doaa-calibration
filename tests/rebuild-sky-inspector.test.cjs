@@ -18,3 +18,11 @@ test('Rack rows are keyboard operable and retain focus across refresh',()=>{
  assert.match(html,/e\.key==='Enter'\|\|e\.key===' '/);
  assert.match(html,/row\?\.focus\(\{preventScroll:true\}\)/);
 });
+
+test('Inspector offers a close control and keyboard-visible navigation',()=>{
+ const css=fs.readFileSync(new URL('../field-notes.css',import.meta.url),'utf8');
+ assert.match(html,/id="detailclose"/);
+ assert.match(html,/detailclose\.onclick=/);
+ assert.match(css,/\.detail\.show \.detail-tray button:focus-visible/);
+ assert.match(css,/\.detail\.show \.detail-close:focus-visible/);
+});
