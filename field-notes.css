@@ -123,3 +123,12 @@ html,body{background:var(--bg);color:var(--ice);font-family:Inter,ui-sans-serif,
 @media(max-width:360px){.detail-body .fn-telemetry-primary .inspector-facts{gap:6px}.detail-body .fn-telemetry-primary .inspector-fact{padding:9px}}
 
 .detail-body .fn-telemetry-status{font-size:10px;font-weight:700;letter-spacing:.075em;color:#587486;margin:0 0 10px;text-transform:uppercase}
+
+/* Related evidence objects are navigation, not decorative dossier rows. */
+.detail-body .fn-object-link{display:flex;flex-direction:column;gap:3px;text-align:left;width:100%;min-height:52px;padding:11px 9px;border:0;border-bottom:1px solid #dfe7e3;background:transparent;color:#294454;cursor:pointer;font:inherit}
+.detail-body .fn-object-link:hover{background:#eef3f1}
+.detail-body .fn-object-link:focus-visible{outline:3px solid #3377a5;outline-offset:-3px;border-radius:4px}
+.detail-body .fn-object-kind{font-size:10px;letter-spacing:.075em;font-weight:650;color:#66808c}
+.detail-body .fn-object-title{display:flex;justify-content:space-between;gap:12px;font-size:13px;line-height:1.45;font-weight:650;overflow-wrap:anywhere}
+.detail-body .fn-object-title [aria-hidden]{color:#557c92}
+.detail-body .fn-object-sub{font-size:11px;line-height:1.5;color:#687e88;overflow-wrap:anywhere}
