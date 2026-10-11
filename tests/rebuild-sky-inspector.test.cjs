@@ -220,3 +220,9 @@ test('Related Airframe link excludes flight lookup identity',()=>{
  assert.ok(!related.includes('f?.manufacturer'));
  assert.ok(!related.includes('f?.model'));
 });
+
+test('Date-only airframe evidence is visible in chronology',()=>{
+ const src=fs.readFileSync(require('node:path').join(__dirname,'../inspector-flight.js'),'utf8');
+ assert.ok(src.includes('chronologyDate'));
+ assert.ok(src.includes('DATE ONLY'));
+});
