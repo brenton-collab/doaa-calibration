@@ -25,4 +25,7 @@ test('every bundled asset is explicitly reachable under Worker-first routing',()
 test('password tables are supplied by versioned migrations',()=>{
  assert.match(read('migrations/0014_password_login_limits.sql'),/CREATE TABLE IF NOT EXISTS password_login_limits/);
  assert.match(read('migrations/0015_password_accounts.sql'),/CREATE TABLE IF NOT EXISTS password_accounts/);
+ const preview=read('scripts/preview-empty-schema.sql');
+ assert.match(preview,/CREATE TABLE IF NOT EXISTS password_login_limits/);
+ assert.match(preview,/CREATE TABLE IF NOT EXISTS password_accounts/);
 });
