@@ -209,7 +209,7 @@
   function syncSwitcher(){switcher.textContent=mode==='SKY'?'SLIDES ↗':'SKY ↗';}
   syncSwitcher();
   root.addEventListener('pointerdown',event=>{if (!event.target.closest('button')) leave();});
-  root.addEventListener('keydown',event=>{if(event.key==='Escape'||event.key==='Enter')leave();});
+  root.addEventListener('keydown',event=>{if(event.key==='Escape')leave();});
   choice.querySelectorAll('[data-ambient-mode]').forEach(el=>el.addEventListener('click',()=>choose(el.dataset.ambientMode)));
   choice.querySelector('[data-ambient-idle]').addEventListener('click',()=>{idleEnabled=!idleEnabled;store('doaa.ambient.idle',idleEnabled?'on':'off');lastInteraction=Date.now();updateButtons();});
   document.addEventListener('pointerdown',event=>{if (!active && !event.target.closest('.ambient-controls')) lastInteraction=Date.now();},{passive:true});
