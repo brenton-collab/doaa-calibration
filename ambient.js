@@ -192,7 +192,7 @@
       drawSky(snapshot);
     } else {
       drawSlides(snapshot);
-      if(lastSlideId)count.textContent=(fresh?'RECENT OBSERVATION':'LAST OBSERVED')+' · PHOTO VERIFIED';
+      if(lastSlideId&&fresh)count.textContent='RECENT OBSERVATION · PHOTO VERIFIED';
     }
   }
   function heartbeat() {
