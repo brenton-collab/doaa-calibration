@@ -1,3 +1,4 @@
+import {passwordAuth,passwordLoginPage} from './password-auth.mjs';
 const encoder=new TextEncoder(),SESSION_SECONDS=34560000;
 const encode=bytes=>btoa(String.fromCharCode(...new Uint8Array(bytes))).replaceAll('+','-').replaceAll('/','_').replace(/=+$/,'');
 const decode=s=>Uint8Array.from(atob(s.replaceAll('-','+').replaceAll('_','/')+'='.repeat((4-s.length%4)%4)),c=>c.charCodeAt(0));
@@ -6,7 +7,7 @@ export const hash=async value=>encode(await crypto.subtle.digest('SHA-256',encod
 const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'content-type':'application/json','cache-control':'no-store'}});
 const cookie=(key,value,age)=>`${key}=${value}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${age}`;
 const cookies=request=>Object.fromEntries((request.headers.get('cookie')||'').split(';').map(v=>v.trim().split(/=(.*)/s)).filter(v=>v.length>1).map(([k,v])=>[k,v]));
-export function approved(env,sub){try{const list=JSON.parse(env.DOAA_ALLOWED_SUBJECTS||'[]');return Array.isArray(list)&&typeof sub==='string'&&list.includes(sub);}catch{return false;}}
+export function approved(env,sub){try{const list=JSON.parse(env.DOAA_ALLOWED_SUBJECTS||'[]');return (typeof sub==='string'&&sub.startsWith('password:')&&sub.slice(9)===env.DOAA_PASSWORD_USERNAME&&!!env.DOAA_PASSWORD_VERIFIER)||(Array.isArray(list)&&typeof sub==='string'&&list.includes(sub));}catch{return false;}}
 export function configured(env){try{const list=JSON.parse(env.DOAA_ALLOWED_SUBJECTS||'[]');return !!(env.DB&&env.GOOGLE_CLIENT_ID&&env.GOOGLE_CLIENT_SECRET&&env.GOOGLE_REDIRECT_URI&&Array.isArray(list)&&list.length&&list.every(x=>typeof x==='string'&&x.length>0));}catch{return false;}}
 let keyCache=null,keyExpiry=0;
 async function googleKeys(force=false){if(!force&&keyCache&&Date.now()<keyExpiry)return keyCache;const r=await fetch('https://www.googleapis.com/oauth2/v3/certs',{signal:AbortSignal.timeout(7000)});if(!r.ok)throw Error('Identity verification unavailable');const j=await r.json();if(!Array.isArray(j.keys))throw Error('Identity verification unavailable');keyCache=j.keys;const age=Number(r.headers.get('cache-control')?.match(/max-age=(\d+)/)?.[1]||600);keyExpiry=Date.now()+Math.min(age,86400)*1000;return keyCache;}
@@ -30,6 +31,7 @@ export async function authorize(request,env){
 }
 export async function authentication(request,env){
  const u=new URL(request.url);
+ const local=await passwordAuth(request,env);if(local)return local;
  if(u.pathname==='/auth/start'&&request.method==='GET'){
   let ready=false;try{ready=configured(env);}catch{}if(!ready)return loginPage('Sign-in is currently unavailable. DOAA data remains private.',503);
   const redirect=new URL(env.GOOGLE_REDIRECT_URI);if(redirect.origin!==u.origin||redirect.pathname!=='/auth/callback'||redirect.search||redirect.protocol!=='https:')return loginPage('Sign-in is currently unavailable.',503);
@@ -68,7 +70,7 @@ export async function authentication(request,env){
 export async function gate(request,env){
  const path=new URL(request.url).pathname,isApi=path.startsWith('/api/')||path.startsWith('/memory/');
  let user;try{const handled=await authentication(request,env);if(handled)return{response:handled};user=await authorize(request,env);}catch{return{response:isApi?json({ok:false,error:'Authentication temporarily unavailable'},503):loginPage('Sign-in is temporarily unavailable.',503)};}
- if(!user)return{response:new URL(request.url).pathname.startsWith('/api/')||new URL(request.url).pathname.startsWith('/memory/')?json({ok:false,error:'Sign-in required'},401):loginPage()};
+ if(!user)return{response:isApi?json({ok:false,error:'Sign-in required'},401):passwordLoginPage()};
  if(!['GET','HEAD','OPTIONS'].includes(request.method)&&!sameOrigin(request))return{response:json({ok:false,error:'Same-origin request required'},403)};
  return{user};
 }
