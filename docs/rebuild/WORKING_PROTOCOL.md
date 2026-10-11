@@ -207,3 +207,8 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `6fc06d9`, `43b9a3f`: display an accessible lookup status and retry control while retaining the known callsign.
 - `0e9a9f1`, `4cc6309`: retry repeats the remote lookup without pushing duplicate Back history; `a45d531` adds source-level regression assertions.
 - Tests not executed; browser/live testing remains deferred. No deployment or paid resource use.
+
+## Flight association provenance (2026-10-11)
+- `d1e5c67` adds an explicit association statement ahead of Flight route and operation details; callsign or route evidence alone is not represented as a confirmed dated assignment.
+- `52798df` ensures observed-callsign navigation treats assignment as established only when the flight evidence explicitly sets that flag true.
+- `a9c1d0b` adds source-level regression assertions. Tests have not been executed; browser testing remains deferred and deployment unchanged.
