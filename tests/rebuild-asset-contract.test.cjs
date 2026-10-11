@@ -16,7 +16,8 @@ test('every bundled asset is explicitly reachable under Worker-first routing',()
  const routes=worker.match(/if\(\[([^\]]+)\]\.includes\(u\.pathname\)\)return env\.ASSETS\.fetch\(request\)/);
  assert.ok(routes,'Worker static route allowlist missing');
  const served=new Set([...routes[1].matchAll(/'\/([^']+)'/g)].map(x=>x[1]));
- served.add('index.html');served.add('flight-enrichment.js');
+ served.add('index.html');served.add('flight-enrichment.js');served.add('admin-users.html');
+ assert.match(read('src/account-admin.mjs'),/env\.ASSETS\.fetch\(new Request\(new URL\('\/admin-users\.html'/);
  assert.deepEqual(assets.filter(x=>!served.has(x)),[],'bundled asset missing authenticated Worker route');
  const html=read('index.html');
  const refs=[...html.matchAll(/(?:src|href)=["']\/([^"'?]+)["']/g)].map(x=>x[1]);
