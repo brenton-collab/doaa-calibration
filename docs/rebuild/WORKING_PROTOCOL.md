@@ -129,3 +129,8 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - `cea2bf0`: source regression checks for Inspector close control and focus styling.
 - Attempted to add Rack focus fallback when a selected aircraft leaves the refreshed list. GitHub connector repeatedly blocked updates to the large `index.html`; **this fix is not committed**. Current code restores focus only when the contact remains in the Rack. Do not represent the missing-contact case as handled.
 - Browser/Node tests still unexecuted; production untouched. Next: retry small `index.html` patch and verify interaction in browser.
+
+## Rack disappearing-contact focus fix (2026-10-11)
+- `138632f`: after Rack rerender, keyboard focus returns to the matching contact if still present, otherwise to the existing Rack search button. This closes the previously documented disappearing-contact focus gap.
+- `672634e`: updated source regression expectation for this fallback. Verified `racksearch` is bound to the actual `#racksearch` button in `index.html` by direct source inspection.
+- Actual browser interaction and Node test execution remain outstanding; no deployment or infrastructure changes.
