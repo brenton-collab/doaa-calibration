@@ -208,7 +208,7 @@
     const observed=Number(snapshot.observedAt)||0;
     const age=Date.now()-observed;
     const fresh=observed>0 && age>=0 && age<90000;
-    status.textContent=mode==='SKY'?(fresh?'':'OBSERVATIONS PAUSED'):(fresh?'RECENT OBSERVATION':observed?'LAST OBSERVED':'AWAITING OBSERVATION');
+    status.textContent=mode==='SKY'?(fresh?'':'OBSERVATIONS PAUSED'):'';
     status.classList.toggle('ambient-stale',!fresh);
     root.classList.toggle('ambient-slides-mode',mode==='SLIDES');
     if (mode==='SKY') {
