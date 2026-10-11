@@ -66,3 +66,6 @@ Verify migrations 0014–0015 and password account bootstrap code; establish a c
 
 ## Thread handoff checklist
 Before ending any substantive work session, record: exact branch and commit; files changed; tested flows and commands/results; deployment/DB status; unresolved bugs and risks; the single next executable step; any user action genuinely required. If an action fails, record what was tried and the smallest next investigation. Do not imply asynchronous background work.
+
+## Latest verification (2026-10-11)
+Re-fetched account page, stylesheet, script, asset builder, Worker and admin module. Static inspection confirms all three account assets are bundled, CSS and JS are explicitly routed, and the HTML page is served by the authenticated administrator route. No browser or database tests have been run. Seven-day password session remains unchanged. The local Node runtime is available, but the container cannot resolve github.com to obtain a checkout. Do not deploy these changes until the schema and account flows have been tested.
