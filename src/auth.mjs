@@ -1,4 +1,4 @@
-import {passwordAuth,passwordLoginPage} from './password-auth.mjs';
+import {passwordAuth,passwordLoginPage,verifyPassword} from './password-auth.mjs';
 const encoder=new TextEncoder(),SESSION_SECONDS=34560000;
 const encode=bytes=>btoa(String.fromCharCode(...new Uint8Array(bytes))).replaceAll('+','-').replaceAll('/','_').replace(/=+$/,'');
 const decode=s=>Uint8Array.from(atob(s.replaceAll('-','+').replaceAll('_','/')+'='.repeat((4-s.length%4)%4)),c=>c.charCodeAt(0));
@@ -27,11 +27,33 @@ const sameOrigin=request=>request.headers.get('origin')===new URL(request.url).o
 export async function authorize(request,env){
  const token=cookies(request).__Host_doaa_session;if(!token||!/^[\w-]{43}$/.test(token)||!env.DB)return null;
  const session=await env.DB.prepare('SELECT subject,expires_at FROM auth_sessions WHERE token_hash=?').bind(await hash(token)).first();
- return session&&Date.parse(session.expires_at)>Date.now()&&approved(env,session.subject)?{subject:session.subject}:null;
+ if(!session||Date.parse(session.expires_at)<=Date.now())return null;
+ if(session.subject.startsWith('password:')){const name=session.subject.slice(9);const account=await env.DB.prepare('SELECT username FROM password_accounts WHERE username=?').bind(name).first();return account?{subject:session.subject}:null;}
+ return approved(env,session.subject)?{subject:session.subject}:null;
 }
 export async function authentication(request,env){
  const u=new URL(request.url);
  const local=await passwordAuth(request,env);if(local)return local;
+ if(u.pathname==='/auth/change-password'&&request.method==='POST'){
+  if(!sameOrigin(request))return json({ok:false,error:'Same-origin request required'},403);
+  const user=await authorize(request,env);
+  if(!user?.subject.startsWith('password:'))return json({ok:false,error:'Sign-in required'},401);
+  const raw=await request.text();if(raw.length>2048)return json({ok:false,error:'Invalid request'},400);
+  const fields=new URLSearchParams(raw),current=fields.get('current')||'',next=fields.get('next')||'';
+  if(next.length<12||next.length>128||current.length>256)return json({ok:false,error:'New password must be 12–128 characters'},400);
+  const name=user.subject.slice(9),account=await env.DB.prepare('SELECT verifier FROM password_accounts WHERE username=?').bind(name).first();
+  if(!account||!await verifyPassword(current,account.verifier))return json({ok:false,error:'Current password is incorrect'},403);
+  const salt=crypto.getRandomValues(new Uint8Array(16)),key=await crypto.subtle.importKey('raw',encoder.encode(next),'PBKDF2',false,['deriveBits']);
+  const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt,iterations:100000,hash:'SHA-256'},key,256);
+  const verifier='100000.'+encode(salt)+'.'+encode(bits);
+  await env.DB.prepare('UPDATE password_accounts SET verifier=?,changed_at=CURRENT_TIMESTAMP WHERE username=?').bind(verifier,name).run();
+  await env.DB.prepare('DELETE FROM auth_sessions WHERE subject=?').bind(user.subject).run();
+  return new Response(null,{status:303,headers:{location:'/', 'set-cookie':cookie('__Host_doaa_session','',0),'cache-control':'no-store'}});
+ }
+ if(u.pathname==='/auth/change-password'&&request.method==='GET'){
+  const user=await authorize(request,env);if(!user?.subject.startsWith('password:'))return passwordLoginPage();
+  return new Response(`<!doctype html><html lang="en"><meta name="viewport" content="width=device-width,initial-scale=1"><meta charset="utf-8"><title>Change password · DOAA</title><style>body{font:16px system-ui;max-width:420px;margin:10vh auto;padding:24px;background:#f3f5f5;color:#203d55}input,button{display:block;box-sizing:border-box;width:100%;padding:12px;margin:8px 0 20px}button{background:#214b67;color:white;border:0;border-radius:5px}a{color:#214b67}</style><h1>Change password</h1><form method="post" action="/auth/change-password"><label>Current password<input name="current" type="password" autocomplete="current-password" required></label><label>New password (at least 12 characters)<input name="next" type="password" autocomplete="new-password" minlength="12" required></label><button>Change password and sign out</button></form><a href="/">Return to DOAA</a></html>`,{headers:{'content-type':'text/html; charset=utf-8','cache-control':'no-store','content-security-policy':"default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; base-uri 'none'"}});
+ }
  if(u.pathname==='/auth/start'&&request.method==='GET'){
   let ready=false;try{ready=configured(env);}catch{}if(!ready)return loginPage('Sign-in is currently unavailable. DOAA data remains private.',503);
   const redirect=new URL(env.GOOGLE_REDIRECT_URI);if(redirect.origin!==u.origin||redirect.pathname!=='/auth/callback'||redirect.search||redirect.protocol!=='https:')return loginPage('Sign-in is currently unavailable.',503);
