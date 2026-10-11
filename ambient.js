@@ -19,7 +19,10 @@
   const status = root.querySelector('.ambient-status'), count = root.querySelector('.ambient-count');
   const switcher = root.querySelector('.ambient-switch');
   const choice = document.createElement('div');
+  choice.id = 'ambient-controls';
   choice.className = 'ambient-controls';
+  choice.setAttribute('role','group');
+  choice.setAttribute('aria-label','Ambient display options');
   choice.innerHTML = `<button type="button" data-ambient-mode="SKY">AMBIENT SKY</button><button type="button" data-ambient-mode="SLIDES">AMBIENT SLIDES</button><button type="button" data-ambient-idle aria-pressed="false">AUTO-ENTER AFTER IDLE</button>`;
   document.body.appendChild(choice);
   const safeStorage = (key, fallback) => { try { return localStorage.getItem(key) || fallback; } catch { return fallback; } };
@@ -47,7 +50,7 @@
     window.setPrimaryView?.('SKY');
     root.hidden = false;
     document.documentElement.classList.add('ambient-active');
-    choice.classList.remove('show');
+    closeSettings();
     trails.clear();
     root.focus({preventScroll:true});
     update();
@@ -86,7 +89,7 @@
       canvas.height = Math.round(h * ratio);
       canvas.style.width = w + 'px';
       canvas.style.height = h + 'px';
-      // Trails store screen-space points; old pixels cannot survive a viewport re-projection.
+      // Start a new trace composition when viewport geometry changes.
       trails.clear();
     }
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
@@ -94,6 +97,7 @@
   }
   // Persistent strokes accumulate from actual observed movement, never simulated traffic.
   const trails = new Map();
+  let trailHome = '';
   const verifiedMedia = new Map();
   const failedPhotos = new Map();
   window.addEventListener('doaa:airframe-media', event => {
@@ -121,7 +125,10 @@
     const lon = validHome ? Number(home.lon) : 0;
     const cos = Math.cos(lat * Math.PI / 180);
     const t = Date.now();
-    const current = new Set();
+    const homeKey=validHome?lat+'|'+lon:'';
+    if(homeKey!==trailHome||!validHome){trails.clear();trailHome=homeKey;}
+    const screen=p=>({x:cx+(p.lon-lon)*60*cos*scale,y:cy-(p.lat-lat)*60*scale});
+    const current = new Set(aircraft.map(a=>a.id));
     ctx.fillStyle = '#07141c';
     ctx.fillRect(0,0,w,h);
     // Barely perceptible geographic field, no map labels, rings or compass.
@@ -135,27 +142,33 @@
       const y=cy+n*Math.min(w,h)*.16;
       ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();
     }
-    for (const a of aircraft) {
-      if (!validHome) break;
-      const x=cx+(Number(a.lon)-lon)*60*cos*scale;
-      const y=cy-(Number(a.lat)-lat)*60*scale;
-      if (!Number.isFinite(x+y) || x < -30 || x>w+30 || y < -30 || y>h+30) continue;
-      current.add(a.id);
+    for (const a of validHome?aircraft:[]) {
       const points=trails.get(a.id)||[];
-      if (!points.length || Math.hypot(x-points[points.length-1].x,y-points[points.length-1].y)>1.5) {
-        points.push({x,y,t});
+      const last=points[points.length-1],stamp=Number(a.observedAt)||observed;
+      // Store geographic evidence, never pixels changed by resize or projection.
+      if(!last||(stamp>last.t&&(Number(a.lat)!==last.lat||Number(a.lon)!==last.lon))){
+        points.push({lat:Number(a.lat),lon:Number(a.lon),t:stamp});
         if(points.length>150)points.shift();
         trails.set(a.id,points);
       }
-      for(let i=1;i<points.length;i++){
-        const p=points[i-1],q=points[i];
-        const age=Math.max(0,t-q.t);
-        const alpha=.27*Math.max(0,1-age/900000);
+    }
+    while(trails.size>128)trails.delete(trails.keys().next().value);
+    for(const [id,points] of trails){
+      const live=points.filter(p=>t-p.t<900000);
+      if(!live.length){trails.delete(id);continue;}
+      trails.set(id,live);
+      for(let i=1;i<live.length;i++){
+        const p=screen(live[i-1]),q=screen(live[i]),age=Math.max(0,t-live[i].t);
+        const alpha=.27*Math.max(0,1-age/900000)*(current.has(id)?1:.4);
         if(alpha<=0)continue;
         ctx.strokeStyle='rgba(142,208,217,'+alpha.toFixed(3)+')';
         ctx.lineWidth=1.2;
         ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();
       }
+    }
+    for(const a of validHome?aircraft:[]){
+      const {x,y}=screen(a);
+      if (!Number.isFinite(x+y) || x < -30 || x>w+30 || y < -30 || y>h+30) continue;
       const hasTrack=a.trk!=null&&a.trk!==''&&Number.isFinite(Number(a.trk));
       ctx.save();ctx.translate(x,y);
       ctx.fillStyle='rgba(205,242,243,.8)';
@@ -164,11 +177,6 @@
       ctx.restore();
       ctx.fillStyle='rgba(124,212,222,.08)';
       ctx.beginPath();ctx.arc(x,y,15,0,Math.PI*2);ctx.fill();
-    }
-    for(const [id,points] of trails){
-      const live=points.filter(p=>t-p.t<900000);
-      if(!live.length)trails.delete(id);
-      else if(!current.has(id))trails.set(id,live);
     }
     count.textContent='';
     lastDrawAt=t;
@@ -285,7 +293,7 @@
   }
   function heartbeat() {
     if (document.hidden) return;
-    if (!active && idleEnabled && Date.now()-lastInteraction>=idleMs && !document.querySelector('.detail.show,.catchment.show,.quota-panel.open')) enter();
+    if (!active && idleEnabled && Date.now()-lastInteraction>=idleMs && !document.querySelector('.detail.show,.catchment.show,.quota-panel.open,.ambient-controls.show')) enter();
     if (active) update();
   }
   root.querySelector('.ambient-return').addEventListener('click',leave);
@@ -306,13 +314,23 @@
   choice.querySelector('[data-ambient-idle]').addEventListener('click',()=>{idleEnabled=!idleEnabled;store('doaa.ambient.idle',idleEnabled?'on':'off');lastInteraction=Date.now();updateButtons();});
   document.addEventListener('pointerdown',event=>{if (!active && !event.target.closest('.ambient-controls')) lastInteraction=Date.now();},{passive:true});
   document.addEventListener('keydown',event=>{if (!active)lastInteraction=Date.now();if(active&&event.key==='Escape')leave();});
-  document.addEventListener('scroll',()=>{if(!active)lastInteraction=Date.now();},{passive:true,capture:true});
+  // Wheel/touch/key/pointer input resets idle. Refresh-driven scroll restoration is not user activity.
   document.addEventListener('wheel',()=>{if(!active)lastInteraction=Date.now();},{passive:true});
   document.addEventListener('touchmove',()=>{if(!active)lastInteraction=Date.now();},{passive:true});
   document.addEventListener('visibilitychange',()=>{lastInteraction=Date.now();if(!document.hidden&&active)update();});
   window.addEventListener('doaa:observations',()=>{if(active)update();});
   window.addEventListener('resize',()=>{if(active)update();});
-  window.DOAAAmbient={enter,leave,choose,openSettings:()=>choice.classList.toggle('show'),get mode(){return mode;},get active(){return active;}};
+  function closeSettings(focus=false){choice.classList.remove('show');const button=document.getElementById('ambient-open');button?.setAttribute('aria-expanded','false');if(focus)button?.focus({preventScroll:true});}
+  function openSettings(){
+    if(choice.classList.contains('show')){closeSettings(true);return;}
+    choice.classList.add('show');lastInteraction=Date.now();
+    document.getElementById('ambient-open')?.setAttribute('aria-expanded','true');
+    choice.querySelector('[data-ambient-mode="'+mode+'"]').focus({preventScroll:true});
+  }
+  choice.addEventListener('keydown',event=>{if(event.key==='Escape'){event.stopPropagation();event.preventDefault();closeSettings(true);}});
+  document.addEventListener('pointerdown',event=>{if(!choice.contains(event.target)&&event.target.id!=='ambient-open')closeSettings();},{passive:true});
+  const opener=document.getElementById('ambient-open');opener?.setAttribute('aria-controls',choice.id);opener?.setAttribute('aria-expanded','false');
+  window.DOAAAmbient={enter,leave,choose,openSettings,get mode(){return mode;},get active(){return active;}};
   updateButtons();
   setInterval(heartbeat,10000);
 })();

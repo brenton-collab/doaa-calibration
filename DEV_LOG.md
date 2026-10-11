@@ -1,6 +1,6 @@
 # DOAA development log and restart handoff
 
-Updated: 2026-10-08. Evidence-qualified checkpoint; not a live runtime acceptance test.
+Updated: 2026-10-11. Latest Work implementation and isolated browser evidence are in the dated entries below and docs/WORK_SESSION_HANDOFF.md. Production acceptance remains open.
 
 ## Permanent rules
 Free-only architecture and operation. The human partner owns product vision; the assistant owns execution, tooling, GitHub, testing, documentation and deliberate deployment wherever connected capabilities permit. Update this file at every meaningful checkpoint and before ending a work session; update DOAA_SPEC.md for design, architecture and invariant changes. External research must never create DOAA Encounters.
@@ -167,3 +167,11 @@ Previous published Inspector increment: `e34b45ed4ae9e67024f47f403961be553160299
 The extended browser session found that delayed searches could resurrect cleared results, global response recency concealed old individual positions, and a rack redraw lost the focus restored on Inspector close. Fixed search ownership/cancellation/deadlines and stable loading/error/empty states; rack hydration now rejects obsolete identities and retains keyboard focus. Individual position time is derived from existing response time and provider position age, unknown age stays unknown, and duplicate cells choose the newest observation. SKY/Inspector/LOOK/AMBIENT share the same filtered snapshot; a presentation tick expires evidence without additional acquisition. Existing matching cached flight/model/operator facts now reach SLIDES. Provider attribution is rendered safely as text.
 
 Validation: **20/20 actual local Chromium browser checks** using synthetic aviation/media and controlled time; **73/73 offline contracts/syntax** including the normalization/merge behavioral regression. Reading-state retention, traffic outage/recovery and distinct BOARD empty/error/recovery states pass. No browser errors, mutations, provider calls, production writes, CI, merge or deployment. Wall-clock endurance and live integrations remain unverified.
+
+## 2026-10-11 — Work final integrated browser refinement
+
+Previous implementation SHA: `51058a59f171b5d443a4aa2980f0aa9707e63f72`. Preserved the concurrent independent review through `dca618758e1adfe8b1742175f24bfeea39d4dd5b`, including its resize regression.
+
+AMBIENT traces now retain geographic observation evidence and reset composition on viewport change. Fixed the failed-enrichment/tab-change exception and kept raw contact freshness updating when enrichment fails. Late enrichment uses current matching observations and rejects identity changes. Added accessible AMBIENT option focus/Escape/expanded state, reading-aware idle behavior, a short-phone facts layout and compact landscape header. Preserved favourite cues after the datum markup repair; failed map tiles settle as unavailable.
+
+Final actual isolated Chromium: **30/30 checks pass**, including main airport conditions/late weather ownership, historical search, stale/outage recovery, mobile expansion, atomic SLIDES image/details with two separately measured 45-second holds, failure/late image/cancellation/resume, SKY resize, idle suppression and preference persistence. **74/74 native checks pass**, including the independent geometry test; seven assets package correctly. Clock installation now precedes page load and application timers; earlier idle/timing results are superseded by this corrected run. API responses, imagery and elapsed time remain simulated; maps/logos blocked. No browser runtime errors or mutation requests, provider acquisition, production writes, CI, merge or deployment. Physical devices, real integrations and sustained wall-clock operation remain release gates.
