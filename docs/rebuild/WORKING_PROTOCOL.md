@@ -76,3 +76,9 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - Source changes re-read via GitHub; no Node/browser or D1 tests executed. The seven-day password session remains an open blocker, and admin creation remains unreleased.
 
 - `8ef1dc5`: added mocked account-page access tests for member denial and administrator-only asset delivery. Tests remain unexecuted pending an isolated checkout.
+
+## Security continuation (2026-10-11)
+- `8cc83db`: changed password session cookie and database expiry from 7 days to 180 days in `src/password-auth.mjs`. This is **not** a fully renewable persistent-session design. Expired sessions will still require login; implement safe sliding renewal and rotation before claiming the no-routine-logout contract met.
+- `cae0ce0`: protected `/account/users` HTML now sends `Cache-Control: private, no-store`, `X-Content-Type-Options: nosniff`, and restrictive CSP. This prevents browser/shared cache retention of the administration shell and limits script/style origins. CSS and JS remain static bundled resources.
+- `f109a1b`: extended admin-page unit test to assert private no-store response and frame-ancestor denial. Tests remain **unexecuted**.
+- Changes confined to rebuild branch; no production or preview database migration, deployment, or paid CI. Next gate: isolated execution of migrations 0014–0016, account tests, browser checks, and session renewal with revocation.
