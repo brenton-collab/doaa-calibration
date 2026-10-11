@@ -84,3 +84,36 @@ test('delayed airport lookup cannot overwrite a new subject', async () => {
   assert.equal(h.renders.length, 1);
   assert.equal(h.wires.length, 1);
 });
+
+test('Flight lookup then Back restores Contact and ignores the late response', async () => {
+  const h = harness();
+  const original = h.a;
+  h.d.innerHTML = '<section>Contact</section>';
+  h.d.scrollTop = 42;
+  h.d._doaaRenderedState = { a: original, f: null, af: null, live: false, ago: null, dossier: null, history: null, obv: [] };
+  h.d.querySelector = () => null;
+  const context = {
+    window: { DOAATrackHistory: { dispose() {} }, DOAAInspector: { tray: { querySelector() { return null; } } } },
+    activeSurface: node => node.dataset.activeSurface,
+    dossierCache: new Map(),
+    dossierKey: a => a.id,
+    wire() {},
+    renderSurface(surface, node) { node.dataset.activeSurface = surface; },
+  };
+  const startHistory = source.indexOf('function rememberInspector(');
+  const endHistory = source.indexOf('\nasync function openObject(', startHistory);
+  const historyFns = vm.runInNewContext(source.slice(startHistory, endHistory) + '\n({rememberInspector,backInspector})', context);
+  historyFns.rememberInspector(h.d);
+  assert.equal(h.d._doaaBack.length, 1);
+  const task = h.openObject(h.d, { kind: 'flight', key: 'TEST99' }, original, null, null, false, null, null, null, [], false);
+  assert.equal(h.d.dataset.activeSurface, 'flight');
+  historyFns.backInspector(h.d);
+  assert.equal(h.d.dataset.activeSurface, 'contact');
+  assert.equal(h.d._doaaSubject, original.id);
+  assert.equal(h.d.innerHTML, '<section>Contact</section>');
+  assert.equal(h.d.scrollTop, 42);
+  h.pending.resolve({ flight: { flight_icao: 'TEST99' } });
+  await task;
+  assert.equal(h.renders.length, 1);
+  assert.equal(h.d.dataset.activeSurface, 'contact');
+});
