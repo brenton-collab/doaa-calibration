@@ -90,3 +90,8 @@ Important remaining issues: track drawing is observation-history only while the 
 - Executed four isolated V8 behavioral scenarios against GitHub-fetched ambient-media.js: successful exact-airframe event, stale registration rejection, exit-before-response rejection, and HTTP-failure retry. All passed. Also parsed ambient.js, ambient-media.js, look.js and build-assets.cjs successfully.
 - f58e0e5 adds permanent Node vm-based runtime tests covering those four scenarios. 76ef781 adds the test file to the production deployment gate. The committed Node tests themselves remain unexecuted until a native checkout is available; V8 isolated equivalents passed.
 - No GitHub Actions run, Cloudflare deploy, premium provider calls or D1 mutations. Full regression/browser release acceptance still pending.
+
+## 2026-10-10 — coordinate integrity and media races
+- d7b60ec validates present, finite, in-range aircraft/home coordinates; null no longer projects to 0 degrees. e95dce1 adds regression source contracts. Seven isolated predicate cases executed against the fetched implementation and passed; ambient.js parsed.
+- 6e56c9b extends the committed asynchronous media runtime tests for disappearing registration.
+- Full repository-native tests, integrated browser flows and deployment remain pending. No CI, D1 mutations, provider calls or production changes.
