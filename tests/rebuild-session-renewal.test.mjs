@@ -13,7 +13,7 @@ async function fixture(daysLeft,{disabled=false}={}){
   if(sql.startsWith('SELECT subject,expires_at FROM auth_sessions'))return this.args[0]===tokenHash?{subject:'password:reader',expires_at:expiry}:null;
   if(sql.startsWith('SELECT username,disabled_at,must_change_password FROM password_accounts'))return account;
   throw Error('Unexpected query '+sql);
- },async run(){changes.push({sql,args:this.args});return {success:true}}}}};
+ },async run(){changes.push({sql,args:this.args});return {success:true,meta:{changes:1}}}}}};
  return {env:{DB:db},changes};
 }
 const request=(method='POST',originHeader=origin)=>new Request(origin+'/auth/renew',{method,headers:{origin:originHeader,cookie:'__Host_doaa_session='+token}});
