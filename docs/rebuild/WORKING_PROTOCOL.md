@@ -123,3 +123,9 @@ Re-fetched account page, stylesheet, script, asset builder, Worker and admin mod
 - Retry succeeded: `d8a726d` activates existing row click path on Enter/Space; `cb679d0` captures focused row identity before rerender; `af298af` restores focus to the matching row; `9723fc7` adds regression assertions; `d781d88` adds visible focus styling.
 - Seven direct source integration checks passed, including focusability, activation, focus restoration, CSS and test coverage. Node tests and browser interaction tests still not executed. If the focused row disappears from refreshed data, focus restoration is not possible; investigate keyboard fallback in viewport QA.
 - No deployment, database changes or CI expenditure.
+
+## Inspector navigation follow-up (2026-10-11)
+- `660a046`: Inspector tab/close focus styling and mobile sheet spacing.
+- `cea2bf0`: source regression checks for Inspector close control and focus styling.
+- Attempted to add Rack focus fallback when a selected aircraft leaves the refreshed list. GitHub connector repeatedly blocked updates to the large `index.html`; **this fix is not committed**. Current code restores focus only when the contact remains in the Rack. Do not represent the missing-contact case as handled.
+- Browser/Node tests still unexecuted; production untouched. Next: retry small `index.html` patch and verify interaction in browser.
