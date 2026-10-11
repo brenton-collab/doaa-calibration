@@ -281,3 +281,8 @@ Flight lookup identity removed from related Airframe labels. ICAO24 is the fallb
 - Valid date-only effective dates are included in Aircraft chronology (`1e0170f`).
 - The display marks them DATE ONLY rather than assigning a source time (`124c77d`).
 - Source regression added (`c4a0c91`). Node tests not yet run.
+
+## Identity runtime verification
+- Executed committed flight-core.js and all 12 cases in tests/rebuild-identity-claims.test.cjs using an isolated V8 runtime with test/assert adapters: 12 passed, 21 assertions.
+- This is runtime verification of the actual source and cases, not a Node test-runner invocation or browser test.
+- GitHub Actions not used; no deployment or infrastructure changes.
