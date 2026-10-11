@@ -39,3 +39,12 @@ test('renewal requires same-origin POST',async()=>{
  assert.equal((await authentication(request('POST','https://attacker.example'),f.env)).status,403);
  assert.equal(f.changes.length,0);
 });
+
+test('renewal does not set a cookie when the session update loses a race',async()=>{
+ const f=await fixture(20);
+ const original=f.env.DB.prepare;
+ f.env.DB.prepare=sql=>{const statement=original(sql);if(sql.startsWith('UPDATE auth_sessions'))statement.run=async()=>({success:true,meta:{changes:0}});return statement;};
+ const response=await authentication(request(),f.env);
+ assert.equal(response.status,401);
+ assert.equal(response.headers.get('set-cookie'),null);
+});
