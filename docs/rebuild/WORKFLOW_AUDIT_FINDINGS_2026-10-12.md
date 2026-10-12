@@ -28,3 +28,32 @@ Date 2026-10-12. Status: **partial audit, not a validated workflow or live infra
 - Draft one canonical runbook only after this evidence. Do not run paid CI or deploy during audit.
 
 No application code, infrastructure, migration or production data changed in this audit.
+
+## Second pass: actual toolchain and release path (read-only)
+
+GitHub Contents enumeration on this branch confirmed:
+- **3 workflows:** `.github/workflows/deploy-production.yml`, `preview.yml`, `syntax-check.yml`.
+- **12 scripts:** `acceptance-server.cjs`, `airport-preview-acceptance.cjs`, `browser-acceptance.cjs`, `build-airport-reference.cjs`, `build-assets.cjs`, `build-decision-matrix.py`, `build-preview-package.cjs`, `movement-browser-acceptance.cjs`, `prepare-airfield-import.mjs`, `preview-empty-schema.sql`, `sky-browser-acceptance.cjs`, `verify-preview-isolation.cjs`.
+- **44 files** in `tests/` (including fixtures and Python smoke script); separate root `airlabs-budget.test.cjs`.
+- GitHub Actions history endpoint reported **619 workflow runs** (repository total at read time), with five latest manual Preview attempts on `rebuild/field-notes-foundation`: three success, two failure. This is not evidence of current billing or DOAA-RR acceptance.
+
+**Production workflow:** `workflow_dispatch` only, `doaa-production` concurrency with no cancellation, Node 22, credential gate, curated asset packaging, JS syntax and Node tests, then `cloudflare/wrangler-action@v3` running `deploy --config wrangler.jsonc` pinned Wrangler 4.149.0. Production deploy is **not automatically triggered by a push**, per workflow YAML. Deployment confirmation, version provenance, authenticated smoke tests, and rollback are **not implemented in this workflow**.
+
+**Preview workflow:** `workflow_dispatch` only, `doaa-preview` concurrency with cancellation, Node 22, syntax checks, isolation verification, asset packaging, then Wrangler deploy with `wrangler.preview.jsonc`. Preview config has no cron, separate D1 and `run_worker_first: ["/*"]`; production has five-minute cron and `run_worker_first: true`. No authenticated post-deploy smoke gate is in workflow.
+
+**Syntax-check workflow:** PRs into `main` for JS/HTML/workflow changes plus manual dispatch; **eight independent two-minute jobs** (memory, enrichment, relay, helpers, worker, contracts, migration-contracts, inline-html). This is a concrete candidate for consolidation into one job, subject to verifying branch protection requirements and actual execution/cost. Its long literal-string semantic assertions encode historic Inspector DOM and could actively obstruct DOAA-RR redesign; migrate important invariants to behaviour-oriented tests rather than silently deleting safety protections.
+
+**Packaging:** `build-assets.cjs` publishes a curated allowlist, generates authenticated `src/sky-document.generated.mjs` from `index.html`, validates referenced assets. `verify-preview-isolation.cjs` asserts preview D1 separation, authenticated SKY, no service forwarding, no preview cron. `build-preview-package.cjs` offers a separate connector/API transport from a clean git tree and generates a self-contained package; this is an alternative to normal Wrangler preview deployment, not evidence both should remain permanently.
+
+**Critical distinction:** existing scripts and workflows are real and useful; none of these inspections executed them. The release path is now reconstructable **from source**, but has not been proven end-to-end. The initial concern about whether workflows existed is resolved; live provider settings, quotas, protections, Render triggers and exact deployed versions remain unknown.
+
+## Immediate consolidation recommendations (provisional)
+
+1. Keep production manual-only and Preview isolated. Add a **verified source SHA → deployed Worker version → authenticated smoke** record before declaring release acceptance; do not deploy now.
+2. Review and consolidate the eight syntax-check jobs to one targeted job where branch policy allows; preserve substantive migration/security assertions, replace brittle historic UI literal matching.
+3. Design one authoritative test entry point selecting existing fast Node tests and only the relevant browser journeys. Avoid automatic all-viewports/all-suites for every minor change; define release-level broader checks.
+4. Define explicit Preview lifecycle, ownership and expiry; reconcile the Wrangler and connector package paths rather than growing a third path.
+5. Put portable lifecycle and stop rules in the cross-project workbench; keep Cloudflare/D1/aviation-specific checks in the DOAA adapter.
+
+No hosted workflows were triggered, and no preview, production or database changes were made.
+
