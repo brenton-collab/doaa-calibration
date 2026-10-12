@@ -4,13 +4,14 @@ const source=fs.readFileSync(require('node:path').join(__dirname,'../flight-enri
 const start=source.indexOf('async function airportWeatherEvidence('),end=source.indexOf('\n function airportMovementEvidence(',start);
 assert.ok(start>=0&&end>start);
 function harness(){
- const requests=[],airport={icao:'CYOW'},d={_doaaAirport:airport,_doaaNavigation:1,dataset:{activeSurface:'airport'},scrollTop:0};
+ const requests=[],airport={icao:'CYOW'},d={_doaaAirport:airport,_doaaNavigation:1,dataset:{activeSurface:'airport'},scrollTop:0,querySelector:()=>null};
  const context={
   AbortController,encodeURIComponent,
   setTimeout:()=>1,clearTimeout:()=>{},
   fetch:()=>new Promise((resolve,reject)=>requests.push({resolve,reject})),
   activeSurface:()=>d.dataset.activeSurface,
   airportOverview:()=>'<div>weather</div>',
+  mountAirportHero:()=>{},
   wire:()=>{}
  };
  return{d,requests,run:vm.runInNewContext(source.slice(start,end)+'\nairportWeatherEvidence',context)};

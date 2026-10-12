@@ -93,9 +93,7 @@ test('multi-cell merge never treats old aircraft as recent',()=>{
 
 test('Inspector live classification excludes pinned and aging aircraft',()=>{
  const src=html.slice(html.indexOf('function selectEncounter('),html.indexOf('function segDist('));
- assert.match(src,/Date\.now\(\)-now<90000/);
- assert.match(src,/!x\._pinned/);
- assert.match(src,/Date\.now\(\)>=now/);
+ assert.match(src,/DOAASkyMapCore\.observation\(a,Date\.now\(\)\)\.fresh/);
  assert.doesNotMatch(html,/id:id\|\|\('board:/);
  assert.match(html,/for\(const \[id,e\] of tracks\)drawTrack/);
  assert.match(html,/if\(a\._pinned\)ctx\.globalAlpha\*=\.42/);
@@ -140,8 +138,8 @@ test('relay requires known per-aircraft position age',()=>{
 });
 
 test('SKY rack and count exclude historical and aging aircraft',()=>{
- assert.match(html,/const vis=aircraft\.filter\(a=>!a\._pinned&&!a\.ground&&inView\(a\)&&now>0/);
- assert.match(html,/a\._pinned\|\|\(now>0&&Date\.now\(\)>=now/);
+ assert.match(html,/const vis=aircraft\.filter\(a=>inView\(a\)&&DOAASkyMapCore\.fresh\(a,t\)\)/);
+ assert.match(html,/a\._pinned\|\|DOAASkyMapCore\.fresh\(a,t\)/);
 });
 test('AMBIENT slides preserve unknown telemetry',()=>{
  assert.match(ambient,/ALT UNKNOWN/);

@@ -25,7 +25,7 @@ test('anonymous visitors cannot read app, static aviation assets, live APIs or m
   for(const path of ['/','/index.html','/track-history.js','/api/airfield','/airfield.js','/api/traffic','/api/health','/memory/encounters']){
     const r=await worker.fetch(request(path),env,{});
     if(path.startsWith('/api/')||path.startsWith('/memory/')){assert.equal(r.status,401,path);assert.equal((await r.json()).error,'Sign-in required');}
-    else {assert.equal(r.status,200,path);assert.match(await r.text(),/Sign in with Google/);}
+    else {assert.equal(r.status,200,path);const html=await r.text();assert.match(html,/action="\/auth\/password"/);assert.doesNotMatch(html,/id="detailbody"/,'anonymous visitor receives only sign-in');}
   }
   assert.equal((await worker.fetch(request('/auth/start'),env,{})).status,503,'missing provider configuration fails closed');
 });

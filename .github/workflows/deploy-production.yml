@@ -26,6 +26,8 @@ jobs:
             echo 'Missing CLOUDFLARE_API_TOKEN. Set it in repository Actions secrets before deploying.' >&2
             exit 1
           fi
+      - name: Package curated web assets
+        run: node scripts/build-assets.cjs
       - name: Syntax gate
         run: |
           node --check src/worker.js
@@ -39,8 +41,6 @@ jobs:
           const html = fs.readFileSync('index.html','utf8');
           for (const [,source] of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)) if(source.trim()) new vm.Script(source);
           NODE
-      - name: Package curated web assets
-        run: node scripts/build-assets.cjs
       - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3
         with:
