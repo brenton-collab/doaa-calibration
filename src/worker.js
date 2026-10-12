@@ -152,7 +152,7 @@ async function dossierApi(u,env){
   const verifiedRegistration=known.registration||ids.registration||aa?.registration||null;
   if(verifiedRegistration&&/^[A-Z0-9-]{3,12}$/i.test(verifiedRegistration)){
    try{const candidate=await commonsPhoto(verifiedRegistration,true);
-    if(candidate?.image&&candidate.license&&(candidate.credit||candidate.artist)&&/^https:\\/\\//i.test(candidate.image))dossierMedia={image:candidate.image,page:candidate.page||null,specificity:'exact-airframe',credit:candidate.credit||candidate.artist,license:candidate.license};
+    if(candidate?.image&&candidate.license&&(candidate.credit||candidate.artist)&&candidate.image.startsWith('https://'))dossierMedia={image:candidate.image,page:candidate.page||null,specificity:'exact-airframe',credit:candidate.credit||candidate.artist,license:candidate.license};
    }catch{} // No photograph is better than a misidentified or unattributed photograph.
   }
  }
