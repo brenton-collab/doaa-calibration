@@ -3,6 +3,11 @@
 **Current branch:** `rebuild/experience-v2` (“Rebuild Rebuild”), based on `rebuild/field-notes-foundation`.
 **Status:** product direction and contract reconciliation recorded; design lab, V2 implementation and live verification pending. No production deployment or new spending authorized.
 
+
+## Governing reuse and focus rule (2026-10-12)
+
+DOAA-RR reconstructs the **experience**, not every DOAA component. Inspect inherited implementation and evidence before designing replacements; judge each capability **retain / refine / relocate / replace / retire** according to how it serves DOAA-RR. Retention is a positive engineering outcome, not a compromise. Preserve legitimate data, security and safety obligations. A new observation or attractive technical tangent does **not** automatically redirect the critical path: capture it, assess whether it is blocking or materially changes the next increment, and otherwise return to the current experience-validation objective. The assistant owns this prioritization discipline rather than requiring the creative director to police drift. In particular, the map inheritance and MET/NAV provisions inform the next interactive SKY Lab but do not authorize an unbounded cartographic redevelopment phase.
+
 ## Read these first
 
 1. [Experience V2 and HMI](EXPERIENCE_V2.md): current open-world, single relational Inspector; CONTACT wide aperture; visual/UX acceptance and Design Lab sequencing.
