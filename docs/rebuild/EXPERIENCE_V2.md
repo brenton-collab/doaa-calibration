@@ -322,3 +322,8 @@ Owner explicitly prefers **not to involve AI in DOAA-RR**. No AI in runtime, Ins
 Study 06 relationship destinations are prototype stubs only. In the product, selecting a resolved entity opens its full subject-appropriate Inspector within the same continuous relational navigation context. Stub depth is not approved product depth.
 
 The datum itself (manufacturer, engine designation, operator, registration, airport code, flight identity) is the navigation target. Avoid repeated 'Explore X' CTAs and unnecessary arrow glyphs. Preserve subtle discoverability, accessible semantic interactions, keyboard focus, mobile touch targets and clear non-linked states. Test visual affordance rather than automatically underlining everything. Direct SKY exit remains distinct from contextual Show in SKY.
+
+
+## Explorable datum visual treatment (2026-10-12)
+
+Owner explicitly rejects underlines on navigable data. Do not use repeated arrow glyphs or 'Explore' CTAs. Preferred direction is a **soft, context-sensitive text distinction**: e.g. cool charcoal versus near-black on light surfaces, or muted/light blue versus other text on darker surfaces, chosen to fit the local composition. Avoid a bright global hyperlink blue or visually noisy link chrome. Interactive names, registrations, codes and other data remain the actual tap targets. Colour alone must not carry all discoverability: use consistent placement/type treatment, generous touch areas, keyboard focus, hover/press feedback and accessible semantics. This is a design direction to test visually, not an approved exact palette or contrast ratio. Ensure non-explorable values do not falsely signal navigation.
