@@ -45,7 +45,7 @@ async function prepare(bytes,{source=SOURCE,retrievedAt=new Date().toISOString()
  const id='ourairports-'+digest.slice(0,24);
  const sql=[
   'BEGIN TRANSACTION;',
-  'INSERT OR IGNORE INTO airport_reference_snapshots (snapshot_id,source_sha256,source_url,retrieved_at,ready) VALUES ('+[id,digest,source,retrievedAt].map(quote).join(',')+',0);',
+  'INSERT OR IGNORE INTO airport_reference_snapshots (snapshot_id,source_sha256,source_url,retrieved_at,expected_airports,ready) VALUES ('+[id,digest,source,retrievedAt].map(quote).join(',')+',1,0);',
   'INSERT OR REPLACE INTO airport_reference_rows (snapshot_id,airport,payload) VALUES ('+[id,'CYOW',JSON.stringify(runways)].map(quote).join(',')+');',
   'UPDATE airport_reference_snapshots SET ready=1 WHERE snapshot_id='+quote(id)+';',
   'COMMIT;'

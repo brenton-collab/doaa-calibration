@@ -1,2 +1,2 @@
-CREATE TABLE IF NOT EXISTS airport_reference_snapshots (snapshot_id TEXT PRIMARY KEY, source_sha256 TEXT NOT NULL, source_url TEXT NOT NULL, retrieved_at TEXT NOT NULL, ready INTEGER NOT NULL DEFAULT 0);
+CREATE TABLE IF NOT EXISTS airport_reference_snapshots (snapshot_id TEXT PRIMARY KEY, source_sha256 TEXT NOT NULL, source_url TEXT NOT NULL, retrieved_at TEXT NOT NULL, expected_airports INTEGER NOT NULL DEFAULT 1 CHECK(expected_airports>=0), ready INTEGER NOT NULL DEFAULT 0);
 CREATE TABLE IF NOT EXISTS airport_reference_rows (snapshot_id TEXT NOT NULL, airport TEXT NOT NULL, payload TEXT NOT NULL, PRIMARY KEY(snapshot_id,airport));
