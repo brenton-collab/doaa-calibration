@@ -242,3 +242,12 @@ Owner challenges the ordering of Inspector frames: **start with “What do I wan
 Owner again finds OVERVIEW insufficiently visually prominent despite larger text in Study 04. Do not solve solely by enlarging fonts or adding heavy containers: rethink composition and the anchor information/instrument of the first substantive frame. The HERO remains topmost. The goal is **shared visual grammar with subject-specific information architecture and strong at-a-glance utility**.
 
 Next experiment should demonstrate Flight's integrated route + interactive progress + meaningful times in its primary frame, alongside an equally intentional Airport glance frame. Continue increasing useful evidence-aware information density without wordy explanatory copy. This is owner critique, not validation of a finalized layout.
+
+
+## Airframe Inspector: owner-defined progressive information hierarchy (2026-10-12)
+
+The Airframe Inspector should answer **identity at a glance** immediately after the topmost HERO: individual registration/identity, operator, manufacturer/make, model/variant, type/category and age where supported. The owner then wants **technical depth** for enthusiasts: plant/manufacture information, wingspan, weights, runway requirements/performance, range, speed, maximum altitude/service ceiling and other relevant specifications. Later sections should include **notices, bulletins and advisories**, then a **scrollable airframe biography with inline photographs**. The sequence follows progressive curiosity, not a generic OVERVIEW attribute grid.
+
+**Epistemic/relational guardrail:** distinguish facts about the individual airframe (serial, registration, operator, manufacturing date and biography) from aircraft type/variant specifications; distinguish bulletin applicability at manufacturer/type/serial/individual level. Do not infer a precise aircraft age from unsupported production dates; do not present generic performance or runway requirements as universal operational limits without conditions. Historical photographs, notices and events require provenance and dates; external sightings must not be mislabelled DOAA observations. Biography should be a meaningful chronological exploration, with source-qualified events, not invented filler.
+
+Maintain a consistent Inspector-wide identity frame typographic grammar while tailoring its leading facts and later section ordering to the subject. Future Airframe toy should demonstrate the sequence and an interactive biographical timeline/gallery, not merely another sparse grid.
