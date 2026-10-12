@@ -7,7 +7,8 @@
 
 1. [Experience V2 and HMI](EXPERIENCE_V2.md): current open-world, single relational Inspector; CONTACT wide aperture; visual/UX acceptance and Design Lab sequencing.
 2. [Relational epistemology](RELATIONAL_EPISTEMOLOGY_CONTRACT.md): sources, retrieval, derivation, inference, calibrated assertion, BOARD timing and geographic progress requirements.
-3. [Inherited-contract reconciliation](REBUILD_REBUILD_RECONCILIATION.md): explicit preservation/supersession register, including removal of required tabs, Back stack and generic Explore navigation.
+3. [Development system and workflow](DEVELOPMENT_SYSTEM_WORKFLOW.md): fourth coequal pillar; audit SDE/IDE, test duplication, previews, release promotion, rollback and canonical runbooks.
+4. [Inherited-contract reconciliation](REBUILD_REBUILD_RECONCILIATION.md): explicit preservation/supersession register, including removal of required tabs, Back stack and generic Explore navigation.
 
 ## Inherited foundation: still applicable unless expressly superseded
 
@@ -22,6 +23,8 @@
 **Design:** co-design one visually polished, responsive Contact composition and relational Flight/Airframe/Airport transitions in a separate reusable-component Design Lab; test no-Back exploration, Close, subtle depth cues, accessibility, real interaction and calibrated presentation. Visual/HMI is not deferred behind data engineering.
 
 **Evidence:** independently audit actual BOARD timing lookup and route+position progress, provider capabilities, data loss and missing derivation; document findings and tests before changing core services.
+
+**Workflow:** audit the actual SDE/IDE, test suites, CI costs, preview lifecycle and production promotion path; consolidate into a tested runbook and reusable scripts rather than repeatedly rediscovering procedures.
 
 **Delivery:** reuse approved lab components, integrate real normalized data, test actual authenticated flows and outages, deploy isolated preview only after safety/quota review. Do not treat a screenshot or build as completion.
 
