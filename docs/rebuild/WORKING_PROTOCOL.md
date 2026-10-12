@@ -373,3 +373,6 @@ Commits 9cc33ad, 41da51f and f908c0f add a per-isolate one-hour, 256-entry Wikim
 
 ## Airport Inspector first UX pass
 Commit 9955cf1 replaces redundant unknown-state/condition sections on Airport Overview with explicit navigation guidance to Movements, Airfield and Operations, retaining the weather/operational-status distinction. Commit 4967adc adds source-contract checks. This is a small readability change, not the complete Airport Inspector redesign. No authenticated browser or runtime provider verification performed. Next: exercise existing Node test suite and browser navigation; improve airport context with evidenced operational data only.
+
+## Executable provider fixtures
+On 2026-10-12 the actual Worker vrsRoute and commonsPhoto functions were extracted and executed in an isolated JavaScript harness with mock fetch and timeout signals. VRS: five checks passed (route parsing, non-live association, invalid callsign rejection, offline graceful return, 3500ms timeout). Commons: five checks passed (registration title match, license, credit, 3500ms timeout, provider error propagation for dossier catch). These are behavior-level fixture checks, not live provider requests, Node suite, browser journey or deployment. Next: commit reproducible Node fixture tests, run full suite, validate preview authentication, then improve Airport Inspector.
