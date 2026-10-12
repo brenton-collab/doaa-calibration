@@ -1,4 +1,33 @@
-# DOAA — Field Notes rebuild foundation
+# DOAA · Rebuild Rebuild documentation index
+
+**Current branch:** `rebuild/experience-v2` (“Rebuild Rebuild”), based on `rebuild/field-notes-foundation`.
+**Status:** product direction and contract reconciliation recorded; design lab, V2 implementation and live verification pending. No production deployment or new spending authorized.
+
+## Read these first
+
+1. [Experience V2 and HMI](EXPERIENCE_V2.md): current open-world, single relational Inspector; CONTACT wide aperture; visual/UX acceptance and Design Lab sequencing.
+2. [Relational epistemology](RELATIONAL_EPISTEMOLOGY_CONTRACT.md): sources, retrieval, derivation, inference, calibrated assertion, BOARD timing and geographic progress requirements.
+3. [Inherited-contract reconciliation](REBUILD_REBUILD_RECONCILIATION.md): explicit preservation/supersession register, including removal of required tabs, Back stack and generic Explore navigation.
+
+## Inherited foundation: still applicable unless expressly superseded
+
+- [Product and Field Notes UX](PRODUCT_UX_CONTRACT.md): SKY, BOARD, LOOK, AMBIENT, history, accessibility and visual history. **Legacy tab/Back/link-arrow prescriptions are superseded for V2.**
+- [Evidence and security](DATA_AND_SECURITY_CONTRACT.md): D1 preservation, provenance, authentication, private accounts, sessions, migration protections.
+- [Engineering and release](ENGINEERING_RELEASE_CONTRACT.md): module separation, infrastructure safety, quotas, tests, real deployment verification. **Legacy first-implementation and Back navigation gates are superseded.**
+- [Understanding and reuse register](UNDERSTANDING_AND_REUSE_REGISTER.md): source/test/runtime classifications and unresolved checks.
+- Historical `FIELD_NOTES_DECISIONS_2026-10-08.md`, `DOAA_SPEC.md`, `DEV_LOG.md` and related docs remain in the repository. Do not erase their historical decisions; record newer supersession explicitly.
+
+## Immediate next gates
+
+**Design:** co-design one visually polished, responsive Contact composition and relational Flight/Airframe/Airport transitions in a separate reusable-component Design Lab; test no-Back exploration, Close, subtle depth cues, accessibility, real interaction and calibrated presentation. Visual/HMI is not deferred behind data engineering.
+
+**Evidence:** independently audit actual BOARD timing lookup and route+position progress, provider capabilities, data loss and missing derivation; document findings and tests before changing core services.
+
+**Delivery:** reuse approved lab components, integrate real normalized data, test actual authenticated flows and outages, deploy isolated preview only after safety/quota review. Do not treat a screenshot or build as completion.
+
+---
+
+## Inherited rebuild-branch index (historical)
 
 Status: **canonical rebuild-branch contracts, not a completed implementation**.
 Branch: `rebuild/field-notes-foundation`. Source: `main` at branch creation, 2026-10-11.
