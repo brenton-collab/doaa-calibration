@@ -27,4 +27,8 @@ assert.match(worker,/const freeDossierCache=new Map\(\)/);
 assert.match(dossier,/freeDossierCache\.get\(cacheKey\)/);
 assert.match(dossier,/freeDossierCache\.size>256/);
 assert.match(worker,/cacheEverything:true\},signal:AbortSignal\.timeout\(3500\)/);
+assert.match(worker,/commonsResultCache=new Map\(\)/);
+assert.match(dossier,/commonsResultCache\.get\(verifiedRegistration\)/);
+assert.match(dossier,/commonsResultCache\.size>256/);
+assert.match(dossier,/candidate\|\|null/);
 console.log('Source contracts for route and media passed.');
