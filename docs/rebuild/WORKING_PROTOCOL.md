@@ -403,3 +403,6 @@ Airframe Commons gallery title matching previously stripped all punctuation and 
 
 ## CYOW Commons source inspection (2026-10-12)
 Public Commons category `Aerial photographs of Ottawa Macdonald-Cartier International Airport` is confirmed to list five photographs. `Ottawa Airport overview.jpg` is a historical photograph dated 2001-07-18 showing expansion construction, licensed GFDL 1.2, credited to John Davies. This verifies category relevance, NOT live Commons API selection or current airport appearance. Commits 8500c92 and 3177f7e add optional image metadata capture date and visibly disclose unknown capture date in the Airport hero. Upload date remains separate. Metadata availability and authenticated rendering unverified; avoid describing the historical photograph as current.
+
+## CYOW photo relevance check
+Commit b925eb8 excludes general cityscape titles from airport hero candidates. Isolated handler fixture selected airport-specific title. Live API and authenticated browser checks remain outstanding.
