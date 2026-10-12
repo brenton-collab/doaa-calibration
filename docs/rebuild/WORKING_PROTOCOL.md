@@ -406,3 +406,6 @@ Public Commons category `Aerial photographs of Ottawa Macdonald-Cartier Internat
 
 ## CYOW photo relevance check
 Commit b925eb8 excludes general cityscape titles from airport hero candidates. Isolated handler fixture selected airport-specific title. Live API and authenticated browser checks remain outstanding.
+
+## Airport profile elevation increment
+Commits 567334e and edc1cff convert AviationWeather stationinfo elevation from metres to feet, preserving unknown instead of zero. Commit fb89450 renders field elevation and explicit unknown operator/timezone/classification rows. Isolated airportLookup handler fixture (CYOW, elev=114 m) returned 374 ft. Live API response, source unit cross-check, full test suite, and browser journey remain unverified. Airport acceptance remains open.
