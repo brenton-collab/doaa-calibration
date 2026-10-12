@@ -184,3 +184,7 @@ html,body{background:var(--bg);color:var(--ice);font-family:Inter,ui-sans-serif,
 .detail-body .doaa-journey-metric strong{display:block;color:#171c1e;font-size:clamp(15px,3.4vw,20px);line-height:1.3;margin-top:7px;font-weight:670;overflow-wrap:anywhere}
 .detail-body .doaa-journey-source{color:#7a8185;font-size:10px;line-height:1.5;margin:21px 0 0}
 @media(max-width:360px){.detail-body .doaa-journey-card{padding:15px 12px}.detail-body .doaa-journey-endpoints{gap:6px}}
+
+.detail-body .doaa-journey-eyebrow{font-size:10px;font-weight:750;letter-spacing:.09em;color:#66757e;margin-bottom:19px}
+.detail-body .doaa-journey-track--unknown{background:repeating-linear-gradient(90deg,#dce1e3 0 12px,#f3f4f4 12px 18px)}
+.detail-body .doaa-journey-endpoints strong{min-height:1.2em}
