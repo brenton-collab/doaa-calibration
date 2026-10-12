@@ -67,3 +67,16 @@ This is an inventory of inherited behaviour, not a design specification. The Ins
 
 ### Verification state and next gate
 Repository source inspection extended; no browser session, live authenticated traffic, screenshots or hosted tests. Full dependency inventory still needs `src/`, Worker routes, runtime response contracts and browser inspection. Audit findings may inform Design Lab and epistemology without prescribing their outcomes.
+
+
+## Runtime inspection gate — attempted 2026-10-12; blocked, not passed
+
+**Tools/environment checked:** Local execution environment contains Chromium and Python Playwright, so a browser engine exists. However, no checkout, app assets or running DOAA service are mounted there. Direct GitHub checkout failed DNS resolution (`github.com`), as did direct HTTPS access to the anticipated Cloudflare preview hostname. A public search did not establish an accessible live preview URL. The connected GitHub API can read source and write documentation but cannot itself supply an authenticated interactive browser. No Work quota, new deployment, hosted test, production login, D1 write or spending was used.
+
+**Result:** No legitimate 1440×900 desktop or 393×851 mobile screenshot, computed layout, tap/keyboard exercise, or real network/telemetry observation was obtained. Chromium's presence is not visual verification. Do not manufacture screenshots or substitute source inference for actual runtime evidence. Existing preview configuration declares a Worker preview and separate D1 binding, but configuration is not proof a current reachable deployment exists.
+
+**Bounded alternative:** An isolated local static fixture could be built from the existing source only after obtaining the actual files in a browser-accessible environment; that would verify layout and interactions under fixture data, **not** live API/provider semantics. An existing authorized interactive preview is preferable if accessible through a browser-capable execution environment. Do not deploy merely to satisfy the audit. Avoid indefinite source archaeology: carry forward the explicit verification debt into Design Lab, which can produce tangible viewport-tested alternatives without claiming to verify inherited runtime.
+
+**UX/epistemology clarification:** Assert warranted conclusions confidently; qualify only material interpretive uncertainty; make reasoning optionally available. An inference is not intrinsically a weak conclusion. Keep provenance/freshness/conflicts internally without mandatory visible badges. Preserve investigation origin, focus and workspace separately, and keep Inspector physical form open.
+
+**Next bounded transition:** Begin Design Lab with two real interactive responsive compositions, testing aircraft salience, contextual discovery and investigation continuity. Use explicitly illustrative fixtures and mark them as such. Maintain this audit as a source baseline until an actual running inherited SKY can be inspected; do not pronounce the visual audit complete.
