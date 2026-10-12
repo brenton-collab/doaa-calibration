@@ -361,3 +361,6 @@ Test source contract added in tests/rebuild-free-enrichment.test.cjs (4e70334); 
 
 ## Free-enrichment source check
 Fourteen JavaScript source-contract assertions passed against fetched branch contents. This is not Node execution, provider integration, or browser verification. RACK hydration currently invokes media-enabled dossiers; separate it from Inspector photo research before deployment.
+
+## RACK request separation
+Commits ebb383d and cdd124f switch automatic RACK hydration to read-only dossiers without media=1 and add a five-minute, 128-key client cache with pending-request sharing (including null responses). No deployment or provider integration verification yet. The server still performs free ADSBdb/VRS lookups; further server-side throttling and Commons miss caching remain open. A subsequent cleanup patch was blocked by the repository tool; source-level testing remains required.
