@@ -31,4 +31,6 @@ assert.match(worker,/commonsResultCache=new Map\(\)/);
 assert.match(dossier,/commonsResultCache\.get\(verifiedRegistration\)/);
 assert.match(dossier,/commonsResultCache\.size>256/);
 assert.match(dossier,/candidate\|\|null/);
+assert.match(client,/section\('EXPLORE THIS AIRPORT'/);
+assert.match(client,/Movements<\/strong>/);
 console.log('Source contracts for route and media passed.');
