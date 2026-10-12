@@ -278,3 +278,12 @@ Owner endorses traversing relationships freely: a model/variant Inspector should
 **Entity modeling:** separate manufacturer, family, model/variant, individual airframe, operator, airport, **flight service/flight-number identity**, and **dated flight occurrence**. A service can have multiple dated operations and different assigned airframes over time; a particular occurrence may have a specific aircraft only when evidence supports attribution. Record time-bounded relationships (registration, operator, assignment) and preserve sources, freshness and uncertainty. Distinguish knowledge-record coverage from DOAA observations and from current contact. Relations should be traversable in both directions when supported. Avoid presenting a relationship as factual solely because labels or flight numbers match.
 
 Experience implication: related collections should be relevant and readable, not exhaustive walls of links. Directly tap meaningful names/codes; preserve Inspector Back trail and prior context. Use one continuous Inspector with subject-appropriate hero, glance-first framing, operational evidence and deeper histories.
+
+
+## Study 05 owner validation: relational exploration and exit to SKY (2026-10-12)
+
+Owner explicitly validates Study 05's **multi-hop relational investigation concept**: “Yes! This is the idea!!” and characterizes it as “choose your own adventure.” This validates the discovery/navigation model, **not** the prototype's illustrative aviation facts, completeness, visual polish or browser/mobile reliability.
+
+**New essential navigation affordance:** users must have an obvious, restrained way to return directly to **HOME/SKY** from anywhere in a deep Inspector traversal. Preserve distinction between (1) Back: retrace Inspector subject history one hop, (2) Return to SKY/HOME: exit exploration to the prior SKY context, and (3) Show in SKY: intentionally locate/center a specific aircraft or other geospatial subject. Return should preserve SKY camera/zoom/selection/layers where feasible; Show in SKY should be explicitly distinct and evidence/freshness aware. Don't force multiple Back actions to leave a long exploration. Browser/Android Back should remain supported; evaluate a persistent SKY action in Inspector header.
+
+Next study/implementation should preserve the validated multi-hop structure while adding the direct SKY exit and deepening genuine content and visual hierarchy. Avoid re-proving the basic concept with another skeletal toy.
