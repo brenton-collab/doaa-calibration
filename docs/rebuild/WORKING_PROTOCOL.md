@@ -409,3 +409,6 @@ Commit b925eb8 excludes general cityscape titles from airport hero candidates. I
 
 ## Airport profile elevation increment
 Commits 567334e and edc1cff convert AviationWeather stationinfo elevation from metres to feet, preserving unknown instead of zero. Commit fb89450 renders field elevation and explicit unknown operator/timezone/classification rows. Isolated airportLookup handler fixture (CYOW, elev=114 m) returned 374 ft. Live API response, source unit cross-check, full test suite, and browser journey remain unverified. Airport acceptance remains open.
+
+## Airport navigation lifecycle fix
+Commit 4bebbdb disposes the Airport Overview interactive runway workspace before any Inspector surface replacement and when restoring Back navigation. Previously only the separate Runways workspace and Movements workspace were consistently disposed. Client source syntax and presence of both disposal paths checked; interactive browser leak/regression test remains outstanding. Airport acceptance gate remains open.
