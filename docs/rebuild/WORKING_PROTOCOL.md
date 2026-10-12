@@ -415,3 +415,6 @@ Commit 4bebbdb disposes the Airport Overview interactive runway workspace before
 
 ## Airport runway remount state verification
 Commit a64d559 invalidates the outstanding request token and clears the loading flag when an airfield workspace is disposed. Verified from fetched rebuild-branch code with isolated runtime fixtures: disposal clears loading/token; remount retains selected runway ID and establishes a new disposal callback. This is not a full DOM, network, or authenticated preview test. Airport acceptance remains open.
+
+## Preview runway-reference database blocker (read-only verified)
+Cloudflare D1 read-only sqlite_master query on isolated preview database 939eda3b-4894-497b-9f67-209771761b3f found no airport_reference_snapshots or airport_reference_rows tables. The currently committed src/airfield.mjs requires those tables, so its prepared-snapshot lookup cannot succeed on this preview DB. No schema or data mutation performed. Need locate/implement migration and snapshot ingestion before Airport Runways can pass end-to-end acceptance. Preview deployment of latest branch remains unverified.
