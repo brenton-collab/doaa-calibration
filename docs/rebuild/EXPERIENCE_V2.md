@@ -347,3 +347,8 @@ Owner proposes distinguishing the present within the internally scrollable chron
 ## Bounded chronology: return-to-NOW control (2026-10-12)
 
 Owner requests an obvious but nonintrusive **NOW** return control inside the MOVEMENTS chronology frame. Design direction: small floating/sticky control anchored within the bounded scroller, appearing once the user navigates sufficiently away from the current-time anchor, hidden when NOW is visible. Activating it scrolls only the internal chronology to actual present time, retaining the surrounding Inspector scroll position and subject context. Respect reduced motion, keyboard and touch accessibility; avoid obscuring records. NOW must be a real time anchor, not an invented current flight. Prototype alongside the graded NOW row shading and internal infinite scroll.
+
+
+## Study 09 feedback: chronology works; rows too airy (2026-10-12)
+
+Owner positively validates the combined bounded MOVEMENTS chronology, graded NOW focus, and contextual return-to-NOW interaction ("Oh I like that!"). The remaining visual criticism is that movement rows are **too tall / airy**. Next refinement should reduce row vertical padding and inter-row spacing, and tighten flight/route/time grouping to achieve an aviation-instrument density, without simply shrinking typography or compromising mobile hit targets. Preserve the validated internal scroll, NOW gradient, return button, and datum navigation. Exact density remains to be judged in a tangible revision.
