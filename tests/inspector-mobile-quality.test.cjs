@@ -6,7 +6,7 @@ test('Contact overview exposes a direct keyboard-accessible Airframe action',()=
 });
 test('Media hero and credit field use sanitized photo attribution',()=>{
  assert.match(source,/\['CREDIT',safePhotoCredit\(y\.photo_credit,y\.photo_artist\)\]/);
- assert.match(source,/y\.photo_image,safePhotoCredit\(y\.photo_credit,y\.photo_artist\)/);
+ assert.match(source,/y\.photo_image,photoHeroCredit\(y\)/);
  assert.match(source,/function safePhotoCredit\(/);
 });
 
@@ -18,4 +18,19 @@ test('Inspector opens with collapsed phone rack and restores its prior state on 
 });
 test('Legacy Inspector heading no longer draws a dark crossing rule',()=>{
  assert.doesNotMatch(html,/\.detail:before\{[^}]*border-bottom:2px solid #263c48/);
+});
+
+test('Contact and Airframe use photographic heroes with source specificity',()=>{
+ assert.match(source,/af\?\.photo_image\|\|null,photoHeroCredit\(af\)/);
+ assert.match(source,/y\.photo_image,photoHeroCredit\(y\)/);
+ assert.match(source,/EXACT AIRFRAME PHOTO/);
+ assert.match(source,/REPRESENTATIVE MODEL PHOTO/);
+ assert.doesNotMatch(source,/function contactHero\(/);
+});
+test('Inspector subject persists in sheet chrome and heading precedes image',()=>{
+ assert.match(html,/attr\(data-inspector-subject\)/);
+ assert.match(html,/delete detail\.dataset\.inspectorSubject/);
+ assert.match(source,/inspector\.dataset\.inspectorSubject=subject/);
+ const shell=source.slice(source.indexOf('function shell('),source.indexOf('function columns('));
+ assert.match(shell,/\+hero\+body/);
 });
