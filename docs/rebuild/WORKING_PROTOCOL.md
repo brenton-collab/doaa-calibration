@@ -367,3 +367,6 @@ Commits ebb383d and cdd124f switch automatic RACK hydration to read-only dossier
 
 ## Verification follow-up
 Commit 4b7b09e expands free-enrichment source contracts. Eight direct source checks passed for RACK route-only hydration, pending-request sharing, negative cache, bounded size and top-three scope, VRS fallback, opt-in Commons and provider timeout. Not browser or live-provider tests. Attempted Worker-side cache patch was blocked; server caching is NOT implemented. Next gate: execute Node tests, isolate free-provider failures and check Airport Inspector usability.
+
+## Free media lookup caching
+Commits 9cc33ad, 41da51f and f908c0f add a per-isolate one-hour, 256-entry Wikimedia Commons registration cache including null/missing photographs. Commit b02414f adds source-contract assertions; six direct source checks passed. ADSBdb five-minute cache and VRS timeout were committed earlier (20a5874 to 87a44cf), with test extension 2d7023a. No external provider fixture tests, authenticated browser checks or preview deployment yet. In-flight Commons request deduplication and error-result caching remain open; cached misses apply only to successful no-result searches.
