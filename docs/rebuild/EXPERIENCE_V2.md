@@ -352,3 +352,8 @@ Owner requests an obvious but nonintrusive **NOW** return control inside the MOV
 ## Study 09 feedback: chronology works; rows too airy (2026-10-12)
 
 Owner positively validates the combined bounded MOVEMENTS chronology, graded NOW focus, and contextual return-to-NOW interaction ("Oh I like that!"). The remaining visual criticism is that movement rows are **too tall / airy**. Next refinement should reduce row vertical padding and inter-row spacing, and tighten flight/route/time grouping to achieve an aviation-instrument density, without simply shrinking typography or compromising mobile hit targets. Preserve the validated internal scroll, NOW gradient, return button, and datum navigation. Exact density remains to be judged in a tangible revision.
+
+
+## Study 10: compact MOVEMENTS direction accepted (2026-10-12)
+
+Owner reviewed Study 10 and responded "Yep. Love it." Treat its compact, information-dense movement-row composition as the **accepted UX design direction**, superseding Study 09's airy row spacing. Retain the bounded independently scrolling chronology, progressive temporal loading, graduated NOW shading, contextual return-to-NOW control, and direct links to flight occurrences/airports/airframes. This is **design validation of an illustrative interactive toy**, not production implementation, real-data validation, accessibility certification or browser-tested release. Stop isolated movement-density iteration; next evaluate integration with a full subject-appropriate Inspector and then remaining SKY/BOARD primitives. Preserve this decision in future implementations unless new evidence warrants revision.
