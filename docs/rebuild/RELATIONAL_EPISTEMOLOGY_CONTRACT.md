@@ -60,3 +60,16 @@ Audit, in order:
 - Every primary composition remains beautiful and understandable without opening an evidence drawer.
 
 No algorithm, source capability, real flight time, provider access or deployment is claimed verified by this document.
+
+
+## Governing synthesis principle (2026-10-12 clarification)
+
+**Assert what the evidence warrants. Qualify only what materially changes the interpretation. Make the reasoning available without making it compulsory.**
+
+Epistemological integrity must not become epistemological timidity. DOAA develops a defensible understanding of aviation activity through observation, retrieval, published records, derivation and reasoned inference. A conclusion synthesized from several sources is not categorically inferior to direct observation; assess the quality, independence, relevance, temporal fit and coherence of its supporting evidence. When these warrant a confident conclusion, state it confidently, even when inference contributed.
+
+The distinction between observed, retrieved, derived and inferred is essential to internal evidence processing, but it is **not** a mandatory set of visible labels. A qualifier belongs in the primary experience only when omitting it would materially mislead about identity, location, time, operation, source reliability or interpretation. A strong inference need not be introduced with “likely”; a weak association must not be promoted into certainty. Keep the reasoning and competing evidence inspectable on demand, without imposing an evidence audit on ordinary use.
+
+Presentation should absorb epistemic complexity, not export it. Do not confuse repeated disclaimers, confidence chips, provenance badges or generic hedges with trustworthiness. Preserve all safeguards: provenance, freshness, explicit source scope, dated-identity resolution, conflicts, independent corroboration, auditable derivations, and honest failure states. Avoid fabricating facts or concealing material uncertainty.
+
+This clarification **supersedes any blanket reading** of the earlier “Inferred: natural concise qualifier” prescription. Qualify *materially uncertain* inferences, not every inferentially supported conclusion. Likewise, “Position-based” is necessary only where a user could otherwise mistake geographic progress for elapsed-time, flown-distance or operational progress. Earlier illustrative labels are examples, not compulsory UI furniture.
