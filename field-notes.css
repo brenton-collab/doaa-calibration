@@ -146,3 +146,8 @@ html,body{background:var(--bg);color:var(--ice);font-family:Inter,ui-sans-serif,
 /* Airframe media: sourced gallery with accessible next/previous controls. */
 .fn-airframe-gallery figure{margin:0;overflow:hidden;border:1px solid #d2dcdd;border-radius:12px;background:#e9eeee}.fn-airframe-gallery img{display:block;width:100%;max-height:280px;object-fit:contain;background:#dce5e7}.fn-airframe-gallery figcaption{padding:10px 12px;font-size:11px;line-height:1.5;overflow-wrap:anywhere;color:#526976}.fn-airframe-gallery a{color:#285f7d}.fn-gallery-controls{display:flex;align-items:center;justify-content:center;gap:18px;margin:12px 0}.fn-gallery-controls button{min-width:44px;min-height:44px;border:1px solid #c5d5d8;border-radius:9px;background:#f0f5f5;color:#2c586e;cursor:pointer}.fn-gallery-controls button:disabled{opacity:.4;cursor:default}.fn-gallery-controls span{font-variant-numeric:tabular-nums;color:#496372}
 
+
+/* Shared editorial presentation primitives. */
+:root{--doaa-ink:#182329;--doaa-rule:#e3e7e5;--doaa-soft:#f0f2f0;--doaa-radius:16px}
+.detail-body .fn-inspector-section-title{font-size:17px;letter-spacing:-.02em;text-transform:none;color:var(--doaa-ink)}
+.detail-body .fn-inspector-section{padding:23px 0 21px;border-color:var(--doaa-rule)}
