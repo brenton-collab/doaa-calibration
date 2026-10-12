@@ -421,3 +421,8 @@ Cloudflare D1 read-only sqlite_master query on isolated preview database 939eda3
 
 ## Airport runway schema and snapshot generator (2026-10-11)
 Preview D1 939eda3b-4894-497b-9f67-209771761b3f: created airport_reference_snapshots and airport_reference_rows tables directly through Cloudflare D1 API, and verified both exist with a read-only sqlite_master query. Production database untouched. Committed migration migrations/0010_airport_reference.sql (9d5da0d) and CYOW-only SQL snapshot generator scripts/build-airport-reference.cjs (78e9d2f). Generator is committed but has NOT run against the live OurAirports dataset; no snapshot records inserted, no real CYOW runway interaction verified. Preview Worker latest branch deployment still outstanding. Next: run generator with verified source, inspect CYOW records, insert preview-only snapshot, verify API and UI.
+
+## Airport reference generator hardening (2026-10-11)
+- Prepared bounded streaming download, abort timer covering the entire body read, validation of CYOW-only records, SHA-256 digest, and offline SQL generation. The generator writes no database directly. Source blob staged for scripts/build-airport-reference.cjs; commit verification below.
+- Direct execution environment could not resolve davidmegginson.github.io; web retrieval rejected the CSV content type; GitHub connector rejected the full CSV as too large. No verified CYOW data acquired and no snapshot inserted. Preview D1 query returned snapshots=0, rows=0. No production changes.
+- Next: acquire genuine source bytes via permitted path, run parser and failure-case tests, populate preview D1 only, verify deployed API and authenticated Inspector browser interactions. Current preview deployment unverified.
