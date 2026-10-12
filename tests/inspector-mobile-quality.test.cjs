@@ -31,6 +31,6 @@ test('Inspector subject persists in sheet chrome and heading precedes image',()=
  assert.match(html,/attr\(data-inspector-subject\)/);
  assert.match(html,/delete detail\.dataset\.inspectorSubject/);
  assert.match(source,/inspector\.dataset\.inspectorSubject=subject/);
- const shell=source.slice(source.indexOf('function shell('),source.indexOf('function columns('));
+ const shell=source.slice(source.indexOf('function shell('),source.indexOf('function columns(',source.indexOf('function shell(')));
  assert.match(shell,/\+hero\+body/);
 });
