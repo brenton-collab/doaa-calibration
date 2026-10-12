@@ -2,6 +2,16 @@
 
 Updated 2026-10-12. Applies to `rebuild/experience-v2` (“Rebuild Rebuild”). The branch inherits the Field Notes rebuild files and source history. **Preserve original historical decisions and documents as evidence; use this document to resolve conflicts.** This is a contract reconciliation, not a claim that the inherited implementation works.
 
+## DOAA-RR independent design authority (explicit direction, 2026-10-12)
+
+**DOAA-RR is not constrained by the previous “DOAA Rebuild.”** Its inherited contracts, decisions, component inventories, architecture proposals, layouts, visual tokens, and prior “locked” interaction patterns are **reference material, not veto power**. DOAA-RR may redesign, replace, simplify, or discard any inherited solution when a better solution serves the actual experience. No earlier decision is grandfathered in simply because it was documented, implemented, or once approved.
+
+Carry forward *requirements and evidence* on their merits: aviation accuracy, provenance, privacy, security, data preservation, accessibility, user needs, provider/cost constraints, and proven algorithms. Distinguish these enduring outcomes and constraints from contingent implementation choices. Reconsider even an inherited implementation if it obstructs the new experience, while retaining necessary safety properties and migration protections.
+
+Authority order: **current explicit user direction → subsequently approved DOAA-RR design/behaviour contracts → validated product requirements and empirical findings → inherited rebuild documents as nonbinding context.** Historical decisions remain archived for traceability, not as mandatory acceptance gates. When conflicts arise, document the choice and rationale rather than allowing older wording to silently reassert itself.
+
+The name **DOAA-RR** denotes the independent “DOAA Rebuild Rebuild” effort. It is free to discover a different visual language or architecture through the Design Lab. No blanket commitment to Field Notes styling, inherited navigation, tab structures, layout tokens, existing modules, or original release sequencing is implied.
+
 ## Reading order / authority
 1. `EXPERIENCE_V2.md`: current V2 product, Inspector interaction and visual/HMI direction.
 2. `RELATIONAL_EPISTEMOLOGY_CONTRACT.md`: investigation, derivation, provenance and epistemic presentation.
