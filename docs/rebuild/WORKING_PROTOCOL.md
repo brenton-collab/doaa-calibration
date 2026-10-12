@@ -370,3 +370,6 @@ Commit 4b7b09e expands free-enrichment source contracts. Eight direct source che
 
 ## Free media lookup caching
 Commits 9cc33ad, 41da51f and f908c0f add a per-isolate one-hour, 256-entry Wikimedia Commons registration cache including null/missing photographs. Commit b02414f adds source-contract assertions; six direct source checks passed. ADSBdb five-minute cache and VRS timeout were committed earlier (20a5874 to 87a44cf), with test extension 2d7023a. No external provider fixture tests, authenticated browser checks or preview deployment yet. In-flight Commons request deduplication and error-result caching remain open; cached misses apply only to successful no-result searches.
+
+## Airport Inspector first UX pass
+Commit 9955cf1 replaces redundant unknown-state/condition sections on Airport Overview with explicit navigation guidance to Movements, Airfield and Operations, retaining the weather/operational-status distinction. Commit 4967adc adds source-contract checks. This is a small readability change, not the complete Airport Inspector redesign. No authenticated browser or runtime provider verification performed. Next: exercise existing Node test suite and browser navigation; improve airport context with evidenced operational data only.
