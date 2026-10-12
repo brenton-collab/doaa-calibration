@@ -315,3 +315,10 @@ Guiding question: **Does following this relationship materially deepen understan
 ## Decision: no AI dependency or integration (2026-10-12)
 
 Owner explicitly prefers **not to involve AI in DOAA-RR**. No AI in runtime, Inspector composition, ingestion, entity resolution, relevance ranking, enrichment or source interpretation. Use deterministic software, validated schemas, source-specific adapters and explicit evidence rules. Do not wire in an AI service, build AI abstractions prematurely, create AI-related configuration, or incur inference costs. Clean modular boundaries may permit an optional AI adapter *later*, but this is not a present feature or commitment; adding it requires a separate consequential design/authorization decision. The validated relational Inspector and on-demand record composition must function entirely without AI.
+
+
+## Study 06: full Inspector destinations and datum-as-link (2026-10-12)
+
+Study 06 relationship destinations are prototype stubs only. In the product, selecting a resolved entity opens its full subject-appropriate Inspector within the same continuous relational navigation context. Stub depth is not approved product depth.
+
+The datum itself (manufacturer, engine designation, operator, registration, airport code, flight identity) is the navigation target. Avoid repeated 'Explore X' CTAs and unnecessary arrow glyphs. Preserve subtle discoverability, accessible semantic interactions, keyboard focus, mobile touch targets and clear non-linked states. Test visual affordance rather than automatically underlining everything. Direct SKY exit remains distinct from contextual Show in SKY.
