@@ -342,3 +342,8 @@ Owner confirms Study 08 MOVEMENTS link and row interaction is working. Critical 
 ## Bounded chronology: NOW focus gradient (2026-10-12)
 
 Owner proposes distinguishing the present within the internally scrollable chronology using a graded row tint: strongest at the NOW period, half-strength in immediately adjacent rows, half again for next neighbours, fading into normal chronology. Interpret as **temporal focus gradient**, not a hard past/future divider. A NOW anchor must be grounded in actual current time and chronology semantics; do not falsely suggest an observed movement is happening now. Consider a dedicated time marker/period row when no movement coincides with the present. Gradient should support readability, accessibility, varying row heights, filtering, and moving scroll position; exact tint, strength, and whether emphasis follows NOW versus viewport focus remain to be tested in an interactive study. Preserve bounded internal scroll rather than page-length expansion.
+
+
+## Bounded chronology: return-to-NOW control (2026-10-12)
+
+Owner requests an obvious but nonintrusive **NOW** return control inside the MOVEMENTS chronology frame. Design direction: small floating/sticky control anchored within the bounded scroller, appearing once the user navigates sufficiently away from the current-time anchor, hidden when NOW is visible. Activating it scrolls only the internal chronology to actual present time, retaining the surrounding Inspector scroll position and subject context. Respect reduced motion, keyboard and touch accessibility; avoid obscuring records. NOW must be a real time anchor, not an invented current flight. Prototype alongside the graded NOW row shading and internal infinite scroll.
