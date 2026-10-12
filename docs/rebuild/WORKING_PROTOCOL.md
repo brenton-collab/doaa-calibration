@@ -358,3 +358,6 @@ Test source contract added in tests/rebuild-free-enrichment.test.cjs (4e70334); 
 ## RACK enrichment wiring
 - Root cause found: RACK called DOAAFlight.summary(), which previously read only the Inspector dossier cache; uninspected aircraft therefore had no route. Commits ed877ee and b442721 connect at most the three nearest displayed RACK contacts to the shared five-minute dossier enrichment cache. Other entries remain cache-only. A stale asynchronous response is ignored if the aircraft contact key changed. No proof of current route is asserted. Changes are committed, not deployed or live-tested.
 - Regression source contracts extended in e140ec8; test file committed but execution not yet verified. Provider lookup rates may still require stricter server-side negative caching or throttling; avoid claiming production readiness. Preserve preview and production isolation.
+
+## Free-enrichment source check
+Fourteen JavaScript source-contract assertions passed against fetched branch contents. This is not Node execution, provider integration, or browser verification. RACK hydration currently invokes media-enabled dossiers; separate it from Inspector photo research before deployment.
