@@ -392,3 +392,8 @@ Owner confirms red-marked Preferences and MAP are objections to **persistent on-
 ### SKY Study 02 feedback — launcher (2026-10-12)
 
 Owner says the relocated control sheet is directionally appealing ("Yeah. Kinda. I like where you put the displaced stuff") and proposes a **settings gear icon** for its launcher rather than the prominent DOAA-labelled button. This is a preference to explore, not blanket acceptance of the static screenshot study or final information architecture. Preserve a discoverable accessible label, minimum touch target and the distinction between app-wide navigation and settings within the consolidated sheet.
+
+
+### SKY Study 03 feedback — direction accepted, execution rejected (2026-10-12)
+
+Owner: **"Poorly implemented in the Study, but yes."** Interpret narrowly: owner supports a discreet gear-type launcher in the proposed location for displaced controls, but **does not approve Study 03's execution, interaction quality, or visual finish**. Stop iterating on static screenshot composites. Next meaningful SKY study should have a genuinely interactive pan/zoom viewport and coherent functional launcher/panel, preserving the deployed viewport's distinctive cartographic expression. Avoid calling a static screenshot interactive merely because its panel works; distinguish illustrative fixtures from live aircraft and operational layers. Do not assume a gear icon alone adequately communicates navigation; test discoverability.
