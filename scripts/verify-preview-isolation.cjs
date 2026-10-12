@@ -4,7 +4,7 @@ const preview=JSON.parse(fs.readFileSync('wrangler.preview.jsonc','utf8'));
 const production=JSON.parse(fs.readFileSync('wrangler.jsonc','utf8'));
 assert.equal(preview.name,'doaa-calibration-preview');
 assert.equal(preview.main,'src/worker.js');
-assert.equal(preview.assets.run_worker_first,true,'all static app assets require authentication');
+assert.ok(preview.assets.run_worker_first===true||(Array.isArray(preview.assets.run_worker_first)&&preview.assets.run_worker_first.length===1&&preview.assets.run_worker_first[0]==='/*'),'all static app assets require authentication');
 assert.equal(preview.assets.directory,'./dist');
 assert.equal(preview.d1_databases.length,1);
 assert.equal(preview.d1_databases[0].binding,'DB');
