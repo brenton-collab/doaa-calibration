@@ -150,7 +150,7 @@ async function dossierApi(u,env){
  let dossierMedia={image:known.photo_image||null,page:known.photo_page||null,specificity:known.photo_specificity||null,credit:known.photo_credit||known.photo_artist||null,license:known.photo_license||null};
  if(!(dossierMedia.image&&dossierMedia.license&&dossierMedia.credit)&&!conflicts.registration){
   const verifiedRegistration=known.registration||ids.registration||aa?.registration||null;
-  if(verifiedRegistration&&/^[A-Z0-9-]{3,12}$/i.test(verifiedRegistration)){
+  if(verifiedRegistration&&/^[A-Z0-9-]{3,12}$/i.test(verifiedRegistration)&&u.searchParams.get('media')==='1'){
    try{const candidate=await commonsPhoto(verifiedRegistration,true);
     if(candidate?.image&&candidate.license&&(candidate.credit||candidate.artist)&&candidate.image.startsWith('https://'))dossierMedia={image:candidate.image,page:candidate.page||null,specificity:'exact-airframe',credit:candidate.credit||candidate.artist,license:candidate.license};
    }catch{} // No photograph is better than a misidentified or unattributed photograph.
