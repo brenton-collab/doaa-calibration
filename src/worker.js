@@ -127,7 +127,7 @@ async function dossierApi(u,env){
  const has=p=>remembered.some(c=>c.predicate===p&&c.value_text);
  const needIdentity=!has('registration')||!has('icao_type')||!has('manufacturer')||!has('model');
  const cachedRoute=call?routeClaim(mj.claims||[],call):null;
- const adb=needIdentity||(!cachedRoute&&call)?await adsbdbDossier(hex,call):null;
+ const cacheKey=hex+'|'+call,prior=freeDossierCache.get(cacheKey);const adb=needIdentity||(!cachedRoute&&call)?(prior&&Date.now()-prior.at<300000?prior.value:await adsbdbDossier(hex,call)):null;
  let f=adb?.flight||(cachedRoute?{...cachedRoute.route,source:cachedRoute.claim.source_name||'REMEMBERED ROUTE',retrieved_at:cachedRoute.claim.retrieved_at||cachedRoute.claim.last_supported_at||null,current_assignment_established:false}:null);
  // ADSBdb aircraft lookups often identify the airframe without returning a route.
  // Try the existing free standing-route source before falling back to a callsign-only record.
