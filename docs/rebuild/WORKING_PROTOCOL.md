@@ -364,3 +364,6 @@ Fourteen JavaScript source-contract assertions passed against fetched branch con
 
 ## RACK request separation
 Commits ebb383d and cdd124f switch automatic RACK hydration to read-only dossiers without media=1 and add a five-minute, 128-key client cache with pending-request sharing (including null responses). No deployment or provider integration verification yet. The server still performs free ADSBdb/VRS lookups; further server-side throttling and Commons miss caching remain open. A subsequent cleanup patch was blocked by the repository tool; source-level testing remains required.
+
+## Verification follow-up
+Commit 4b7b09e expands free-enrichment source contracts. Eight direct source checks passed for RACK route-only hydration, pending-request sharing, negative cache, bounded size and top-three scope, VRS fallback, opt-in Commons and provider timeout. Not browser or live-provider tests. Attempted Worker-side cache patch was blocked; server caching is NOT implemented. Next gate: execute Node tests, isolate free-provider failures and check Airport Inspector usability.
