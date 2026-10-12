@@ -151,3 +151,18 @@ html,body{background:var(--bg);color:var(--ice);font-family:Inter,ui-sans-serif,
 :root{--doaa-ink:#182329;--doaa-rule:#e3e7e5;--doaa-soft:#f0f2f0;--doaa-radius:16px}
 .detail-body .fn-inspector-section-title{font-size:17px;letter-spacing:-.02em;text-transform:none;color:var(--doaa-ink)}
 .detail-body .fn-inspector-section{padding:23px 0 21px;border-color:var(--doaa-rule)}
+
+/* DOAA editorial system, shared with all Inspector surfaces. */
+.detail-body{font-size:14px;line-height:1.58;color:var(--doaa-ink)}
+.detail-body .fn-inspector-header{border-bottom:0;padding:5px 0 2px}
+.detail-body .fn-inspector-heading .dcall{font-size:clamp(24px,5.5vw,33px);font-weight:720;letter-spacing:-.042em;line-height:1.12;color:var(--doaa-ink)}
+.detail-body .fn-inspector-subtitle{margin:8px 0 18px;font-size:14px}
+.detail-body .fn-inspector-hero{border-radius:var(--doaa-radius);margin-bottom:18px}
+.detail-body .fn-inspector-hero img{height:clamp(160px,28vh,260px)}
+.detail-body .inspector-fact{padding:11px 0 14px;border-bottom:0;min-width:0}
+.detail-body .fact-label{font-size:11px;font-weight:500;letter-spacing:0;text-transform:none}
+.detail-body .fact-value{font-size:15px;line-height:1.4;font-weight:650;color:var(--doaa-ink);overflow-wrap:anywhere}
+.detail-body .fn-telemetry-primary .inspector-fact{background:var(--doaa-soft);border:1px solid var(--doaa-rule);border-radius:var(--doaa-radius);padding:13px}
+.detail-body .fn-object-link,.detail-body .fn-observation-link{background:#fafaf8;border:1px solid var(--doaa-rule);border-radius:var(--doaa-radius);padding:14px 15px;min-height:72px;margin:0 0 9px}
+.detail-body .fn-object-title,.detail-body .fn-observation-title{font-size:15px;font-weight:650;color:var(--doaa-ink)}
+@media(max-width:420px){.detail-body .fn-inspector-header{display:flex;flex-direction:column;align-items:flex-start;gap:5px}.detail-body .fn-inspector-kicker{order:-1}}
