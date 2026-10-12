@@ -376,3 +376,6 @@ Commit 9955cf1 replaces redundant unknown-state/condition sections on Airport Ov
 
 ## Executable provider fixtures
 On 2026-10-12 the actual Worker vrsRoute and commonsPhoto functions were extracted and executed in an isolated JavaScript harness with mock fetch and timeout signals. VRS: five checks passed (route parsing, non-live association, invalid callsign rejection, offline graceful return, 3500ms timeout). Commons: five checks passed (registration title match, license, credit, 3500ms timeout, provider error propagation for dossier catch). These are behavior-level fixture checks, not live provider requests, Node suite, browser journey or deployment. Next: commit reproducible Node fixture tests, run full suite, validate preview authentication, then improve Airport Inspector.
+
+## Reproducible free-provider fixture tests
+Commit 3757c6b adds tests/rebuild-provider-fixtures.test.cjs with five Node test cases exercising extracted VRS and Commons implementations with mocked fetch. JavaScript syntax parsed successfully in the tool runtime; the Node suite itself has NOT been executed. Prior ten isolated runtime fixture assertions passed. Run Node tests locally or in a controlled existing test environment before any preview deploy; avoid triggering scarce paid GitHub Actions unnecessarily. Airport Inspector improvements remain a separate UX gate.
