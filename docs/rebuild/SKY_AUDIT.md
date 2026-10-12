@@ -29,3 +29,41 @@ Protect aircraft salience, genuine geographic cues, trustworthy trails and immed
 
 ## Verification
 Read-only repository inspection; no browser runtime, screenshots, local test execution, hosted CI, preview or production verification. No spending incurred. Next action: finish source interaction/layer inventory, then browser-verify before committing visual redesign decisions.
+
+
+## Source inventory extension — 2026-10-12
+
+### Audit boundaries
+This is an inventory of inherited behaviour, not a design specification. The Inspector is a relational interaction model; its future physical presentation is unconstrained. Classifications below distinguish **S** (source confirmed), **I** (inferred risk), and **R** (runtime/browser verification required). Capability preservation never mandates preserving an existing control.
+
+### Active render stack and dependencies
+- **S:** `index.html` loads MapLibre GL 4.7.1 from unpkg and `vector-base.js`. The latter creates an `interactive:false` vector map with OpenFreeMap tiles and external glyphs, plus a failure fallback. `draw()` synchronizes camera through `doaaVectorSync`. **R:** camera parity, tile availability, labels and licensing/attribution appearance.
+- **S:** `#tiles` canvas renders OpenStreetMap raster tile fallback/street layer; `#sky` canvas renders aircraft, trails, graticule, range rings and airport crosshair markers. MapLibre's base layer is independent of the SKY hit testing and gestures. **I:** multiple projections and zoom conventions may diverge; **R:** measure rather than assume.
+- **S:** `map-overlay.js` contains a separate Overpass-derived canvas but is **not loaded by the inspected main `index.html` script list**. Prior audit wording describing it as active was overbroad. It remains resident legacy code unless another entrypoint proves usage.
+- **S:** `track-history.js` implements a distinct recorded-observation playback/compare canvas, playback, fit, follow, zoom, pan, event seek and candidate picker. Its empty state explicitly distinguishes external history from DOAA Sightings.
+- **S:** `ambient.js` implements independent SKY and SLIDES compositions, media eligibility checks, exit on interaction, manual mode choice and optional idle entry. Its SKY trail store is distinct from interactive SKY trails. **R:** equivalence of live/stale semantics across them.
+
+### Actual map symbols and overlays
+- **S:** current aircraft with valid heading use a directional half-arrow polygon rotated by track; without heading a dot; selected contact gets a circular halo. Pinned/last-known markers have reduced alpha. Search match filtering dims nonmatches. Aircraft rendering excludes ground aircraft and generally requires recent positions.
+- **S:** static `AIRPORTS` markers use crosshair geometry; hit testing checks aircraft before airports within a 20 px radius. **I:** overlap and touch competition; **R:** test dense clusters.
+- **S:** altitude-coloured age-faded tracks; true-bearing range rings with tick marks, adaptive geographic graticule, home/catchment map framing. **R:** whether they visually compete with aircraft, clutter at different zooms and preserve true geographic semantics.
+- **S:** base/street map mode, trail visibility, follow/resume, altitude legend and map-settings dialog. SKY preferences separately manage home aerodrome, exploratory aerodrome, catchment radius and units. Header contains SKY/BOARD/LOOK, feed/status, preferences, usage/provider health, AMBIENT entry; Rack provides collapse/search and aircraft rows; recenter/return home appears contextually. **R:** exact default visibility, stacking and accessible hit areas.
+
+### Interaction and acquisition lifecycle
+- **S:** pointer drag pans and suspends following; two pointers pinch zoom; wheel zoom suspends following; tap selects aircraft or airport, or clears selection; Rack row Enter/Space activates selection; Rack pull toggles collapse; Inspector has close and deliberate mobile expansion, with touch gesture on its handle. Selection starts following; follow requires a fresh position and compensates for occupied Inspector area.
+- **S:** `refresh(false)` starts on load and a 30-second interval; acquisition uses viewport cells, bounded concurrent requests, 12-second fetch timeout, cache and source freshness logic. A separate 10-second redraw refreshes visual age while visible. **R:** actual provider degradation, cell gaps and stale semantics.
+- **S:** `renderRack` normal view is ten nearest aircraft; asynchronous hydration differs for first three. Search returns airframe/flight/airport records, some represented as synthetic aircraft-shaped rows. A flight search result can open a text-only external result, rather than necessarily invoking the full relational Inspector. **I:** conceptual conflation of live encounter, retrieved flight, and historical identity.
+- **S:** selecting a contact immediately paints a telemetry fallback while asynchronous Inspector enrichment runs. On enrichment rejection it can return to fallback. **R:** stale asynchronous completion after focus change and actual continuity under errors.
+- **S:** BOARD movement opening calls `setPrimaryView('SKY')` then opens detail and sets `returnView='BOARD'`; LOOK selection follows similar return bookkeeping. **I:** origin, focus and underlying workspace are coupled in the shell. This is inherited behaviour, not an RR design constraint.
+- **S:** mobile portrait collapses Rack when Inspector opens; CSS defines compact/expanded sheet and desktop dock/short-landscape positioning. **R:** viewport usability, scroll/focus restoration, overlap, safe-area and keyboard/reduced-motion behaviour.
+
+### Epistemic seams for adjacent workstream
+- **S:** map uses fresh (<90-second) observed positions; pinned/last-known are rendered differently. Tracks retain up to 60 minutes. Rack search creates placeholders with `lat:0,lon:0` for retrieved flight/airframe records, relying on branch-specific display logic. Keep these synthetic values out of domain position claims.
+- **S:** current Rack status combines route endpoints, phase inferred from catchment endpoint matching, estimated arrival strings and current telemetry. **I:** without provenance attached to each displayed value, users may interpret inferred phase or retrieved route as confirmed dated movement. Verify source association and time semantics before adopting.
+- **S:** `DOAALiveSnapshot` exposes current aircraft, observation timestamp, home and provider for LOOK/AMBIENT. **R:** whether these consumers apply equivalent stale/degraded and identity rules.
+
+### Dispositions without design foreclosure
+**Protect as capabilities:** observed contact positioning, direction, geographic orientation, selection, evidence-backed trails, contextual follow, airport exploration, search, historical replay, status/provenance, degraded operation, accessible navigation. **Re-evaluate, not inherit:** Rack form and ten-item limit, inspector dock/sheet, fixed home rings, persistent header controls, map layer choices, static airport markers, map rendering stack, SKY as obligatory host of BOARD-origin inspection. **No removal decision yet:** all require runtime evidence, task relevance and Design Lab alternatives.
+
+### Verification state and next gate
+Repository source inspection extended; no browser session, live authenticated traffic, screenshots or hosted tests. Full dependency inventory still needs `src/`, Worker routes, runtime response contracts and browser inspection. Audit findings may inform Design Lab and epistemology without prescribing their outcomes.
