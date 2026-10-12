@@ -19,4 +19,8 @@ assert.match(client,/if\(!x&&hydrate\)/);
 assert.match(rack,/const hydrate=index<3,ttl=hydrate\?300000:30000/);
 assert.match(rack,/summary\(a,hydrate\)/);
 assert.match(rack,/_contactKey!==key/);
+assert.match(client,/rackRoutePending\.get\(key\)/);
+assert.match(client,/rackRouteCache\.set\(key/);
+assert.match(client,/rackRouteCache\.size>128/);
+assert.match(client,/getEvidence\('\/api\/dossier\?'\+new URLSearchParams\(\{hex:a\.id\|\|''/);
 console.log('Source contracts for route and media passed.');
