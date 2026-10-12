@@ -412,3 +412,6 @@ Commits 567334e and edc1cff convert AviationWeather stationinfo elevation from m
 
 ## Airport navigation lifecycle fix
 Commit 4bebbdb disposes the Airport Overview interactive runway workspace before any Inspector surface replacement and when restoring Back navigation. Previously only the separate Runways workspace and Movements workspace were consistently disposed. Client source syntax and presence of both disposal paths checked; interactive browser leak/regression test remains outstanding. Airport acceptance gate remains open.
+
+## Airport runway remount state verification
+Commit a64d559 invalidates the outstanding request token and clears the loading flag when an airfield workspace is disposed. Verified from fetched rebuild-branch code with isolated runtime fixtures: disposal clears loading/token; remount retains selected runway ID and establishes a new disposal callback. This is not a full DOM, network, or authenticated preview test. Airport acceptance remains open.
