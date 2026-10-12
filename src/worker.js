@@ -129,7 +129,7 @@ async function dossierApi(u,env){
  const has=p=>remembered.some(c=>c.predicate===p&&c.value_text);
  const needIdentity=!has('registration')||!has('icao_type')||!has('manufacturer')||!has('model');
  const cachedRoute=call?routeClaim(mj.claims||[],call):null;
- const cacheKey=hex+'|'+call,cachedDossier=freeDossierCache.get(cacheKey);const adb=needIdentity||(!cachedRoute&&call)?(cachedDossier&&Date.now()-cachedDossier.at<300000?cachedDossier.value:await adsbdbDossier(hex,call)):null;
+ const cacheKey=hex+'|'+call,cachedDossier=freeDossierCache.get(cacheKey);const adb=(cachedDossier&&Date.now()-cachedDossier.at<300000)?cachedDossier.value:await adsbdbDossier(hex,call);
  if(adb&&(!cachedDossier||Date.now()-cachedDossier.at>=300000)){freeDossierCache.set(cacheKey,{at:Date.now(),value:adb});if(freeDossierCache.size>256)freeDossierCache.delete(freeDossierCache.keys().next().value)}
  let f=adb?.flight||(cachedRoute?{...cachedRoute.route,source:cachedRoute.claim.source_name||'REMEMBERED ROUTE',retrieved_at:cachedRoute.claim.retrieved_at||cachedRoute.claim.last_supported_at||null,current_assignment_established:false}:null);
  // ADSBdb aircraft lookups often identify the airframe without returning a route.
@@ -161,7 +161,7 @@ async function dossierApi(u,env){
    }catch{} // No photograph is better than a misidentified or unattributed photograph.
   }
  }
- return json({ok:true,build:BUILD,identity:{icao24:hex,registration:conflicts.registration?null:known.registration||ids.registration||af?.reg_number||f?.reg_number||null,icao_type:conflicts.icao_type?null:known.icao_type||ids.icao_type||af?.icao||f?.aircraft_icao||type||null},live:{callsign:call||null},flight:f,airframe:{...(af||{}),...known,hex},memory:mj,history:hj,identity_conflicts:conflicts,enrichment:{premium:'disabled',free_lookup:!!(adb?.aircraft||adb?.flight),free_lookup_status:adb?.lookup_status||'not-needed',read_only:true,media_research:'not-run'},obv,media:dossierMedia});
+ return json({ok:true,build:BUILD,identity:{icao24:hex,registration:conflicts.registration?null:known.registration||ids.registration||af?.reg_number||f?.reg_number||null,icao_type:conflicts.icao_type?null:known.icao_type||ids.icao_type||af?.icao||f?.aircraft_icao||type||null},live:{callsign:call||null},flight:f,airframe:{...known,...(af||{}),hex},memory:mj,history:hj,identity_conflicts:conflicts,enrichment:{premium:'disabled',free_lookup:!!(adb?.aircraft||adb?.flight),free_lookup_status:adb?.lookup_status||'no-response',read_only:true,media_research:'not-run'},obv,media:dossierMedia});
 }
 function claimAgeMs(c){const t=Date.parse(c?.retrieved_at||c?.last_supported_at||'');return Number.isFinite(t)?Date.now()-t:Infinity}
 function routeComplete(r){return !!(r&&(r.dep_iata||r.dep_icao)&&(r.arr_iata||r.arr_icao))}
