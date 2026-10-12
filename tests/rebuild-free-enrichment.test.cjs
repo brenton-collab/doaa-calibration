@@ -1,0 +1,16 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const worker=fs.readFileSync('src/worker.js','utf8');
+const client=fs.readFileSync('flight-enrichment.js','utf8');
+const dossier=worker.slice(worker.indexOf('async function dossierApi('),worker.indexOf('function claimAgeMs('));
+assert.match(dossier,/if\(!routeComplete\(f\)&&call\)/);
+assert.match(dossier,/await vrsRoute\(call\)/);
+assert.match(dossier,/media=|searchParams\.get\('media'\)/);
+assert.match(dossier,/commonsPhoto\(verifiedRegistration,true\)/);
+assert.match(dossier,/candidate\.license/);
+assert.match(dossier,/candidate\.image\.startsWith\('https:\/\/'\)/);
+assert.match(client,/media:'1'/);
+assert.match(client,/dossierCache\.get\(key\)/);
+assert.match(worker,/AbortSignal\.timeout\(3500\)/);
+console.log('Source contracts for route and media passed.');
