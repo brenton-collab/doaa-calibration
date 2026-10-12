@@ -28,3 +28,14 @@ Review real UI at phone portrait (393×851), short landscape (851×393), tablet 
 
 ## Decision resolution
 Apply all 184 indexed decisions with their amendments and supersessions; specifically 128 supersedes 125 trail extent; 152 qualifies 133 jitter; 159/161 revise 83 marker conflict badge; 165 qualifies 82 when all positions degraded; 176 and 177 lock tab inventories; 179 defines release boundary amended by 180–184. Preserve remaining unimplemented product ambition as documented scope, not falsely completed features.
+
+
+## Epistemological confidence in the experience (2026-10-12 clarification)
+
+**Assert what the evidence warrants. Qualify only what materially changes the interpretation. Make the reasoning available without making it compulsory.**
+
+DOAA is an aviation understanding instrument, not a provenance dashboard. Observations, published records, retrieval, derivation and reasoned inference may combine into confident conclusions. Present the best defensible synthesis directly when evidence supports it. The interface should absorb the complexity of source reconciliation and expose its reasoning through optional inspection, not mandatory badges, source prefixes, confidence scores or ubiquitous caveats.
+
+Visible qualification is a *materiality decision*, not a source-type rule. Qualify genuinely ambiguous identity, time, operational status, route association, location or contradictory evidence when omission would change a reasonable interpretation. Do not automatically prepend “likely” to a well-supported inference or “derived” to every calculation. Do not mask important uncertainty for visual polish. The internal evidence contract still requires provenance, freshness, validity intervals, competing claims and auditability.
+
+This clarification supersedes any interpretation of prior “Evidence-driven visual states,” evidence badges, and inferred-value qualifier examples as a mandate for constant visible labeling. Preserve meaningful live-versus-last-seen distinctions and genuine degraded states, but choose their expression through actual UX exploration. Neither the inherited Inspector dock/sheet nor the current Rack and tab layout dictates future spatial design. Investigation **origin**, **focus**, and **workspace** are separate concepts; the relational Inspector is an interaction model, not a required panel.
