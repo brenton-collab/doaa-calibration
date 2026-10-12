@@ -480,3 +480,8 @@ Preview D1 939eda3b-4894-497b-9f67-209771761b3f: created airport_reference_snaps
 
 ### Inspector subject identification (2026-10-12 UTC)
 - User requires an unambiguous indication of the object currently inspected. Commit c9369f5 moves subject identity/header above hero photography and sets the sheet's subject from the actual rendered title and category during Inspector wiring. Commit f9c87a9 displays that context in the persistent Inspector chrome, truncates long labels, and clears it on close. These changes are source-only and need automated and mobile browser validation before acceptance. An attempt to update regression tests was blocked by connector safety checks; test addition remains open.
+
+### Distinct Contact and Airframe heroes (2026-10-12 UTC)
+- User explicitly requires an appropriate hero on Contact Overview and the airframe photograph on Airframe Overview, not solely on Media.
+- Commit `40b6fb4`: Contact Overview now renders an observation-first signal hero (observed identifier, altitude, groundspeed, position freshness, with explicit unknown fallbacks). Airframe Overview now uses existing aircraft image and sanitized attribution via the shared shell; identity heading precedes photo. The Media tab retains specificity, licensing and gallery evidence. Commit `f427fd0` adds editorial Contact hero styling.
+- Do not confuse a Contact observation with a confirmed physical airframe or imply a representative image is exact. Further work: display photo specificity on Airframe hero, verify no stale/incorrect photo across changing subjects, add executed tests, deploy preview and review Android screenshots. These commits are not yet live.
