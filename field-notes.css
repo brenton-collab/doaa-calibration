@@ -146,10 +146,3 @@ html,body{background:var(--bg);color:var(--ice);font-family:Inter,ui-sans-serif,
 /* Airframe media: sourced gallery with accessible next/previous controls. */
 .fn-airframe-gallery figure{margin:0;overflow:hidden;border:1px solid #d2dcdd;border-radius:12px;background:#e9eeee}.fn-airframe-gallery img{display:block;width:100%;max-height:280px;object-fit:contain;background:#dce5e7}.fn-airframe-gallery figcaption{padding:10px 12px;font-size:11px;line-height:1.5;overflow-wrap:anywhere;color:#526976}.fn-airframe-gallery a{color:#285f7d}.fn-gallery-controls{display:flex;align-items:center;justify-content:center;gap:18px;margin:12px 0}.fn-gallery-controls button{min-width:44px;min-height:44px;border:1px solid #c5d5d8;border-radius:9px;background:#f0f5f5;color:#2c586e;cursor:pointer}.fn-gallery-controls button:disabled{opacity:.4;cursor:default}.fn-gallery-controls span{font-variant-numeric:tabular-nums;color:#496372}
 
-/* Contact hero represents a live observation, not an unverified aircraft portrait. */
-.detail-body .fn-contact-hero{margin:10px 0 16px;padding:17px 18px 15px;border:1px solid #c6d9df;border-radius:12px;background:linear-gradient(135deg,#e4eef0,#f1f5f2);color:#263f4b}
-.detail-body .fn-contact-hero-label{font:650 10px/1.4 ui-monospace,monospace;letter-spacing:.11em;color:#4a7182}
-.detail-body .fn-contact-hero strong{display:block;margin:7px 0;font:650 clamp(21px,5vw,30px)/1.15 system-ui;letter-spacing:-.04em;overflow-wrap:anywhere}
-.detail-body .fn-contact-hero-metrics{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
-.detail-body .fn-contact-hero-metrics span{padding:5px 8px;border:1px solid #c7d7d9;border-radius:5px;background:#f9fbf8;font:600 11px ui-monospace,monospace}
-.detail-body .fn-contact-hero p{margin:6px 0 0;color:#526e7a;font:12px/1.4 system-ui}
