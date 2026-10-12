@@ -30,7 +30,7 @@ html,body{background:var(--bg);color:var(--ice);font-family:Inter,ui-sans-serif,
 .board{background:#f4f3ee;color:#263c49}
 :where(button,a,input,select,[role="button"]):focus-visible{outline:3px solid #3377a5!important;outline-offset:3px}
 @media(min-width:701px) and (min-height:561px){
- .detail.show{top:156px;left:20px;width:min(425px,calc(100vw - 42px));max-width:min(40vw,425px);max-height:calc(100dvh - 177px)}
+ .detail.show{top:var(--inspector-top,156px);left:20px;width:min(425px,calc(100vw - 42px));max-width:min(40vw,425px);max-height:calc(100dvh - var(--inspector-top,156px) - 16px)}
 }
 @media(max-width:700px) and (orientation:portrait){
  .top{padding:14px 15px 10px}
@@ -42,7 +42,7 @@ html,body{background:var(--bg);color:var(--ice);font-family:Inter,ui-sans-serif,
 }
 @media(orientation:landscape) and (max-height:560px){
  .top{padding:8px 12px}
- .detail.show{border-radius:13px}
+ .detail.show{border-radius:13px;max-height:calc(100dvh - var(--inspector-top,110px) - 12px)}
 }
 @media(prefers-reduced-motion:reduce){.rail,.detail.show,.recenter{transition:none!important}}
 
