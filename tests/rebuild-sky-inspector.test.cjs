@@ -264,3 +264,9 @@ test('Late dossier enrichment cannot rewire a navigated Inspector',()=>{
  const show=src.slice(src.indexOf('async show(a,live,ago,d,force=false)'),src.indexOf('refresh(a,d){'));
  assert.ok(show.includes("if(d._doaaNavigation!==navigation||activeSurface(d)!=='contact')return;wire(d,a,x.flight"));
 });
+
+
+test('Closing a SKY Inspector preserves selection but stops follow',()=>{
+ assert.ok(html.includes("detailbody.replaceChildren();if(returnView==='LOOK'||returnView==='BOARD')selected=null;followSelected=false;"));
+ assert.ok(html.includes("if(returnView==='LOOK'||returnView==='BOARD')setPrimaryView(returnView)"));
+});
