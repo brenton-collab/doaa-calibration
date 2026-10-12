@@ -58,3 +58,20 @@ A fresh thread can identify the canonical state and next step quickly. A small c
 ## Immediate next action
 
 Inspect existing repository scripts, GitHub workflows, documentation, Cloudflare/Render configuration and available deployment history **read-only**; publish a findings-based workflow map and specific consolidation recommendations. Then choose the smallest useful improvements. This contract records the intent, not a claim that the workflow has been audited or fixed.
+
+## Decision: Workbench is a separate initiative, not automatically an app (2026-10-12)
+
+**Working name:** Weekend Workbench.
+
+**Purpose:** A portable, low-friction development environment for small, high-quality weekend software projects. DOAA-RR is the first proving ground, not the owner of the system.
+
+**Initial deliverable:** Reliable shared procedures, small scripts, templates, project adapters and durable canonical records. First audit existing tools and prove a repeatable project lifecycle.
+
+**Potential later deliverable:** A lightweight local Workbench application that exposes projects, current state, validation, previews, release status and next actions. This is an option, **not an approved build**. Only build UI after underlying workflows work and measured friction demonstrates the benefit.
+
+**Non-goals:** Custom IDE, replacement CI platform, deployment engine, broad orchestration framework, or another source of truth that requires continual maintenance.
+
+**Ownership and storage:** A separate ChatGPT Project named `Weekend Workbench` is suitable as a conversation/design space. It is not durable canonical source control. Once there is independent tooling, keep its code, runbooks and state in a separate repository rather than embedded in DOAA. Creating the ChatGPT Project is a user-side action; this note does not assert it exists.
+
+**Gate:** Complete read-only workflow audit → consolidate and verify portable underlying process using DOAA-RR → exercise on a second distinct project type → decide whether a small application is justified. Avoid launching the app project as a distraction from the core workflow.
+
