@@ -17,6 +17,21 @@ The aim is a reproducible, economical, reliable, comprehensible system that Sage
 
 The fourth workstream enables the others; it must not become an infrastructure project that delays product design. Evaluate actual practice before prescribing a new stack or elaborate process.
 
+## Cross-project portability: explicit user direction, 2026-10-12
+
+**The target is a reusable weekend-project development workbench, not a DOAA-specific development environment.** DOAA-RR is the first proving ground. The same workbench should support future web applications, Android applications, Windows utilities and creative experiments without repeating setup, test, preview, release and continuity decisions.
+
+Separate:
+- **Portable core:** project initialization, tool discovery, repository and branch hygiene, canonical state/decision records, test selection and stop criteria, artifact/version provenance, review and promotion gates, secrets/cost safeguards, and resume/rollback conventions.
+- **Project adapters:** platform-specific build tools, test runners, packaging, local emulators, cloud providers, preview destinations, release channels, signing, database migrations and domain-specific verification.
+- **Project policy:** approved budgets, target devices, data handling, required acceptance flows, release authority and rollback constraints.
+
+Avoid hardwiring Cloudflare, D1, Render, GitHub Actions or aviation concepts into the portable core. Conversely, do not force Android or Windows work into a web-preview workflow. Prefer lightweight templates and small scripts over a custom orchestration platform. Reuse existing free tools and integrations where feasible; verify capabilities and costs before adopting them.
+
+**Portability acceptance:** a new small project can be initialized with its own canonical state and appropriate platform adapter; it can build/test/produce a usable artifact and document its release path without copying DOAA-specific assumptions. The first real validation is DOAA-RR; a second distinct project type should eventually test generality before declaring the workbench reusable.
+
+Keep the workbench's eventual canonical source independent of the DOAA repository (e.g. a separate repository or shared project template), subject to actual workflow audit and user approval. The DOAA-RR documents record the requirement and pilot findings, not the permanent home of cross-project tooling.
+
 ## Audit requirements
 
 - Inventory current local/remote SDE and IDE, repository branches, tooling, available GitHub/Cloudflare/Render capabilities, automation, credentials boundaries, build scripts, migrations, deployments and preview URLs. Distinguish documented claims from verified runtime state.
