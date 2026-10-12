@@ -33,4 +33,8 @@ assert.match(dossier,/commonsResultCache\.size>256/);
 assert.match(dossier,/candidate\|\|null/);
 assert.match(client,/section\('EXPLORE THIS AIRPORT'/);
 assert.match(client,/Movements<\/strong>/);
+assert.match(client,/data-doaa=\\"airport-movements\\"/);
+assert.match(client,/data-doaa=\\"airport-airfield\\"/);
+assert.match(client,/data-doaa=\\"airport-operations\\"/);
+assert.match(client,/querySelectorAll\('\[data-doaa\]'\)/);
 console.log('Source contracts for route and media passed.');
