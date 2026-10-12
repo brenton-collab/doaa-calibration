@@ -80,3 +80,8 @@ Repository source inspection extended; no browser session, live authenticated tr
 **UX/epistemology clarification:** Assert warranted conclusions confidently; qualify only material interpretive uncertainty; make reasoning optionally available. An inference is not intrinsically a weak conclusion. Keep provenance/freshness/conflicts internally without mandatory visible badges. Preserve investigation origin, focus and workspace separately, and keep Inspector physical form open.
 
 **Next bounded transition:** Begin Design Lab with two real interactive responsive compositions, testing aircraft salience, contextual discovery and investigation continuity. Use explicitly illustrative fixtures and mark them as such. Maintain this audit as a source baseline until an actual running inherited SKY can be inspected; do not pronounce the visual audit complete.
+
+
+## Preview URL recovered; access boundary (2026-10-12)
+
+The owner supplied the historical previous-Rebuild preview URL: `https://doaa-calibration-preview.brenton-7e6.workers.dev/`. This is a **historical reference**, not an experience-v2 deployment. Direct read-only attempts from the available web reader returned a cache miss and from the local container failed DNS resolution; neither result establishes that the Worker is offline. The URL is no longer unknown, correcting the earlier preview-discovery limitation. No desktop/mobile interaction or visual verification has yet occurred; do not claim otherwise. No deployment, remote database write, paid workflow or Work session was initiated. Proceed with responsive interactive Design Lab exploration while retaining historical preview inspection as an outstanding, bounded evidence gate.
