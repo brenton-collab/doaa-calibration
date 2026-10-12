@@ -233,3 +233,12 @@ Owner says Airport and Flight compositions/instruments feel somewhat better but 
 Candidate pattern for testing: subject-specific topmost HERO; shared identity frame; legible overview frame; subject-specific interactive instrument(s); further evidence and relationships. This is a **visual grammar hypothesis**, not an approved rigid five-frame template. Preserve variation in subject composition and avoid imposing identical sections or ordering without reason.
 
 Next toy should test cross-object consistency and scannability **under substantially richer, realistically structured illustrative aviation information**, while keeping epistemic qualifiers honest. Do not solve 'too light' with paragraphs or verbose labels; prefer useful compact values, diagrams, timelines, evidence and relationships. Prior owner feedback on BOARD row interaction, logos/fallback, mobile Back, and Rebuild Airport instrument reuse remains active.
+
+
+## Study 04 critique: glance-first subject hierarchy (2026-10-12)
+
+Owner challenges the ordering of Inspector frames: **start with “What do I want to see quickly, at a glance?” for the particular inspected subject**, rather than applying an invariant OVERVIEW-first list of attributes. For Flight, **route/progress and departure/arrival times belong together in the leading information frame**, not separated into a later graphic. Airport and Airframe require their own subject-specific glance priorities. Shared framing/typography must remain recognizable across objects, but **content hierarchy and frame order are not necessarily identical**.
+
+Owner again finds OVERVIEW insufficiently visually prominent despite larger text in Study 04. Do not solve solely by enlarging fonts or adding heavy containers: rethink composition and the anchor information/instrument of the first substantive frame. The HERO remains topmost. The goal is **shared visual grammar with subject-specific information architecture and strong at-a-glance utility**.
+
+Next experiment should demonstrate Flight's integrated route + interactive progress + meaningful times in its primary frame, alongside an equally intentional Airport glance frame. Continue increasing useful evidence-aware information density without wordy explanatory copy. This is owner critique, not validation of a finalized layout.
