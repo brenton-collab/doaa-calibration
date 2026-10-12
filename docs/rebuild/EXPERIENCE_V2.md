@@ -62,3 +62,10 @@ Preserve verified aviation acquisition, D1 evidence/history, provider fallback, 
 ## Status
 
 2026-10-12: documented product direction and inherited-contract reconciliation; **no V2 Design Lab, new UI implementation, interactive verification or deployment completed**. Earlier V2 spec's explicit Back stack, focus tabs, Explore cards and immediate implementation gate are superseded here. Open questions remain design hypotheses until tested.
+
+
+## Clarification: confident synthesis and open spatial form (2026-10-12)
+
+DOAA should assert evidence-warranted conclusions confidently, including conclusions reached through reasoned multi-source synthesis. Qualification is warranted when it materially changes interpretation, not automatically because a conclusion is derived or inferred. Reasoning, provenance, freshness and competing claims remain internally preserved and optionally inspectable. Avoid turning the interface into a disclaimer or confidence-badge system. See `RELATIONAL_EPISTEMOLOGY_CONTRACT.md` for safeguards.
+
+The relational Inspector specifies continuity of investigation, **not** a dock, panel, tray, overlay or permanent arrangement. Model investigation origin, focused entity and visible workspace separately. Evaluate tangible responsive compositions in the Design Lab before deciding physical form; inherited SKY, BOARD and LOOK navigation is evidence, not design authority.
