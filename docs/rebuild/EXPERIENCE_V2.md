@@ -387,3 +387,8 @@ Owner supplied a screenshot of the deployed SKY on a mobile browser, marked **gr
 ### Owner clarification — controls versus capabilities (2026-10-12)
 
 Owner confirms red-marked Preferences and MAP are objections to **persistent on-screen buttons**, not requests to remove underlying capabilities. Preserve preferences, map modes, selectable layers and other functional controls; explore discoverable contextual access that does not intrude on the SKY viewport. This principle applies to evaluating the annotated navigation and return-home furniture too, but their exact replacement interaction is not yet approved. Do not equate visual removal with feature retirement.
+
+
+### SKY Study 02 feedback — launcher (2026-10-12)
+
+Owner says the relocated control sheet is directionally appealing ("Yeah. Kinda. I like where you put the displaced stuff") and proposes a **settings gear icon** for its launcher rather than the prominent DOAA-labelled button. This is a preference to explore, not blanket acceptance of the static screenshot study or final information architecture. Preserve a discoverable accessible label, minimum touch target and the distinction between app-wide navigation and settings within the consolidated sheet.
