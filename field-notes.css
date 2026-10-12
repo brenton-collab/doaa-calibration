@@ -200,3 +200,8 @@ html,body{background:var(--bg);color:var(--ice);font-family:Inter,ui-sans-serif,
 .detail-body .doaa-object-glyph{display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;margin-right:5px;border-radius:8px;background:#e8f0f6;color:#3775a2;font-size:17px}
 .detail-body .doaa-contact-evidence{margin-top:22px;padding:18px 0;border-top:1px solid #e4e6e6}
 .detail-body .doaa-contact-evidence>summary{cursor:pointer;font-size:13px;font-weight:650;color:#53626c}
+
+.detail-body .doaa-visual-hero{position:relative;height:158px;overflow:hidden;margin:12px 0 22px;border-radius:20px;background:linear-gradient(145deg,#e5f1f8 0%,#f6f9fb 54%,#dbeaf4 100%);border:1px solid #dce9f1}
+.detail-body .doaa-visual-hero svg{width:100%;height:100%;display:block}
+.detail-body .doaa-visual-hero>span{position:absolute;left:15px;bottom:12px;font-size:10px;letter-spacing:.1em;font-weight:750;color:#537b95}
+.detail-body .doaa-journey-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
