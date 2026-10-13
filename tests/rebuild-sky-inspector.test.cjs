@@ -270,3 +270,15 @@ test('Closing a SKY Inspector preserves selection but stops follow',()=>{
  assert.ok(html.includes("detailbody.replaceChildren();if(returnView==='LOOK'||returnView==='BOARD')selected=null;followSelected=false;"));
  assert.ok(html.includes("if(returnView==='LOOK'||returnView==='BOARD')setPrimaryView(returnView)"));
 });
+
+
+test('Rebuild SKY gear delegates to existing operational controls without parallel map state',()=>{
+ assert.match(html,/id="sky-launcher"[^>]*aria-expanded="false"/);
+ assert.match(html,/id="sky-launcher-panel"[^>]*hidden/);
+ for(const action of ['SKY','BOARD','LOOK','AMBIENT','MAP','FOLLOW','HOME','PREFERENCES'])assert.ok(html.includes('data-sky-action="'+action+'"'));
+ assert.ok(html.includes("MAP:'#sky-map-settings'"));
+ assert.ok(html.includes("HOME:'#recenter'"));
+ assert.ok(html.includes("PREFERENCES:'#global-preferences'"));
+ assert.ok(html.includes("target.click()"));
+ assert.ok(html.includes("mapDialog.addEventListener('close',()=>{const launcher="));
+});
