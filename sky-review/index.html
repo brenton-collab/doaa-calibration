@@ -7,17 +7,17 @@
 main{position:fixed;inset:0;overflow:hidden}#vector-base,#tiles,#sky{position:absolute;inset:0;width:100%;height:100%}
 #vector-base{z-index:0;visibility:hidden;pointer-events:none}#tiles{z-index:1;pointer-events:none;filter:grayscale(1) brightness(1.18) contrast(.72) opacity(.68)}html[data-vector-ready='yes'] #vector-base{visibility:visible}html[data-vector-ready='yes'] #tiles{visibility:hidden}#sky{z-index:2;touch-action:none;cursor:grab}
 #sky:active{cursor:grabbing}
-header{position:absolute;top:0;left:0;right:0;z-index:3;pointer-events:none;padding:16px 22px;background:linear-gradient(#f3f5f5f5,#f3f5f500)}
-h1{font-size:14px;letter-spacing:.12em;font-weight:650;margin:0 0 5px}
+header{position:absolute;top:0;left:0;right:0;z-index:3;pointer-events:none;padding:12px 14px;background:linear-gradient(#f3f5f5e8,#f3f5f500)}
+h1{font-size:12px;letter-spacing:.12em;font-weight:650;margin:0 0 5px}
 small{font-size:10px;letter-spacing:.08em}
-footer{position:absolute;bottom:0;left:0;right:0;z-index:3;pointer-events:none;padding:12px 22px;background:linear-gradient(#f3f5f500,#f3f5f5e8)}
-#note{position:absolute;right:20px;top:16px;z-index:3;text-align:right;font-size:11px;pointer-events:none}
+footer{position:absolute;bottom:0;left:0;z-index:3;pointer-events:none;padding:4px 8px;background:#f3f5f5c9;font-size:9px}
+#note{position:absolute;right:12px;top:14px;z-index:3;text-align:right;font-size:10px;pointer-events:none;max-width:52vw}#status{display:block}#status:empty{display:none}
 </style></head><body>
 <main id="instrument" aria-label="Independent SKY viewport">
 <div id="vector-base" aria-hidden="true"></div><canvas id="tiles"></canvas><canvas id="sky" aria-label="Interactive Ottawa aviation chart"></canvas>
-<header><h1>DOAA / SKY</h1><small>INDEPENDENT VIEWPORT · REAL RENDERER</small></header>
-<div id="note">CYOW · 45 NM<br>OBSERVATIONS NOT CONNECTED<br><span id="status" role="status">INITIALIZING</span></div>
-<footer><span id="attribution">MAP INITIALIZING</span><span style="float:right">DRAG TO PAN · SCROLL OR PINCH TO ZOOM</span></footer>
+<header><h1>DOAA / SKY</h1></header>
+<div id="note">CYOW · 45 NM<br><span id="status" role="status">MAP LOADING</span></div>
+<footer><span id="attribution">© OpenStreetMap contributors</span></footer>
 </main>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="./vector-base.js"></script>
@@ -37,7 +37,7 @@ const view={cx:home.lon,cy:home.lat,zoom:1},airports=[home],observations=[],trac
 const area=()=>{const w=host.clientWidth,h=host.clientHeight;return{top:0,bottom:0,w,h,cx:w*.5,cy:h*.5,mode:'standalone'}};
 const units={format:(n)=>n+' NM'};
 const status=document.getElementById('status');
-function updateStatus(){status.textContent=document.documentElement.dataset.vectorReady==='yes'?'VECTOR MAP READY':'OSM FALLBACK / MAP LOADING'};
+function updateStatus(){status.textContent=document.documentElement.dataset.vectorReady==='yes'?'MAP · VECTOR':'MAP · FALLBACK'};
 window.addEventListener('error',e=>{status.textContent='ERROR: '+(e.message||'resource unavailable');status.style.color='#a43333'});
 let viewport;
 function paint(){
