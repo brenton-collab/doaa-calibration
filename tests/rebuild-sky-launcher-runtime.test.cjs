@@ -53,3 +53,7 @@ test('gear shows current workspace and disables follow when no aircraft selected
 test('gear focuses current workspace',()=>{
  const h=harness();h.actions.SKY['aria-pressed']='false';h.actions.BOARD['aria-pressed']='true';h.open();assert.equal(h.actions.BOARD['aria-current'],'page');assert.equal(h.focuses.at(-1),'BOARD');
 });
+
+test('choosing already active SKY does not reset its Inspector',()=>{
+ const h=harness();h.open();h.act('SKY');assert.deepEqual(h.clicks,[]);assert.equal(h.panel.hidden,true);assert.equal(h.focuses.at(-1),'launcher');
+});
