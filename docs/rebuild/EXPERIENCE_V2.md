@@ -439,3 +439,8 @@ With local GitHub DNS blocked, the launcher adapter source was retrieved via con
 ### SKY gear truthful state (2026-10-12)
 
 Commit `a7a85c7` updates the launcher on opening to read the inherited `#sky-follow` control's visibility, disabled state and label, and the primary workspace buttons' `aria-pressed` state. It disables FOLLOW when unavailable, displays the inherited follow status, and marks the active workspace with `aria-current=page`; no new tracking state is introduced. Commit `35f66ad` updates the isolated Node test harness for these DOM reads and asserts the no-selection state. The new adapter's no-selection path was executed via the GitHub connector's source and an isolated DOM stub and returned the expected disabled/active/label state. **No full Node suite or real browser test has run.** Local GitHub checkout remains blocked by DNS; no production deployment or hosted CI consumption.
+
+
+### Active workspace keyboard focus (2026-10-12)
+
+Commit `68f8906` changes launcher initial focus to the currently active workspace (`aria-current=page`) with SKY fallback. Commits `15bff0e` and `3de18a7` update the isolated DOM test harness and add a BOARD-active focus assertion. The committed adapter source was executed against an isolated DOM with BOARD active: BOARD received `aria-current=page` and keyboard focus. Commit `965515e` also corrected the unavailable-FOLLOW test to avoid simulating a click on a disabled button. These are **isolated interaction checks**, not a complete Node-suite run or browser verification. No deployment or hosted CI consumption.
