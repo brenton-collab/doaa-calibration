@@ -36,7 +36,7 @@ test('BOARD and LOOK navigate directly without resetting SKY first',()=>{
  for(const name of ['BOARD','LOOK']){const h=harness();h.open();h.act(name);assert.deepEqual(h.clicks,[name])}
 });
 test('unavailable follow control does not trigger a fake action',()=>{
- const h=harness();h.actions.FOLLOW.hidden=true;h.open();h.act('FOLLOW');assert.deepEqual(h.clicks,['SKY']);assert.equal(h.focuses.at(-1),'launcher');
+ const h=harness();h.actions.FOLLOW.hidden=true;h.open();assert.equal(h.actions.FOLLOW.disabled,true);assert.equal(h.actions.FOLLOW.textContent,'Follow · select an aircraft');assert.deepEqual(h.clicks,[]);
 });
 
 test('preferences and ambient delegate without changing workspace',()=>{
