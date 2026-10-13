@@ -8,14 +8,14 @@ main{position:fixed;inset:0;overflow:hidden}#vector-base,#tiles,#sky{position:ab
 #vector-base{z-index:0;visibility:hidden;pointer-events:none}#tiles{z-index:1;pointer-events:none;filter:grayscale(1) brightness(1.18) contrast(.72) opacity(.68)}html[data-vector-ready='yes'] #vector-base{visibility:visible}html[data-vector-ready='yes'] #tiles{visibility:hidden}#sky{z-index:2;touch-action:none;cursor:grab}
 #sky:active{cursor:grabbing}
 header{position:absolute;top:0;left:0;right:0;z-index:3;pointer-events:none;padding:12px 14px;background:linear-gradient(#f3f5f5e8,#f3f5f500)}
-h1{font-size:12px;letter-spacing:.12em;font-weight:650;margin:0 0 5px}
+h1{font-size:clamp(29px,7vw,38px);line-height:1.08;letter-spacing:.01em;font-weight:450;margin:5px 0 0}
 small{font-size:10px;letter-spacing:.08em}
 footer{position:absolute;bottom:0;left:0;z-index:3;pointer-events:none;padding:4px 8px;background:#f3f5f5c9;font-size:9px}
 #note{position:absolute;right:12px;top:14px;z-index:3;text-align:right;font-size:10px;pointer-events:none;max-width:52vw}#status{display:block}#status:empty{display:none}
 </style></head><body>
 <main id="instrument" aria-label="Independent SKY viewport">
 <div id="vector-base" aria-hidden="true"></div><canvas id="tiles"></canvas><canvas id="sky" aria-label="Interactive Ottawa aviation chart"></canvas>
-<header><h1>DOAA / SKY</h1></header>
+<header><small>DOAA•RR · OTTAWA AVIATION</small><h1>SKY</h1></header>
 <div id="note">CYOW · 45 NM<br><span id="status" role="status">MAP LOADING</span></div>
 <footer><span id="attribution">© OpenStreetMap contributors</span></footer>
 </main>
