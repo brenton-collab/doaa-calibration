@@ -282,3 +282,9 @@ test('Rebuild SKY gear delegates to existing operational controls without parall
  assert.ok(html.includes("target.click()"));
  assert.ok(html.includes("mapDialog.addEventListener('close',()=>{const launcher="));
 });
+
+
+test('Opening a SKY contact does not silently move the camera into follow mode',()=>{
+ assert.ok(html.includes('selected=id;followSelected=false;openDetail();'));
+ assert.ok(html.includes("document.getElementById('sky-follow').onclick=()=>{followSelected=!followSelected;followAircraft();draw()}"));
+});
