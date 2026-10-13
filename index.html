@@ -381,7 +381,7 @@ let pullY=null;pull.onpointerdown=e=>{pullY=e.clientY;pull.setPointerCapture(e.p
 skyViewport=window.DOAASkyViewport.mount({
  overlay:sky,base:tiles,getView:()=>view,getArea:area,getRange:()=>configured,getActive:()=>ACTIVE,units:DOAAUnits,
  geometry:window.DOAASkyViewportGeometry,camera:window.DOAASkyViewportCamera,
- canvas:window.DOAASkyViewportCanvas,input:window.DOAASkyViewportInput,
+ canvas:window.DOAASkyViewportCanvas,input:window.DOAASkyViewportInput,traffic:window.DOAASkyViewportTraffic,
  onNavigate:()=>{manual=true;followSelected=false;draw()},
  onTap:(x,y)=>{const h=hit(x,y);if(h&&h.type==='aircraft')selectEncounter(h.id);else if(h&&h.type==='airport')showAirport(h.ap);else{selected=null;followSelected=false;detail.classList.remove('show');draw()}},
  onSettle:()=>scheduleAcquire()
