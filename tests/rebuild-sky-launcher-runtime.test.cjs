@@ -16,7 +16,7 @@ function harness(){
  const names=['SKY','BOARD','LOOK','AMBIENT','MAP','FOLLOW','HOME','PREFERENCES'];
  const actions=Object.fromEntries(names.map(name=>[name,el(name)]));
  actions.SKY['aria-pressed']='true';
- panel.querySelector=q=>actions[q.split('=')[1]?.replace(']','')]||actions.SKY;
+ panel.querySelector=q=>q==='[aria-current=page]'?Object.values(actions).find(a=>a['aria-current']==='page'):actions[q.split('=')[1]?.replace(']','')];
  panel.contains=()=>false;
  const selectors={'#sky-launcher':launcher,'#sky-launcher-panel':panel,'[data-primary=SKY]':actions.SKY,'[data-primary=BOARD]':actions.BOARD,'[data-primary=LOOK]':actions.LOOK,'#ambient-open':actions.AMBIENT,'#sky-map-settings':actions.MAP,'#sky-follow':actions.FOLLOW,'#recenter':actions.HOME,'#global-preferences':actions.PREFERENCES};
  const document={activeElement:launcher,getElementById(id){return selectors['#'+id]},querySelector(q){return selectors[q]},addEventListener(k,fn){handlers.set('document:'+k,fn)}};
