@@ -5,6 +5,9 @@ Status: **candidate architecture, not approved providers or implemented ingestio
 ## Objective
 DOAA-RR should discover, preserve, reconcile and present aviation evidence beyond live position feeds. Acquisition, evidence interpretation and presentation must be independently evolvable. SKY, BOARD and Inspector consume shared, provenance-aware evidence, not independent truth stores.
 
+## Open-ended source discovery (not an exhaustive taxonomy)
+The families below are illustrative starting points, **never a closed integration catalogue or ceiling on inquiry**. Source discovery must expand according to the evidence needed to build comprehensive, temporally accurate pictures of aircraft, flights, airports, operators, routes, infrastructure, people, organizations, events and observations. Consider manufacturers, lessors, maintenance organizations, airport authorities, corporate disclosures, scholarly literature, technical manuals, satellite observations, enthusiast records, specialist archives, photographic collections and newly emerging datasets whenever relevant. Distinguish discoverability from permission to ingest, redistribute or rely upon material.
+
 ## Candidate source families (evaluate licensing, availability, quotas and trust before integration)
 | Family | Candidate examples | Evidence and limitations |
 | --- | --- | --- |
@@ -16,6 +19,9 @@ DOAA-RR should discover, preserve, reconcile and present aviation evidence beyon
 | Weather/operational | METAR/TAF, NOTAMs, official airport notices | Time-bounded weather and advisories, not aircraft movement evidence. |
 | Historical/reference | Aircraft type and production records, accident/incident investigations, archival collections | Historical context; do not silently attach contemporary identities to old observations. |
 | Community datasets | Open aviation datasets, research repositories, volunteer-maintained airport/type tables | Useful complementary coverage; variable quality, rights and update cadence. |
+
+## Question-led source expansion
+Begin with a subject and the questions that remain unanswered; identify missing evidence, then search beyond known providers and source categories. Maintain a continuously extensible source registry with coverage, jurisdiction, subject, temporal scope, access method, provenance, rights, freshness, reliability, cost and limitations. Preserve dissenting and negative evidence, and identify gaps rather than silently filling them. Source breadth must not collapse distinct identities or imply unwarranted certainty. Separate research-time discovery from automated recurring ingestion; the latter requires explicit operational and cost assessment.
 
 ## Evidence model requirements
 Each acquired claim should retain source/provider, source URL or dataset identifier, retrieval time, asserted/observed time, validity interval where applicable, license/attribution, raw payload or durable reference, transformation version, confidence/quality flags and conflicts. Keep source claims distinct from resolved entity identity. UNKNOWN is not zero; scheduled is not observed; inferred is not verified. Avoid retroactive identity assignments.
