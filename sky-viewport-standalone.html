@@ -44,9 +44,9 @@ let mapError='';
 const contact=document.getElementById('contact'),fileInput=document.getElementById('snapshot-file');
 function refreshContacts(){
  if(!snapshot){contact.textContent='AIRCRAFT · LOAD SNAPSHOT';return}
- const valid=snapshot.aircraft.filter(a=>Date.now()-a.observedAt<90000&&a.observedAt<=Date.now()+60000);
+ const valid=snapshot.state==='historical'?snapshot.aircraft:snapshot.aircraft.filter(a=>Date.now()-a.observedAt<90000&&a.observedAt<=Date.now()+60000);
  observations=valid;
- contact.textContent=valid.length+' AIRCRAFT · '+(valid.length?'SNAPSHOT':'NO CURRENT POSITIONS');
+ contact.textContent=valid.length+' AIRCRAFT · '+(snapshot.state==='historical'?'HISTORICAL REPLAY':valid.length?'SNAPSHOT':'NO CURRENT POSITIONS');
  contact.title='Imported evidence · '+(snapshot.provider||'source unknown')+' · observed '+(snapshot.observedAt?new Date(snapshot.observedAt).toISOString():'time unknown')+' · click to replace';
 }
 async function loadSnapshot(file){
@@ -55,7 +55,7 @@ async function loadSnapshot(file){
  try{
   const data=JSON.parse(await file.text());
   if(!data||data.ok===false||!Array.isArray(data.aircraft))throw Error('Invalid DOAA traffic response');
-  snapshot=window.DOAASkyObservations.fromTraffic(data,Date.now());
+  snapshot=window.DOAASkyObservations.fromTraffic(data,Date.now(),{mode:'replay'});
   refreshContacts();paint();
  }catch(e){contact.textContent='SNAPSHOT · INVALID';contact.title=String(e.message||e)}
 }
@@ -74,7 +74,7 @@ function paint(){
  updateStatus();
  viewport.ctx.clearRect(0,0,width,height);
  viewport.drawInstruments(height);
- viewport.drawTraffic({aircraft:observations,AIRPORTS:airports,selected:null,tracks,trailsVisible:true,DOAASkyMapCore:{fresh:a=>Date.now()-a.observedAt<90000,alpha:()=>0,colour:()=>[0,0,0],HOUR:3600000},rackSearchResults:null,searchMatchIds:new Set(),rad:n=>n*Math.PI/180,inView:()=>true,now:Date.now(),innerHeight:height});
+ viewport.drawTraffic({aircraft:observations,AIRPORTS:airports,selected:null,tracks,trailsVisible:true,DOAASkyMapCore:{fresh:a=>snapshot?.state==='historical'||Date.now()-a.observedAt<90000,alpha:()=>0,colour:()=>[0,0,0],HOUR:3600000},rackSearchResults:null,searchMatchIds:new Set(),rad:n=>n*Math.PI/180,inView:()=>true,now:Date.now(),innerHeight:height});
 }
 viewport=window.DOAASkyViewport.mount({
  overlay:document.getElementById('sky'),base:document.getElementById('tiles'),
@@ -90,7 +90,7 @@ viewport=window.DOAASkyViewport.mount({
 function resize(){viewport.resize(host.clientWidth,host.clientHeight,window.devicePixelRatio||1);paint()}
 const observer=new ResizeObserver(resize);observer.observe(host);
 window.addEventListener('doaa-vector-ready',paint);
-const freshnessTimer=setInterval(()=>{if(snapshot)paint()},10000);
+const freshnessTimer=setInterval(()=>{if(snapshot&&snapshot.state!=='historical')paint()},10000);
 window.addEventListener('unhandledrejection',e=>{mapError='RESOURCE ERROR';status.title=String(e.reason);status.style.color='#a43333';updateStatus()});
 window.addEventListener('pagehide',()=>{observer.disconnect();clearInterval(freshnessTimer);viewport.destroy()},{once:true});
 resize();
