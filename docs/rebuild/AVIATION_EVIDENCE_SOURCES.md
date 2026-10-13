@@ -49,3 +49,6 @@ Inspected `src/worker.js`, `relay.js`, `index.html` and standalone SKY harness o
 
 ### Preferred next integration decision
 Reuse the authenticated Worker as the acquisition boundary when DOAA-RR has a proper authenticated host; evaluate a *read-only, explicit opt-in* development fixture or secure same-origin preview route only if genuinely necessary for visual acceptance. Assess rate/quota effects before live requests. In parallel, develop provider-independent evidence enrichment against safely captured, real observations. No production changes, new hosted services or paid consumption authorized by this audit.
+
+## Focused verification (2026-10-12)
+Ran Node.js v22.16.0 locally against the canonical contents of `sky-observations.js` and `tests/rebuild-sky-observations.test.cjs` using `node --test`: **4 passed, 0 failed**. No hosted CI or provider calls. This validates adapter behavior only; browser integration, provider response compatibility, authentication and live SKY rendering remain unverified.
