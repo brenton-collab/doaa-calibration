@@ -30,3 +30,17 @@ test('rejects positions with missing, old or future individual timestamps even i
  ]},t);
  assert.deepEqual(r.aircraft.map(a=>a.id),['good']);
 });
+
+test('historical replay retains genuinely dated old positions but never undated positions',()=>{
+ const recorded=t-86400000;
+ const payload={now:recorded,provider:'ARCHIVE',aircraft:[
+  {id:'recorded',lat:45.3,lon:-75.6,seen_pos:4},
+  {id:'undated',lat:45.3,lon:-75.6},
+  {id:'future',lat:45.3,lon:-75.6,_doaa_observed_at:recorded+120000}
+ ]};
+ assert.equal(fromTraffic(payload,t).aircraft.length,0);
+ const replay=fromTraffic(payload,t,{mode:'replay'});
+ assert.equal(replay.state,'historical');
+ assert.deepEqual(replay.aircraft.map(a=>a.id),['recorded']);
+ assert.equal(replay.aircraft[0].observedAt,recorded-4000);
+});
