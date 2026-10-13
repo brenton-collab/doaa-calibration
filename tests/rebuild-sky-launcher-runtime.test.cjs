@@ -49,3 +49,7 @@ test('clicking gear twice closes panel',()=>{
 test('gear shows current workspace and disables follow when no aircraft selected',()=>{
  const h=harness();h.actions.FOLLOW.hidden=true;h.open();assert.equal(h.actions.SKY['aria-current'],'page');assert.equal(h.actions.FOLLOW.disabled,true);assert.equal(h.actions.FOLLOW.textContent,'Follow · select an aircraft');
 });
+
+test('gear focuses current workspace',()=>{
+ const h=harness();h.actions.SKY['aria-pressed']='false';h.actions.BOARD['aria-pressed']='true';h.open();assert.equal(h.actions.BOARD['aria-current'],'page');assert.equal(h.focuses.at(-1),'BOARD');
+});
