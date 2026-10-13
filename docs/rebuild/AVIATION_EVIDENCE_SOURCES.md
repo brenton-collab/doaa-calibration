@@ -39,3 +39,13 @@ Each acquired claim should retain source/provider, source URL or dataset identif
 2. Build a source register with rights, freshness, entity coverage, access method, marginal cost and known reliability for each candidate.
 3. Prototype one low-cost complementary enrichment path against real existing observations, preserving provenance, without modifying production.
 4. Review identity reconciliation and source-conflict UI in Inspector before allowing enrichment claims to appear as fact.
+
+## Existing acquisition boundary audit (2026-10-12)
+Inspected `src/worker.js`, `relay.js`, `index.html` and standalone SKY harness on `rebuild/experience-v2`.
+- Worker `/api/traffic` passes through `gate(request, env)` before dispatch. Its `access-control-allow-origin: *` response header **does not remove authentication**. The Render-hosted static SKY harness cannot assume cross-origin anonymous access. Do not weaken production auth, expose tokens or create a new proxy merely for the preview.
+- Worker requests the existing Render relay, which has ordered free-source fallbacks ADSB.FI, ADSB.ONE and ADSB.LOL. Worker has geographic cell caching (fresh 25s, stale 300s), inflight coordination, source observation timestamp validation and optional historical checkpointing. The legacy frontend polls approximately every 30 seconds and uses scout + viewport cells; this behavior is **not** a DOAA-RR acquisition policy.
+- Worker supplies `_doaa_observed_at` derived from per-aircraft `seen_pos`/`seen` where present. A batch timestamp alone is insufficient to claim a current aircraft position. The standalone `sky-observations.js` adapter now requires individual timestamps and rejects stale/missing evidence. Focused regression tests are committed but execution remains unverified.
+- The standalone review page is static on the existing Render review service. It currently has no live acquisition or authenticated session integration; do not label the absence of a feed as zero aircraft.
+
+### Preferred next integration decision
+Reuse the authenticated Worker as the acquisition boundary when DOAA-RR has a proper authenticated host; evaluate a *read-only, explicit opt-in* development fixture or secure same-origin preview route only if genuinely necessary for visual acceptance. Assess rate/quota effects before live requests. In parallel, develop provider-independent evidence enrichment against safely captured, real observations. No production changes, new hosted services or paid consumption authorized by this audit.
