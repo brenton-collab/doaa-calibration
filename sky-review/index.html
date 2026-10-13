@@ -11,13 +11,13 @@ header{position:absolute;top:0;left:0;right:0;z-index:3;pointer-events:none;padd
 h1{font-size:clamp(29px,7vw,38px);line-height:1.08;letter-spacing:.01em;font-weight:450;margin:5px 0 0}
 small{font-size:10px;letter-spacing:.08em}
 footer{position:absolute;bottom:0;left:0;z-index:3;pointer-events:none;padding:4px 8px;background:#f3f5f5c9;font-size:9px}
-#note{position:absolute;right:12px;top:14px;z-index:3;text-align:right;font-size:10px;pointer-events:none;max-width:52vw}#status{display:block}#status:empty{display:none}
+#note{position:absolute;right:12px;top:14px;z-index:3;text-align:right;font-size:10px;pointer-events:none;max-width:52vw}#status{display:block}#status:empty{display:none}#contact{display:block;pointer-events:auto;cursor:pointer}#contact:focus-visible{outline:2px solid #286586;outline-offset:3px}
 </style></head><body>
 <main id="instrument" aria-label="Independent SKY viewport">
 <div id="vector-base" aria-hidden="true"></div><canvas id="tiles"></canvas><canvas id="sky" aria-label="Interactive Ottawa aviation chart"></canvas>
 <header><small>DOAA•RR · OTTAWA AVIATION</small><h1>SKY</h1></header>
-<div id="note"><span id="position">VIEW · —</span><br><span id="status" role="status">MAP LOADING</span><br><span id="contact">AIRCRAFT · NOT CONNECTED</span></div>
-<footer><span id="attribution">© OpenStreetMap contributors</span></footer>
+<div id="note"><span id="position">VIEW · —</span><br><span id="status" role="status">MAP LOADING</span><span id="contact" role="button" tabindex="0" aria-label="Load an existing DOAA traffic JSON snapshot" title="Load a previously acquired traffic JSON file; no network requests">AIRCRAFT · LOAD SNAPSHOT</span></div>
+<footer><span id="attribution">© OpenStreetMap contributors</span></footer><input id="snapshot-file" type="file" accept=".json,application/json" hidden>
 </main>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="./vector-base.js"></script>
@@ -29,20 +29,44 @@ footer{position:absolute;bottom:0;left:0;z-index:3;pointer-events:none;padding:4
 <script src="./sky-viewport-hit.js"></script>
 <script src="./sky-viewport-tiles.js"></script>
 <script src="./sky-viewport.js"></script>
+<script src="./sky-observations.js"></script>
 <script>
 'use strict';
 document.documentElement.dataset.mapLayer='base';
 const host=document.getElementById('instrument'),home={icao:'CYOW',lat:45.3225,lon:-75.6692};
-const view={cx:home.lon,cy:home.lat,zoom:1},airports=[home],observations=[],tracks=new Map();
+const view={cx:home.lon,cy:home.lat,zoom:1},airports=[home],tracks=new Map();
+let observations=[],snapshot=null;
 const area=()=>{const w=host.clientWidth,h=host.clientHeight;return{top:0,bottom:0,w,h,cx:w*.5,cy:h*.5,mode:'standalone'}};
 const units={format:(n)=>n+' NM'};
 const status=document.getElementById('status');
 const position=document.getElementById('position');
 let mapError='';
+const contact=document.getElementById('contact'),fileInput=document.getElementById('snapshot-file');
+function refreshContacts(){
+ if(!snapshot){contact.textContent='AIRCRAFT · LOAD SNAPSHOT';return}
+ const valid=snapshot.aircraft.filter(a=>Date.now()-a.observedAt<90000&&a.observedAt<=Date.now()+60000);
+ observations=valid;
+ contact.textContent=valid.length+' AIRCRAFT · '+(valid.length?'SNAPSHOT':'NO CURRENT POSITIONS');
+ contact.title='Imported evidence · '+(snapshot.provider||'source unknown')+' · observed '+(snapshot.observedAt?new Date(snapshot.observedAt).toISOString():'time unknown')+' · click to replace';
+}
+async function loadSnapshot(file){
+ if(!file)return;
+ if(file.size>5_000_000){contact.textContent='SNAPSHOT · TOO LARGE';return}
+ try{
+  const data=JSON.parse(await file.text());
+  if(!data||data.ok===false||!Array.isArray(data.aircraft))throw Error('Invalid DOAA traffic response');
+  snapshot=window.DOAASkyObservations.fromTraffic(data,Date.now());
+  refreshContacts();paint();
+ }catch(e){contact.textContent='SNAPSHOT · INVALID';contact.title=String(e.message||e)}
+}
+contact.addEventListener('click',()=>fileInput.click());
+contact.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fileInput.click()}});
+fileInput.addEventListener('change',()=>{loadSnapshot(fileInput.files?.[0]);fileInput.value=''});
 function updateStatus(){status.textContent=mapError|| (document.documentElement.dataset.vectorReady==='yes'?'MAP · VECTOR':'MAP · OSM FALLBACK');};
 window.addEventListener('error',e=>{mapError='MAP / SCRIPT ERROR';status.title=e.message||'Resource unavailable';status.style.color='#a43333';updateStatus()});
 let viewport;
 function paint(){
+ if(snapshot)refreshContacts();
  const width=host.clientWidth,height=host.clientHeight;
  position.textContent='VIEW · '+viewport.extent()+' NM';
  viewport.syncVector({mode:'base',width,height});
@@ -50,7 +74,7 @@ function paint(){
  updateStatus();
  viewport.ctx.clearRect(0,0,width,height);
  viewport.drawInstruments(height);
- viewport.drawTraffic({aircraft:observations,AIRPORTS:airports,selected:null,tracks,trailsVisible:true,DOAASkyMapCore:{fresh:()=>true,alpha:()=>0,colour:()=>[0,0,0],HOUR:3600000},rackSearchResults:null,searchMatchIds:new Set(),rad:n=>n*Math.PI/180,inView:()=>true,now:Date.now(),innerHeight:height});
+ viewport.drawTraffic({aircraft:observations,AIRPORTS:airports,selected:null,tracks,trailsVisible:true,DOAASkyMapCore:{fresh:a=>Date.now()-a.observedAt<90000,alpha:()=>0,colour:()=>[0,0,0],HOUR:3600000},rackSearchResults:null,searchMatchIds:new Set(),rad:n=>n*Math.PI/180,inView:()=>true,now:Date.now(),innerHeight:height});
 }
 viewport=window.DOAASkyViewport.mount({
  overlay:document.getElementById('sky'),base:document.getElementById('tiles'),
@@ -66,7 +90,8 @@ viewport=window.DOAASkyViewport.mount({
 function resize(){viewport.resize(host.clientWidth,host.clientHeight,window.devicePixelRatio||1);paint()}
 const observer=new ResizeObserver(resize);observer.observe(host);
 window.addEventListener('doaa-vector-ready',paint);
+const freshnessTimer=setInterval(()=>{if(snapshot)paint()},10000);
 window.addEventListener('unhandledrejection',e=>{mapError='RESOURCE ERROR';status.title=String(e.reason);status.style.color='#a43333';updateStatus()});
-window.addEventListener('pagehide',()=>{observer.disconnect();viewport.destroy()},{once:true});
+window.addEventListener('pagehide',()=>{observer.disconnect();clearInterval(freshnessTimer);viewport.destroy()},{once:true});
 resize();
 </script></body></html>
