@@ -449,3 +449,8 @@ Commit `68f8906` changes launcher initial focus to the currently active workspac
 ### Direct airframe Inspector follow isolation (2026-10-12)
 
 Review of the actual `window.DOAAOpenAirframe` path found that it changed `selected` but did not clear `followSelected`; unlike ordinary `selectEncounter` and `showAirport`, this could carry an earlier follow intent into a different airframe subject. Commit `394197a` sets `followSelected=false` before opening that Inspector. Commit `1e20327` adds a focused source-contract regression assertion. This was reviewed against the connected branch source but has **not** undergone full application/browser execution. Existing local checkout retrieval still fails GitHub DNS; no hosted CI or deployment triggered.
+
+
+### Active SKY navigation is non-destructive (2026-10-12)
+
+Source inspection found that choosing SKY from the new gear while already in SKY still invoked `setPrimaryView('SKY')`, which unconditionally removes the Inspector's `.show` class and could destroy inspection continuity. Commit `73ba532` makes the launcher treat an already-active SKY choice as a no-op for workspace state, closing the gear and restoring focus. Commit `e2c56fc` adds an isolated runtime test asserting no delegated workspace click. Full Node/browser tests remain outstanding; local `git ls-remote` was retried and still fails with GitHub DNS resolution. No deployment or paid CI.
