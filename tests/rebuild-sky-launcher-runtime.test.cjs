@@ -37,3 +37,10 @@ test('BOARD and LOOK navigate directly without resetting SKY first',()=>{
 test('unavailable follow control does not trigger a fake action',()=>{
  const h=harness();h.actions.FOLLOW.hidden=true;h.open();h.act('FOLLOW');assert.deepEqual(h.clicks,['SKY']);assert.equal(h.focuses.at(-1),'launcher');
 });
+
+test('preferences and ambient delegate without changing workspace',()=>{
+ for(const name of ['PREFERENCES','AMBIENT']){const h=harness();h.open();h.act(name);assert.deepEqual(h.clicks,[name]);assert.equal(h.panel.hidden,true)}
+});
+test('clicking gear twice closes panel',()=>{
+ const h=harness();h.open();h.open();assert.equal(h.panel.hidden,true);assert.equal(h.launcher['aria-expanded'],'false');
+});
