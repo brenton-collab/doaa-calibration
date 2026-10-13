@@ -293,3 +293,7 @@ test('Opening a SKY contact does not silently move the camera into follow mode',
 test('Map-specific gear actions first restore SKY from BOARD or LOOK',()=>{
  assert.ok(html.includes("if(action==='MAP'||action==='FOLLOW'||action==='HOME')document.querySelector('[data-primary=SKY]')?.click()"));
 });
+
+test('direct airframe inspection cancels follow on a previously selected aircraft',()=>{
+ assert.ok(html.includes('selected=hex.toLowerCase();followSelected=false;openDetail();window.DOAAFlight.showAirframe'));
+});
