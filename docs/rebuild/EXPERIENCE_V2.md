@@ -444,3 +444,8 @@ Commit `a7a85c7` updates the launcher on opening to read the inherited `#sky-fol
 ### Active workspace keyboard focus (2026-10-12)
 
 Commit `68f8906` changes launcher initial focus to the currently active workspace (`aria-current=page`) with SKY fallback. Commits `15bff0e` and `3de18a7` update the isolated DOM test harness and add a BOARD-active focus assertion. The committed adapter source was executed against an isolated DOM with BOARD active: BOARD received `aria-current=page` and keyboard focus. Commit `965515e` also corrected the unavailable-FOLLOW test to avoid simulating a click on a disabled button. These are **isolated interaction checks**, not a complete Node-suite run or browser verification. No deployment or hosted CI consumption.
+
+
+### Direct airframe Inspector follow isolation (2026-10-12)
+
+Review of the actual `window.DOAAOpenAirframe` path found that it changed `selected` but did not clear `followSelected`; unlike ordinary `selectEncounter` and `showAirport`, this could carry an earlier follow intent into a different airframe subject. Commit `394197a` sets `followSelected=false` before opening that Inspector. Commit `1e20327` adds a focused source-contract regression assertion. This was reviewed against the connected branch source but has **not** undergone full application/browser execution. Existing local checkout retrieval still fails GitHub DNS; no hosted CI or deployment triggered.
