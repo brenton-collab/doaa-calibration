@@ -1,6 +1,6 @@
 # SKY viewport — atomic component contract
 
-**Status:** architectural decision accepted 2026-10-12; extraction not yet implemented or browser-verified.
+**Status:** partial extraction implemented and assembled behind a mount interface; complete atomic viewport and browser parity not yet verified.
 **Authority:** DOAA-RR SKY experience direction; preserve inherited renderer fidelity.
 
 ## Boundary
@@ -55,3 +55,7 @@ Commits `95fae32` and `f131587` add `sky-viewport-canvas.js`, a host-independent
 ## Implementation increment — input lifecycle extracted (2026-10-12)
 
 Commits `709816f` and `a8c9185` move real SKY pointer pan, pinch, wheel and tap dispatch into `sky-viewport-input.js` with explicit host callbacks and listener cleanup (`destroy`). The existing application still supplies camera state, hit-testing, Inspector actions and acquisition scheduling. Commit `0f19b3c` adds focused Node tests. An isolated runtime exercise confirmed pan, wheel zoom and zero listeners remaining after destroy. Browser interaction parity is **not verified**; pointer-cancel and multitouch edge cases require further testing. A full drop-in mount still needs integration of canvas, camera, rendering, map layers, aircraft and host-independent sizing. No production deployment or paid CI.
+
+## Implementation increment — assembled mount (2026-10-12)
+
+Commits `c5ad884` and `fbd2bec` introduce `sky-viewport.js` and replace separate root-page module wiring with one `DOAASkyViewport.mount` call. This composition owns canvas context acquisition/resizing, camera/projection, inherited graticule and graduated range-ring drawing, pointer input, and listener teardown. It accepts host-supplied geometry and callbacks, and exposes `drawInstruments`, `getViewState`, `resize`, and `destroy`. Commit `1322db2` adds a focused Node regression test. Isolated execution of the committed modules verified mount, projection round-trip, canvas sizing, listener removal and post-destroy guard. **Not a complete drop-in SKY:** tile rendering/vector sync, aircraft/trails, hit-testing, acquisition and layout remain in root `index.html`; the root app has not been browser-verified. No production deployment or paid CI.
