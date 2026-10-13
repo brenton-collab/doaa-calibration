@@ -30,3 +30,8 @@ These names are candidates from the common decoder family, not a guarantee that 
 
 ## Next engineering increment
 Inspect actual provider samples or preserved raw observations without incurring billable requests; record field presence across a representative mix of contacts. Implement a pure normalized telemetry view-model adapter with unit and timestamp tests; wire the interactive CONTACT Design Lab to that adapter. Test mixed sparse/rich records, source changes, and stale data. Do not promote until visual/browser verification and evidence provenance are complete.
+
+## Interaction decision (2026-10-13)
+**Labels explain; values connect.** Telemetry labels are accessible inspection controls exposing meaning, units, raw field and evidence. Values that identify resolvable entities are semantic links to the corresponding focus composition in the same Inspector (e.g., ICAO24 → Airframe, callsign → candidate Flight with association qualification). Non-relational values may expose measurement evidence but must not masquerade as links. Further links should be driven by validated relationships: airports, operators, aircraft type, observation reference, source/receiver where resolvable, and historical encounters. Never invent destinations or resolve a callsign to a dated flight without sufficient evidence.
+
+Design Lab local study: `contact-inspector-relational-telemetry.html` (standalone artifact; not deployed or integrated). Label/value separation and field-presence rendering implemented in toy; JavaScript syntax checked, browser UX unverified. Current non-CONTACT focus compositions remain illustrative placeholders.
