@@ -288,3 +288,8 @@ test('Opening a SKY contact does not silently move the camera into follow mode',
  assert.ok(html.includes('selected=id;followSelected=false;openDetail();'));
  assert.ok(html.includes("document.getElementById('sky-follow').onclick=()=>{followSelected=!followSelected;followAircraft();draw()}"));
 });
+
+
+test('Map-specific gear actions first restore SKY from BOARD or LOOK',()=>{
+ assert.ok(html.includes("if(action==='MAP'||action==='FOLLOW'||action==='HOME')document.querySelector('[data-primary=SKY]')?.click()"));
+});
