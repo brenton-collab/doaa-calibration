@@ -16,7 +16,7 @@ footer{position:absolute;bottom:0;left:0;right:0;z-index:3;pointer-events:none;p
 <main id="instrument" aria-label="Independent SKY viewport">
 <div id="vector-base" aria-hidden="true"></div><canvas id="tiles"></canvas><canvas id="sky" aria-label="Interactive Ottawa aviation chart"></canvas>
 <header><h1>DOAA / SKY</h1><small>INDEPENDENT VIEWPORT · REAL RENDERER</small></header>
-<div id="note">CYOW · 45 NM<br>OBSERVATIONS NOT CONNECTED</div>
+<div id="note">CYOW · 45 NM<br>OBSERVATIONS NOT CONNECTED<br><span id="status" role="status">INITIALIZING</span></div>
 <footer><span id="attribution">MAP INITIALIZING</span><span style="float:right">DRAG TO PAN · SCROLL OR PINCH TO ZOOM</span></footer>
 </main>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
@@ -36,11 +36,15 @@ const host=document.getElementById('instrument'),home={icao:'CYOW',lat:45.3225,l
 const view={cx:home.lon,cy:home.lat,zoom:1},airports=[home],observations=[],tracks=new Map();
 const area=()=>{const w=host.clientWidth,h=host.clientHeight;return{top:0,bottom:0,w,h,cx:w*.5,cy:h*.5,mode:'standalone'}};
 const units={format:(n)=>n+' NM'};
+const status=document.getElementById('status');
+function updateStatus(){status.textContent=document.documentElement.dataset.vectorReady==='yes'?'VECTOR MAP READY':'OSM FALLBACK / MAP LOADING'};
+window.addEventListener('error',e=>{status.textContent='ERROR: '+(e.message||'resource unavailable');status.style.color='#a43333'});
 let viewport;
 function paint(){
  const width=host.clientWidth,height=host.clientHeight;
  viewport.syncVector({mode:'base',width,height});
  document.getElementById('attribution').textContent=viewport.drawTiles({width,height,mode:'base',vectorReady:document.documentElement.dataset.vectorReady==='yes'});
+ updateStatus();
  viewport.ctx.clearRect(0,0,width,height);
  viewport.drawInstruments(height);
  viewport.drawTraffic({aircraft:observations,AIRPORTS:airports,selected:null,tracks,trailsVisible:true,DOAASkyMapCore:{fresh:()=>true,alpha:()=>0,colour:()=>[0,0,0],HOUR:3600000},rackSearchResults:null,searchMatchIds:new Set(),rad:n=>n*Math.PI/180,inView:()=>true,now:Date.now(),innerHeight:height});
@@ -58,6 +62,7 @@ viewport=window.DOAASkyViewport.mount({
 function resize(){viewport.resize(host.clientWidth,host.clientHeight,window.devicePixelRatio||1);paint()}
 const observer=new ResizeObserver(resize);observer.observe(host);
 window.addEventListener('doaa-vector-ready',paint);
+window.addEventListener('unhandledrejection',e=>{status.textContent='ERROR: '+String(e.reason);status.style.color='#a43333'});
 window.addEventListener('pagehide',()=>{observer.disconnect();viewport.destroy()},{once:true});
 resize();
 </script></body></html>
