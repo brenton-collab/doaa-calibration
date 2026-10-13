@@ -51,7 +51,8 @@ function paint(){
 }
 viewport=window.DOAASkyViewport.mount({
  overlay:document.getElementById('sky'),base:document.getElementById('tiles'),
- getView:()=>view,getArea:area,getRange:()=>45,getActive:()=>home,units,
+ getView:()=>view,getArea:area,getRange:()=>45,getActive:()=>home,
+ getInstrumentOrigin:()=>({lat:view.cy,lon:view.cx}),units,
  geometry:window.DOAASkyViewportGeometry,camera:window.DOAASkyViewportCamera,
  canvas:window.DOAASkyViewportCanvas,input:window.DOAASkyViewportInput,
  traffic:window.DOAASkyViewportTraffic,hitTest:window.DOAASkyViewportHit,

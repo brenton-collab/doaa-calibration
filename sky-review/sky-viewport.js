@@ -4,7 +4,7 @@
  */
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else root.DOAASkyViewport=api;})(typeof globalThis!=='undefined'?globalThis:this,()=>{
  'use strict';
- function mount({overlay,base,getView,getArea,getRange,getActive,units,onNavigate,onTap,onSettle,geometry,camera,canvas,input,traffic,hitTest,tiles,onInvalidate,vector,vectorContainer}){
+ function mount({overlay,base,getView,getArea,getRange,getActive,getInstrumentOrigin,units,onNavigate,onTap,onSettle,geometry,camera,canvas,input,traffic,hitTest,tiles,onInvalidate,vector,vectorContainer}){
   if(!overlay||!base||!geometry||!camera||!canvas||!input||!traffic||!hitTest||!tiles)throw new TypeError('Missing SKY viewport dependency');
   const surfaces=canvas.create({overlay,base});
   const projection=camera.create({getView,getArea,getRange});
@@ -30,7 +30,7 @@
     requireAlive();
     const env={ctx:surfaces.ctx,area:getArea,project:projection.project,unproject:projection.unproject,view:getView(),innerHeight:height};
     geometry.drawGraticule(env);
-    geometry.drawRangeRings({...env,ACTIVE:getActive(),baseScale:projection.baseScale,rad,DOAAUnits:units});
+    geometry.drawRangeRings({...env,ACTIVE:getInstrumentOrigin?getInstrumentOrigin():getActive(),baseScale:projection.baseScale,rad,DOAAUnits:units});
    },
    syncVector:({mode,width,height})=>{requireAlive();if(!vectorLayer)return;const c=projection.unproject(width/2,height/2),z=Math.log2(projection.nmlon()*projection.baseScale()*getView().zoom*360/512);vectorLayer.sync({lon:c.lon,lat:c.lat,zoom:z,mode,width,height})},
    drawTiles:(data)=>{requireAlive();return tileLayer.draw(data)},
